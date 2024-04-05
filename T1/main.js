@@ -20,8 +20,9 @@ var groundPlane = createGroundPlaneXZ(10, 10, 40, 40); // width, height, resolut
 scene.add(groundPlane);
 
 // Create objects
-const tank1 = Tank( 2.0,  0.4,  0.0, Math.random() * 0xffffff);
-scene.add(tank1)
+const TankRed = new Tank(2.0,  0.4,  0.0, Math.random() * 0xffffff);
+
+scene.add(TankRed)
 
 let camPos  = new THREE.Vector3(3, 4, 8);
 let camUp   = new THREE.Vector3(0.0, 1.0, 0.0);
@@ -49,7 +50,22 @@ function keyboardUpdate() {
    keyboard.update();
    
    // DICA: Insira aqui seu código para mover a câmera
+            
+   if ( keyboard.pressed("up") ) {
+      obj.z -= 0.1;
+   }
 
+   if ( keyboard.pressed("down") ) {
+      obj.z += 0.1;
+   }
+
+   if ( keyboard.pressed("left") ) {
+      obj.x -= 0.1;
+   }
+
+   if ( keyboard.pressed("right") ) {
+      obj.x += 0.1;
+   }
    
    
    updateCamera();
