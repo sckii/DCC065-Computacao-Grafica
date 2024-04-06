@@ -18,17 +18,18 @@ scene = new THREE.Scene();    // Create main scene
 renderer = initRenderer();    // View function in util/utils
 light = initDefaultSpotlight(scene, new THREE.Vector3(5.0, 5.0, 5.0)); // Use default light    
 
-// Camera Manipulation
+// Manipulação de camera
+// variavel para armazenar se a camera orbital foi chamada
 camChangeOrbit = false;
 
-mainCamera = new MainCamera(-10, 8, 0); // Create main camera
+// Cria a camera main e adiciona na cena
+mainCamera = new MainCamera(-10, 8, 0);
 scene.add(mainCamera.cameraHolder)
-mainCamera.rotate(THREE.MathUtils.degToRad(-30), THREE.MathUtils.degToRad(0), THREE.MathUtils.degToRad(0))
+window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update(), renderer)}, false );
 
+// Cria a camera secundario que terá os contres de orbita
 secondCamera = initCamera(new THREE.Vector3(mainCamera.x, mainCamera.y, mainCamera.z)); // Init second camera in this position
 orbit = new OrbitControls( secondCamera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
-
-window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update(), renderer)}, false );
 window.addEventListener( 'resize', function(){onWindowResize(secondCamera, renderer)}, false );
 
 // Keyboard set variable
@@ -51,7 +52,7 @@ function keyboardUpdate() {
 
    keyboard.update();
    
-   // Enable OrbitControls
+   // Atalho para habilitar a camera secundaria (orbital)
    if ( keyboard.down("O") ) {
       camChangeOrbit = !camChangeOrbit;
    }
@@ -62,9 +63,11 @@ function render()
    keyboardUpdate();
    requestAnimationFrame(render);
 
-   KeyboardMovement(redTank.geometry);
+   // Adicionando controles aos objetos
+   KeyboardMovement(redTank.geometry, "P1");
    KeyboardMovement(blueTank.geometry, "P2");
 
+   // Verificando qual camera será utilizada
    if (camChangeOrbit)
       renderer.render(scene, secondCamera) // Render scene
 
