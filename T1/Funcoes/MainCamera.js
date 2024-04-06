@@ -20,6 +20,8 @@ class MainCamera {
     update() {
         // Atualizando a camera caso altere o aspect ratio
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.cameraHolder.position.set(this.x, this.y, this.z);
+        this.cameraHolder.add(this.camera)
         
         // Criando um pivot para pegar o ponto central
         const pivot = new THREE.Vector3();
