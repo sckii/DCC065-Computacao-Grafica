@@ -1,8 +1,5 @@
 import * as THREE from  'three';
 
-const keyboardShortcuts = {
-    "w": "arrowup",
-}
 
 class Tank {
     constructor(x, y, z, color) {
@@ -15,7 +12,7 @@ class Tank {
     }
 
     buildGeometry(){
-        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
 
         const material = new THREE.MeshPhongMaterial({color: this.color, shininess:"200"});
               material.side = THREE.DoubleSide;
@@ -32,8 +29,8 @@ class Tank {
     }
 
     update() {
-        this.checkColision();
-    }
+    }        ke
+
 }
 
 export default Tank;
