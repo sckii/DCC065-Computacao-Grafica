@@ -2,4 +2,5 @@
 /build
 /html
 /libs
+/node_modules
 favicon.ico
