@@ -34,12 +34,17 @@ class MainCamera {
         pivot.y = (this.obj_1.position.y + this.obj_2.position.y) / 2;
         pivot.z = (this.obj_1.position.z + this.obj_2.position.z) / 2;
 
+        // movimentação camera holder
+        this.cameraHolder.position.x = ((this.obj_1.position.x + this.obj_2.position.x) / 2) - 8;
+        // this.cameraHolder.position.y = 10
+        this.cameraHolder.position.z = ((this.obj_1.position.z + this.obj_2.position.z) / 2);
+
         // Camera e o camera holder "olhem" para o pivot
         this.cameraHolder.lookAt(pivot);
         this.camera.lookAt(pivot);
 
         // Zoom in e Zoom out da camera
-        this.cameraHolder.translateZ(8 - distance);
+        this.cameraHolder.translateZ(6 - distance);
         
         // Retornando o objeto camera
         return this.camera;
