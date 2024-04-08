@@ -18,7 +18,7 @@ class SphereCollider {
         if (other instanceof SphereCollider)
             this.checkCollisonWithSphere(other);
     } */
-
+    
     checkCollisonWithSphere(other) {
         if (this.intersectsSphere(other)) {
             if (this.isColliding == false) {

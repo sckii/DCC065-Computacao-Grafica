@@ -1,16 +1,16 @@
 import * as THREE from  'three';
-import KeyboardState from '../libs/util/KeyboardState.js'
-import { OrbitControls } from '../build/jsm/controls/OrbitControls.js';
+import KeyboardState from '../../libs/util/KeyboardState.js'
+import { OrbitControls } from '../../build/jsm/controls/OrbitControls.js';
 import {initRenderer, 
         initCamera,
         initDefaultBasicLight,
         setDefaultMaterial,
         InfoBox,
         onWindowResize,
-		SecondaryBox} from '../libs/util/util.js';
-import { buildMap, worldToMatrix } from './Funcoes/Map.js'
-import Tank from './Modelos/Tank.js';
-import KeyboardMovement from './Funcoes/KeyboardMovement.js';
+		SecondaryBox} from '../../libs/util/util.js';
+import { buildMap, worldToMatrix } from '../Funcoes/Map.js'
+import Tank from '../Modelos/Tank.js';
+import KeyboardMovement from '../Funcoes/KeyboardMovement.js';
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
@@ -39,8 +39,9 @@ const matrix = [
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
