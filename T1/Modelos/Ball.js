@@ -40,7 +40,7 @@ class Ball {
 
     update() {
         this.mesh.translateOnAxis(this.dir, this.speed);
-        this.colliderComponent.checkWallCollision();
+        this.colliderComponent.checkBoundCollision();
     }
 }
 

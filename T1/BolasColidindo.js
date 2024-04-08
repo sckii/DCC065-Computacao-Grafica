@@ -54,12 +54,22 @@ function render()
 		ball.update();
 		
 
-		balls.forEach(otherBall => {
+		/* balls.forEach(otherBall => {
 			if (ball !== otherBall) {
 				ball.colliderComponent.checkCollisionWith(otherBall.colliderComponent);
 			}
-		});
+		}); */
 	});
-  requestAnimationFrame(render);
-  renderer.render(scene, camera) // Render scene
+
+	physics();
+	requestAnimationFrame(render);
+	renderer.render(scene, camera) // Render scene
+}
+
+function physics() {
+	for (let i = 0; i < balls.length; i++) {
+		for (let j = i+1; j < balls.length; j++) {
+			balls[i].colliderComponent.getClosestPointTo(balls[j].mesh.position)
+		}		
+	}
 }
