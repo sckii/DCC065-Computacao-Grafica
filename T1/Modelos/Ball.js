@@ -1,11 +1,11 @@
 import * as THREE from  'three';
 import { Vector3 } from 'three';
-import SphereCollider from './SphereCollider.js';
+import SphereCollider from '../Physics/SphereCollider.js';
 
 class Ball {
-    constructor(x, y, z) {
+    constructor(x, y, z, radious) {
         // visual
-        this.mesh = this.buildMesh(x, y, z);
+        this.mesh = this.buildMesh(x, y, z, radious);
 
         // movimento
         this.dir = new Vector3().random();
@@ -14,11 +14,11 @@ class Ball {
         this.speed = .1;
 
         // colisão
-        this.colliderComponent = new SphereCollider(this, 1, this.onCollisionEntered);
+        this.colliderComponent = new SphereCollider(this, radious);
     }
 
-    buildMesh(x, y, z) {
-        const geometry = new THREE.SphereGeometry(1,15,15);
+    buildMesh(x, y, z, radious) {
+        const geometry = new THREE.SphereGeometry(radious,15,15);
         const material = new THREE.MeshPhongMaterial();
         material.color = new THREE.Color("rgb(0,166,32)");
 

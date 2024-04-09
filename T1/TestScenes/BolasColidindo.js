@@ -8,6 +8,8 @@ import {initRenderer,
         onWindowResize,
         createGroundPlaneXZ} from "../../libs/util/util.js";
 import Ball from '../Modelos/Ball.js';
+import PhysicsEnviroment from '../Physics/PhysicsEnvironment.js';
+import { Vector3 } from '../../build/three.module.js';
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
@@ -29,47 +31,25 @@ let plane = createGroundPlaneXZ(20, 20)
 scene.add(plane);
 
 
-const balls = new Array();
+const physics = new PhysicsEnviroment()
+const updateList = new Array();
 
 for (let i = 0; i < 20; i++) {
-	let ball = new Ball(((i%6) * 3) -8, 2, Math.floor(i/6) * 3 - 8);
+	let ball = new Ball(((i%6) * 3) -8, 2, Math.floor(i/6) * 3 - 8, 1);
+	//let ball = new Ball(i*6, 2, i*6, 1);
 	scene.add(ball.mesh);
-	balls.push(ball);
+	physics.add(ball.colliderComponent);
+	updateList.push(ball);
 }
-
-// Use this to show information onscreen
-let controls = new InfoBox();
-	controls.add("Basic Scene");
-	controls.addParagraph();
-	controls.add("Use mouse to interact:");
-	controls.add("* Left button to rotate");
-	controls.add("* Right button to translate (pan)");
-	controls.add("* Scroll to zoom in/out.");
-	controls.show();
 
 render();
 function render()
 {
-	balls.forEach(ball => {
+	updateList.forEach(ball => {
 		ball.update();
-		
-
-		/* balls.forEach(otherBall => {
-			if (ball !== otherBall) {
-				ball.colliderComponent.checkCollisionWith(otherBall.colliderComponent);
-			}
-		}); */
 	});
+	physics.update();
 
-	physics();
 	requestAnimationFrame(render);
 	renderer.render(scene, camera) // Render scene
-}
-
-function physics() {
-	for (let i = 0; i < balls.length; i++) {
-		for (let j = i+1; j < balls.length; j++) {
-			balls[i].colliderComponent.getClosestPointTo(balls[j].mesh.position)
-		}		
-	}
 }
