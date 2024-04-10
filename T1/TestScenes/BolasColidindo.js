@@ -1,5 +1,6 @@
 import * as THREE from  'three';
 import { OrbitControls } from '../../build/jsm/controls/OrbitControls.js';
+import Stats from '../../build/jsm/libs/stats.module.js'
 import {initRenderer, 
         initCamera,
         initDefaultBasicLight,
@@ -22,6 +23,12 @@ orbit = new OrbitControls( camera, renderer.domElement ); // Enable mouse rotati
 // Listen window size changes
 window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)}, false );
 
+// Contador de FPS
+var clock = new THREE.Clock();
+var time = 0;
+var stats = new Stats();
+document.getElementById("webgl-output").appendChild(stats.domElement);
+
 // Show axes (parameter is size of each axis)
 let axesHelper = new THREE.AxesHelper( 12 );
 scene.add( axesHelper );
@@ -30,10 +37,9 @@ scene.add( axesHelper );
 let plane = createGroundPlaneXZ(20, 20)
 scene.add(plane);
 
-
 const physics = new PhysicsEnviroment()
 const updateList = new Array();
-
+/* 
 for (let i = 0; i < 20; i++) {
 	let ball = new Ball(((i%6) * 3) -8, 2, Math.floor(i/6) * 3 - 8, 1);
 	//let ball = new Ball(i*6, 2, i*6, 1);
@@ -41,15 +47,18 @@ for (let i = 0; i < 20; i++) {
 	physics.add(ball.colliderComponent);
 	updateList.push(ball);
 }
-
+ */
 render();
 function render()
 {
+	var dt = clock.getDelta();
 	updateList.forEach(ball => {
 		ball.update();
 	});
 	physics.update();
 
+	time += dt;
+	stats.update();
 	requestAnimationFrame(render);
 	renderer.render(scene, camera) // Render scene
 }

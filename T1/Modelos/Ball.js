@@ -3,9 +3,10 @@ import { Vector3 } from 'three';
 import SphereCollider from '../Physics/SphereCollider.js';
 
 class Ball {
-    constructor(x, y, z, radious) {
+    constructor(x, y, z, radius) {
         // visual
-        this.mesh = this.buildMesh(x, y, z, radious);
+        this.mesh = this.buildMesh(x, y, z, radius);
+        this.position = this.mesh.position;
 
         // movimento
         this.dir = new Vector3().random();
@@ -14,11 +15,11 @@ class Ball {
         this.speed = .1;
 
         // colisão
-        this.colliderComponent = new SphereCollider(this, radious);
+        this.colliderComponent = new SphereCollider(this, radius);
     }
 
-    buildMesh(x, y, z, radious) {
-        const geometry = new THREE.SphereGeometry(radious,15,15);
+    buildMesh(x, y, z, radius) {
+        const geometry = new THREE.SphereGeometry(radius,15,15);
         const material = new THREE.MeshPhongMaterial();
         material.color = new THREE.Color("rgb(0,166,32)");
 
@@ -34,16 +35,16 @@ class Ball {
      * @param {Object} other 
      */
     onCollisionEntered(other) {
-        let distance = new Vector3;
-        distance.subVectors(this.mesh.position, other.mesh.position);
+        let vecDistance = new Vector3;
+        vecDistance.subVectors(this.mesh.position, other.position);
 
-        this.dir.reflect(distance);
+        this.dir.reflect(vecDistance);
         this.dir.normalize();
     }
 
     update() {
         this.mesh.translateOnAxis(this.dir, this.speed);
-        this.colliderComponent.checkBoundCollision();
+        //this.colliderComponent.checkBoundCollision();
     }
 }
 

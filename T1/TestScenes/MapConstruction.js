@@ -11,6 +11,8 @@ import {initRenderer,
 import { buildMap, worldToMatrix } from '../Funcoes/Map.js'
 import Tank from '../Modelos/Tank.js';
 import KeyboardMovement from '../Funcoes/KeyboardMovement.js';
+import Ball from '../Modelos/Ball.js';
+import PhysicsEnvironment from '../Physics/PhysicsEnvironment.js';
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
@@ -50,21 +52,55 @@ const matrix = [
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
+/* const matrix = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+] */
 
-buildMap(scene, matrix);
+let physics = new PhysicsEnvironment();
+let updateList = [];
+let blocks = buildMap(scene, matrix);
+physics.addToMap(blocks);
 
-let tank = new Tank(0,1.2,0);
-scene.add(tank.geometry);
+let ball = new Ball(4,1,4,1); 
+scene.add(ball.mesh);
+updateList.push(ball);
+physics.add(ball.colliderComponent);
 
-var infoBox = new SecondaryBox("");
+
+
+/* let tank = new Tank(0,1.2,0);
+scene.add(tank.geometry); */
+
+//var infoBox = new SecondaryBox("");
 
 render();
 function render()
 {
 	keyboard.update();
-	KeyboardMovement(tank.geometry, "P2");
-	let p = worldToMatrix(tank.geometry.position);
-	infoBox.changeMessage(p.x + ", " + p.y);
+
+    updateList.forEach(element => {
+        element.update();
+    });
+
+    physics.update();
+
+	//KeyboardMovement(tank.geometry, "P2");
+	//let p = worldToMatrix(tank.geometry.position);
+	//infoBox.changeMessage(p.x + ", " + p.y);
 
 	requestAnimationFrame(render);
 	renderer.render(scene, camera) // Render scene

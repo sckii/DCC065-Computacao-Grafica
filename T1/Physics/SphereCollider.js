@@ -4,14 +4,12 @@
 */
 
 import { Vector3 } from "../../build/three.module.js";
-import { worldToMatrix } from "../Funcoes/Map.js";
 
 class SphereCollider {
     collisions = new Set();
-    constructor(object, radious) {
+    constructor(object, radius) {
         this.object = object;
-        this.radious = radious;
-        this.isColliding = false;
+        this.radius = radius;
     }
 
     /**
@@ -19,13 +17,13 @@ class SphereCollider {
      * @param {Vector3} point 
      */
     intersctsPoint(point) {
-        return this.object.mesh.position.distanceTo(point) <= this.radious;
+        return this.object.position.distanceTo(point) <= this.radius;
     }
 
     checkBoundCollision() {
-        if (this.object.mesh.position.x > 10 || this.object.mesh.position.x < -10)
+        if (this.object.position.x > 10 || this.object.position.x < -10)
             this.object.dir.x = -this.object.dir.x;
-        if (this.object.mesh.position.z > 10 || this.object.mesh.position.z < -10)
+        if (this.object.position.z > 10 || this.object.position.z < -10)
             this.object.dir.z = -this.object.dir.z;
     }
 
@@ -36,9 +34,9 @@ class SphereCollider {
     getClosestPointTo(point) {
         let closestPoint = new Vector3;
         closestPoint.copy(point);
-        closestPoint.sub(this.object.mesh.position);
-        closestPoint.clampLength(0,this.radious);
-        closestPoint.add(this.object.mesh.position);
+        closestPoint.sub(this.object.position); // Vetor que aponta deste objeto para o outro objeto
+        closestPoint.clampLength(0,this.radius);
+        closestPoint.add(this.object.position);
         
         return closestPoint;
     }
@@ -50,7 +48,7 @@ class SphereCollider {
         if (!this.collisions.has(other)) {
             this.collisions.add(other);
             try {
-                this.object.onCollisionEntered(other.object);
+                this.object.onCollisionEntered(other);
             } catch (error) {
                 if (error instanceof TypeError == false) {
                     throw error;

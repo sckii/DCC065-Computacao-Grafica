@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 import { createGroundPlane } from '../../libs/util/util.js';
 import { Vector2, Vector3 } from '../../build/three.module.js';
+import AABBCollider from '../Physics/AABBCollider.js';
 
-const blockSize = 1;
-
-        
+const blockSize = 2;
     
 export function buildMap(scene, matrix) {
     //let plane = createGroundPlaneXZ(matrix[0].length*blockSize, matrix.length*blockSize)
-    let plane = createGroundPlane(matrix[0].length*blockSize, matrix.length*blockSize)
+    let plane = createGroundPlane(matrix[0].length*blockSize, matrix.length*blockSize);
+    let blocks = new Set();
     plane.position.set((matrix[0].length*blockSize)/2-blockSize/2,0,(matrix.length*blockSize)/2-blockSize/2);
     plane.rotateX(Math.PI/2);
     scene.add(plane);
@@ -19,9 +19,13 @@ export function buildMap(scene, matrix) {
                 let block = getBlock(matrixToWorld(i, j));
                 scene.add(block);
                 matrix[i][j] = block;
+                blocks.add(block);
+                block.colliderComponent = new AABBCollider(block, blockSize, blockSize);
             }
         }
     }
+
+    return blocks;
 }
 
 function getBlock(pos) {
@@ -45,7 +49,10 @@ function matrixToWorld(i, j) {
  * @param {Vector2} pos 
  */
 export function worldToMatrix(pos) {
-    let mPos = new Vector2(Math.floor(pos.x/blockSize), Math.floor(pos.z/blockSize));
+    let mPos = {
+        i: Math.floor(pos.x/blockSize),
+        j: Math.floor(pos.z/blockSize)
+    }
     return mPos;
 }
 
