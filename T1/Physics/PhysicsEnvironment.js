@@ -14,6 +14,8 @@ class PhysicsEnvironment {
     }
 
     update() {
+
+        // iterar por todos os objetos testando a colisão
         for (let i = 0; i < this.objects.length; i++) {
             for (let j = i+1; j < this.objects.length; j++) {
                 let point = this.objects[i].getClosestPointTo(this.objects[j].object.mesh.position)
@@ -22,8 +24,8 @@ class PhysicsEnvironment {
                     this.objects[j].onCollision(this.objects[i]);
                 }
                 else {
-                    this.objects[i].collisions.delete(this.objects[j]);
-                    this.objects[j].collisions.delete(this.objects[i]);
+                    this.objects[i].onNoCollision(this.objects[j]);
+                    this.objects[j].onNoCollision(this.objects[i]);
                 }
             }		
         }

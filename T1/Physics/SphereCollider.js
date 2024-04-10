@@ -14,31 +14,8 @@ class SphereCollider {
         this.isColliding = false;
     }
 
-    /* checkCollisionWith(other) {
-        if (other instanceof SphereCollider)
-            this.checkCollisonWithSphere(other);
-    } */
-    
-    checkCollisonWithSphere(other) {
-        if (this.intersectsSphere(other)) {
-            if (this.isColliding == false) {
-                this.object.onCollisionEntered(other);
-            }
-            this.isColliding = true;
-        }
-        else {
-            this.isColliding = false;
-        }
-    }
-
-    intersectsSphere(other) {
-        let distance = this.object.mesh.position.distanceTo(other.object.mesh.position);
-        if (distance < this.radious + other.radious)
-            return true;
-        return false;
-    }
-
     /**
+     * retorna _true_ se o ponto estiver dentro da esfera.
      * @param {Vector3} point 
      */
     intersctsPoint(point) {
@@ -53,17 +30,7 @@ class SphereCollider {
     }
 
     /**
-     * @param {int[][]} walls 
-     */
-    checkWallCollision(walls) {
-        let pos = worldToMatrix(this.object.position);
-        if (walls[pos.x][pos.y] != 0) {
-            this.object.onCollisionEntered()
-        }
-    }
-
-    /**
-     * Retorna o ponto, dentro desse objeto, mais proximo de outro objeto
+     * Retorna o ponto (dentro desse objeto) mais proximo do centro de outro objeto
      * @param {Vector3} point centro de um objeto
      */
     getClosestPointTo(point) {
@@ -82,7 +49,28 @@ class SphereCollider {
     onCollision(other) {
         if (!this.collisions.has(other)) {
             this.collisions.add(other);
-            this.object.onCollisionEntered(other);
+            try {
+                this.object.onCollisionEntered(other.object);
+            } catch (error) {
+                if (error instanceof TypeError == false) {
+                    throw error;
+                }
+            }
+        }
+    }
+
+    onNoCollision(other){
+        // Quando não ha colisão com um outro objeto ele é removido da lista de colisões
+        // e é chamado o metodo onCollisionExit caso seja necessário tratar o fim da colisão
+        if (this.collisions.has(other)) {
+            this.collisions.delete(other);
+            try {
+                this.object.onCollisionExit(other.object);
+            } catch (error) {
+                if (error instanceof TypeError == false) {
+                    throw error;
+                }
+            }
         }
     }
 }

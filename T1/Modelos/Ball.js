@@ -29,10 +29,13 @@ class Ball {
         return mesh;
     }
     
-
+    /**
+     * Método chamado quando esse objeto entra em colisão com outro.
+     * @param {Object} other 
+     */
     onCollisionEntered(other) {
         let distance = new Vector3;
-        distance.subVectors(this.mesh.position, other.object.mesh.position);
+        distance.subVectors(this.mesh.position, other.mesh.position);
 
         this.dir.reflect(distance);
         this.dir.normalize();
