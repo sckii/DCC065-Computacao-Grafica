@@ -1,12 +1,10 @@
-/*
-    Instancie essa classe no objeto que deseja ter colisão.
-    A colisão é calculada pela distancia do centro do objeto.
-*/
-
 import { Vector3 } from "../../build/three.module.js";
+import Collision from "./Collision.js";
 
 class SphereCollider {
+    colliders = new Set();
     collisions = new Set();
+    
     constructor(object, radius) {
         this.object = object;
         this.radius = radius;
@@ -42,34 +40,30 @@ class SphereCollider {
     }
 
     /**
-     * @param {Collider} other 
+     * @param {Collision} collision 
      */
-    onCollision(other) {
-        if (!this.collisions.has(other)) {
-            this.collisions.add(other);
-            try {
-                this.object.onCollisionEntered(other);
-            } catch (error) {
-                if (error instanceof TypeError == false) {
-                    throw error;
-                }
-            }
+    onCollision(collision) {
+        if (!this.colliders.has(collision.other)) {
+            this.colliders.add(collision.other);
+            this.object.onCollisionEntered(collision);
         }
     }
 
+    /**
+     * 
+     * @param {Collider} other 
+     */
     onNoCollision(other){
         // Quando não ha colisão com um outro objeto ele é removido da lista de colisões
         // e é chamado o metodo onCollisionExit caso seja necessário tratar o fim da colisão
-        if (this.collisions.has(other)) {
-            this.collisions.delete(other);
-            try {
-                this.object.onCollisionExit(other.object);
-            } catch (error) {
-                if (error instanceof TypeError == false) {
-                    throw error;
-                }
-            }
+        if (this.colliders.has(other.object)) {
+            this.colliders.delete(other.object);
+            this.object.onCollisionExit(other.object);
         }
+    }
+
+    getCollisionNormal(point) {
+        return new Vector3().subVectors(point, this.object.position).normalize();
     }
 }
 

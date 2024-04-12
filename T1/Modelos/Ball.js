@@ -1,6 +1,8 @@
 import * as THREE from  'three';
 import { Vector3 } from 'three';
 import SphereCollider from '../Physics/SphereCollider.js';
+import Collision from '../Physics/Collision.js';
+import AABBCollider from '../Physics/AABBCollider.js';
 
 class Ball {
     constructor(x, y, z, radius) {
@@ -12,7 +14,7 @@ class Ball {
         this.dir = new Vector3().random();
         this.dir.setY(0);
         this.dir.normalize();
-        this.speed = .1;
+        this.speed = .2;
 
         // colisão
         this.colliderComponent = new SphereCollider(this, radius);
@@ -31,16 +33,19 @@ class Ball {
     }
     
     /**
-     * Método chamado quando esse objeto entra em colisão com outro.
-     * @param {Object} other 
+     * Esse método é chamado quando esse objeto entra em colisão com outro.
+     * @param {Collision} collision 
      */
-    onCollisionEntered(other) {
-        let vecDistance = new Vector3;
-        vecDistance.subVectors(this.mesh.position, other.position);
-
-        this.dir.reflect(vecDistance);
+    onCollisionEntered(collision) {
+        this.dir.reflect(collision.getNormal());
         this.dir.normalize();
     }
+
+    /**
+     * Esse método é chmada quando um objeto para de colidir com este
+     * @param {Collider} other 
+     */
+    onCollisionExit(other) {}
 
     update() {
         this.mesh.translateOnAxis(this.dir, this.speed);

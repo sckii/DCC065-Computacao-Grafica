@@ -5,12 +5,8 @@ import {initRenderer,
         initCamera,
         initDefaultBasicLight,
         setDefaultMaterial,
-        InfoBox,
-        onWindowResize,
-		SecondaryBox} from '../../libs/util/util.js';
-import { buildMap, worldToMatrix } from '../Funcoes/Map.js'
-import Tank from '../Modelos/Tank.js';
-import KeyboardMovement from '../Funcoes/KeyboardMovement.js';
+        onWindowResize} from '../../libs/util/util.js';
+import { buildMap } from '../Funcoes/Map.js'
 import Ball from '../Modelos/Ball.js';
 import PhysicsEnvironment from '../Physics/PhysicsEnvironment.js';
 
@@ -52,33 +48,19 @@ const matrix = [
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
-/* const matrix = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-] */
+
 
 let physics = new PhysicsEnvironment();
 let updateList = [];
 let blocks = buildMap(scene, matrix);
 physics.addToMap(blocks);
 
-let ball = new Ball(4,1,4,1); 
-scene.add(ball.mesh);
-updateList.push(ball);
-physics.add(ball.colliderComponent);
+for (let i = 0; i < 1; i++) {
+    let ball = new Ball(((i%6) * 3) +2, 1, Math.floor(i/6) * 3 +2, .5);
+    scene.add(ball.mesh);
+    physics.add(ball.colliderComponent);
+    updateList.push(ball);
+}
 
 
 

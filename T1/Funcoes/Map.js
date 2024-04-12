@@ -31,7 +31,8 @@ export function buildMap(scene, matrix) {
 function getBlock(pos) {
     const blockGeometry = new THREE.BoxGeometry(blockSize,blockSize,blockSize);
     const material = new THREE.MeshStandardMaterial();
-        material.color = new THREE.Color("rgb(100,100,100)");
+        //material.color = new THREE.Color("rgb(100,100,100)");
+        material.color = new THREE.Color(Math.random() * 0xffffff);
     
     const mesh = new THREE.Mesh(blockGeometry, material);
         mesh.position.set(pos.x, pos.y, pos.z);

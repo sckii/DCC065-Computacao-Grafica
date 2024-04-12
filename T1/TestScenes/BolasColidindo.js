@@ -39,7 +39,7 @@ scene.add(plane);
 
 const physics = new PhysicsEnviroment()
 const updateList = new Array();
-/* 
+
 for (let i = 0; i < 20; i++) {
 	let ball = new Ball(((i%6) * 3) -8, 2, Math.floor(i/6) * 3 - 8, 1);
 	//let ball = new Ball(i*6, 2, i*6, 1);
@@ -47,7 +47,7 @@ for (let i = 0; i < 20; i++) {
 	physics.add(ball.colliderComponent);
 	updateList.push(ball);
 }
- */
+
 render();
 function render()
 {
