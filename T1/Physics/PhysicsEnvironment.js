@@ -1,5 +1,6 @@
 import Collision from "./Collision.js";
 import * as THREE from  'three';
+import { Color } from "../../build/three.module.js";
 
 class PhysicsEnvironment {
     colliders = [];
@@ -28,17 +29,19 @@ class PhysicsEnvironment {
         for (let i = 0; i < this.colliders.length; i++) {
             let colidiuComMapa = false;
 
+            let normal = new THREE.Vector3(0,0,0);
+            let point;
             for (let j = 0; j < this.map.length; j++) {
-                let point = this.colliders[i].getClosestPointTo(this.map[j].colliderComponent.object.position);
+                point = this.colliders[i].getClosestPointTo(this.map[j].colliderComponent.object.position);
                 if (this.map[j].colliderComponent.intersctsPoint(point)) {
-                    this.colliders[i].onCollision( new Collision(this.map[j], point) );
+                    normal.add(this.map[j].colliderComponent.getNormal(point));
                     colidiuComMapa = true;
-                    break;
                 }
                 else
                     this.colliders[i].onNoCollision(this.map[j].colliderComponent);
             }
-        
+            this.colliders[i].onCollision( new Collision(this.map[0], point, normal.normalize()) );
+         
             if (!colidiuComMapa) {
                 for (let j = i+1; j < this.colliders.length; j++) {
                     let point = this.colliders[i].getClosestPointTo(this.colliders[j].object.position)

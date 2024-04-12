@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { createGroundPlane } from '../../libs/util/util.js';
-import { Vector2, Vector3 } from '../../build/three.module.js';
+import { Color, Vector2, Vector3 } from '../../build/three.module.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 
 const blockSize = 2;
@@ -21,6 +21,11 @@ export function buildMap(scene, matrix) {
                 matrix[i][j] = block;
                 blocks.add(block);
                 block.colliderComponent = new AABBCollider(block, blockSize, blockSize);
+
+                if ( (i + j) % 2 == 0)
+                    block.material.color = new Color(.3,.3,.3);
+                else
+                    block.material.color = new Color(.1,.1,.1);
             }
         }
     }

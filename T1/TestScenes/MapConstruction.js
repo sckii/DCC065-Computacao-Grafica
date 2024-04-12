@@ -1,6 +1,7 @@
 import * as THREE from  'three';
 import KeyboardState from '../../libs/util/KeyboardState.js'
 import { OrbitControls } from '../../build/jsm/controls/OrbitControls.js';
+import Stats from '../../build/jsm/libs/stats.module.js'
 import {initRenderer, 
         initCamera,
         initDefaultBasicLight,
@@ -26,6 +27,12 @@ window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)},
 // Show axes (parameter is size of each axis)
 let axesHelper = new THREE.AxesHelper( 12 );
 scene.add( axesHelper );
+
+// Contador de FPS
+var clock = new THREE.Clock();
+var time = 0;
+var stats = new Stats();
+document.getElementById("webgl-output").appendChild(stats.domElement);
 
 const matrix = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -55,13 +62,25 @@ let updateList = [];
 let blocks = buildMap(scene, matrix);
 physics.addToMap(blocks);
 
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 20; i++) {
     let ball = new Ball(((i%6) * 3) +2, 1, Math.floor(i/6) * 3 +2, .5);
     scene.add(ball.mesh);
     physics.add(ball.colliderComponent);
     updateList.push(ball);
 }
 
+
+// ================
+
+let n = new THREE.Vector3(1,0,1).normalize();
+let d = new THREE.Vector3(-1,0,1);
+
+console.log(`(${n.x}, ${n.z})`);
+d.reflect(n);
+console.log(`(${n.x}, ${n.z})`);
+
+
+// ================
 
 
 /* let tank = new Tank(0,1.2,0);
@@ -72,11 +91,16 @@ scene.add(tank.geometry); */
 render();
 function render()
 {
+	var dt = clock.getDelta();
+
 	keyboard.update();
 
     updateList.forEach(element => {
         element.update();
     });
+
+    time += dt;
+	stats.update();
 
     physics.update();
 

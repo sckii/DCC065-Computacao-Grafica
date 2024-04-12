@@ -65,15 +65,18 @@ class AABBCollider {
         }
     }
 
-    getCollisionNormal(point) {
-        let normal = new Vector3().subVectors(point, this.object.position).normalize();
+    getNormal(point) {
+        let normal = new Vector3().subVectors(point, this.object.position);
         if (normal.x == normal.z) {
-            console.log(`(${normal.x}, ${normal.z})`);
             return normal;
         }
-
+        
         normal.x = Math.round(normal.x);
         normal.z = Math.round(normal.z);
+
+        normal.normalize();
+
+        //console.log(`(${normal.x}, ${normal.z})`);
         return normal;
     }
 }

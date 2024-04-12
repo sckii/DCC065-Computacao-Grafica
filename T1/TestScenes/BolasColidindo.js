@@ -5,7 +5,6 @@ import {initRenderer,
         initCamera,
         initDefaultBasicLight,
         setDefaultMaterial,
-        InfoBox,
         onWindowResize,
         createGroundPlaneXZ} from "../../libs/util/util.js";
 import Ball from '../Modelos/Ball.js';
