@@ -3,12 +3,9 @@ import * as THREE from  'three';
 import { Color } from "../../build/three.module.js";
 
 class PhysicsEnvironment {
-    colliders = [];
-    map = [];
+    colliders = []; // Lista de objetos para testar a colisão
+    map = []; // Os objetos dessa lista não colidem entre sí
     
-    setMapMatrix(mapMatrix) {
-        this.mapMatrix = mapMatrix;
-    }
 
     /**
      * Adiciona um collider na simulaçao de fisica.
@@ -18,6 +15,10 @@ class PhysicsEnvironment {
         this.colliders.push(collider);
     }
 
+    /**
+     * Adciona um conjunto de objetos ao array *map*
+     * @param {Object} blocks 
+     */
     addToMap(blocks) {
         blocks.forEach(element => {
             this.map.push(element);
@@ -40,9 +41,14 @@ class PhysicsEnvironment {
                 else
                     this.colliders[i].onNoCollision(this.map[j].colliderComponent);
             }
+
+            // Arendonda a normal para cima, baixo ou lados
+            normal.x = Math.round(normal.x);
+            normal.z = Math.round(normal.z);
+            
             this.colliders[i].onCollision( new Collision(this.map[0], point, normal.normalize()) );
          
-            if (!colidiuComMapa) {
+            if (!colidiuComMapa) { // Da priorida á colião com o mapa (evita que as bolas saiam do mapa)
                 for (let j = i+1; j < this.colliders.length; j++) {
                     let point = this.colliders[i].getClosestPointTo(this.colliders[j].object.position)
                     if (this.colliders[j].intersctsPoint(point)) {

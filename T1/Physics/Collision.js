@@ -5,7 +5,7 @@ class Collision {
     /**
      * @param {Object} other 
      * @param {Vector3} point
-     * @param {Vector3} normal
+     * @param {Vector3} normal (opcional)
      */
     constructor(other, point, normal) {
         this.other = other;
@@ -13,6 +13,9 @@ class Collision {
         this.normal = normal;
     }
 
+    /**
+     * Retorna a normal da colisão
+     */
     getNormal() { 
         if (this.normal)
             return this.normal;

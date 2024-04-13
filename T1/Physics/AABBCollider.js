@@ -1,7 +1,7 @@
 import { Vector3 } from "../../build/three.module.js";
 
 class AABBCollider {
-    collisions = new Set();
+    collisions = new Set(); // Guarda as colisões correntes com esse objeto para que a colisão com um mesmo objeto não seja tratada mais de uma vez
 
     constructor(object, width, hight) {
         this.object = object;
@@ -21,7 +21,16 @@ class AABBCollider {
             point.z < this.object.position.z + this.hight
         ) 
             return true;
+    }
 
+    /**
+     * Checa a colisão com um quadrado centrado na origem
+     */
+    checkBoundCollision() {
+        if (this.object.position.x > 10 || this.object.position.x < -10)
+            this.object.dir.x = -this.object.dir.x;
+        if (this.object.position.z > 10 || this.object.position.z < -10)
+            this.object.dir.z = -this.object.dir.z;
     }
 
     /**
@@ -65,6 +74,11 @@ class AABBCollider {
         }
     }
 
+    /**
+     * Retorna a normal dessa superfice em um ponto
+     * @param {Vector3} point 
+     * @returns 
+     */
     getNormal(point) {
         let normal = new Vector3().subVectors(point, this.object.position);
         if (normal.x == normal.z) {
@@ -76,7 +90,6 @@ class AABBCollider {
 
         normal.normalize();
 
-        //console.log(`(${normal.x}, ${normal.z})`);
         return normal;
     }
 }
