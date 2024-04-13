@@ -7,7 +7,6 @@ import {initRenderer,
         InfoBox,
         onWindowResize,
         createGroundPlaneXZ} from "../libs/util/util.js";
-import Ball from './Modelos/Ball.js';
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
@@ -29,14 +28,6 @@ let plane = createGroundPlaneXZ(20, 20)
 scene.add(plane);
 
 
-const balls = new Array();
-
-for (let i = 0; i < 20; i++) {
-	let ball = new Ball(((i%6) * 3) -8, 2, Math.floor(i/6) * 3 - 8);
-	scene.add(ball.mesh);
-	balls.push(ball);
-}
-
 // Use this to show information onscreen
 let controls = new InfoBox();
 	controls.add("Basic Scene");
@@ -50,16 +41,6 @@ let controls = new InfoBox();
 render();
 function render()
 {
-	balls.forEach(ball => {
-		ball.update();
-		
-
-		balls.forEach(otherBall => {
-			if (ball !== otherBall) {
-				ball.colliderComponent.checkCollisionWith(otherBall.colliderComponent);
-			}
-		});
-	});
   requestAnimationFrame(render);
   renderer.render(scene, camera) // Render scene
 }

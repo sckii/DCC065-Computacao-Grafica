@@ -1,24 +1,27 @@
 import * as THREE from  'three';
 import { Vector3 } from 'three';
-import SphereCollider from './SphereCollider.js';
+import SphereCollider from '../Physics/SphereCollider.js';
+import Collision from '../Physics/Collision.js';
+import AABBCollider from '../Physics/AABBCollider.js';
 
 class Ball {
-    constructor(x, y, z) {
+    constructor(x, y, z, radius) {
         // visual
-        this.mesh = this.buildMesh(x, y, z);
+        this.mesh = this.buildMesh(x, y, z, radius);
+        this.position = this.mesh.position;
 
         // movimento
         this.dir = new Vector3().random();
         this.dir.setY(0);
         this.dir.normalize();
-        this.speed = .1;
+        this.speed = .2;
 
         // colisão
-        this.colliderComponent = new SphereCollider(this, 1, this.onCollisionEntered);
+        this.colliderComponent = new SphereCollider(this, radius);
     }
 
-    buildMesh(x, y, z) {
-        const geometry = new THREE.SphereGeometry(1,15,15);
+    buildMesh(x, y, z, radius) {
+        const geometry = new THREE.SphereGeometry(radius,15,15);
         const material = new THREE.MeshPhongMaterial();
         material.color = new THREE.Color("rgb(0,166,32)");
 
@@ -29,18 +32,24 @@ class Ball {
         return mesh;
     }
     
-
-    onCollisionEntered(other) {
-        let distance = new Vector3;
-        distance.subVectors(this.mesh.position, other.object.mesh.position);
-
-        this.dir.reflect(distance);
+    /**
+     * Esse método é chamado quando esse objeto entra em colisão com outro.
+     * @param {Collision} collision 
+     */
+    onCollisionEntered(collision) {
+        this.dir.reflect(collision.getNormal());
         this.dir.normalize();
     }
 
+    /**
+     * Esse método é chmada quando um objeto para de colidir com este
+     * @param {Collider} other 
+     */
+    onCollisionExit(other) {}
+
     update() {
         this.mesh.translateOnAxis(this.dir, this.speed);
-        this.colliderComponent.checkWallCollision();
+        //this.colliderComponent.checkBoundCollision();
     }
 }
 
