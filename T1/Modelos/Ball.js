@@ -1,46 +1,59 @@
 import * as THREE from  'three';
 import { Vector3 } from 'three';
-import SphereCollider from './SphereCollider.js';
+import {setDefaultMaterial} from "../../libs/util/util.js";
+
 
 class Ball {
-    constructor(x, y, z) {
+    constructor(x, y, z, radius) {
         // visual
-        this.mesh = this.buildMesh(x, y, z);
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.radius = radius;
 
         // movimento
-        this.dir = new Vector3().random();
+        this.dir = new Vector3(5.0, 0.0, 3.0);
         this.dir.setY(0);
         this.dir.normalize();
-        this.speed = .1;
+        this.speed = 0.2;
 
-        // colisão
-        this.colliderComponent = new SphereCollider(this, 1, this.onCollisionEntered);
+        this.mesh = this.buildGeometry();
     }
 
-    buildMesh(x, y, z) {
-        const geometry = new THREE.SphereGeometry(1,15,15);
-        const material = new THREE.MeshPhongMaterial();
-        material.color = new THREE.Color("rgb(0,166,32)");
+    buildGeometry() {
+        const geometry = new THREE.SphereGeometry(this.radius,15,15); 
+        const material = setDefaultMaterial("white");
 
-        const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.set(x, y, z);
-            mesh.castShadow = true;
+        const bola = new THREE.Mesh(geometry, material);
+        bola.position.set(this.x, this.y, this.z);
 
-        return mesh;
+        return bola;
     }
     
 
     onCollisionEntered(other) {
-        let distance = new Vector3;
-        distance.subVectors(this.mesh.position, other.object.mesh.position);
+        // let distance = new Vector3;
+        // distance.subVectors(this.mesh.position, other.object.mesh.position);
 
-        this.dir.reflect(distance);
-        this.dir.normalize();
+        // this.dir.reflect(distance);
+        // this.dir.normalize();
     }
 
     update() {
-        this.mesh.translateOnAxis(this.dir, this.speed);
-        this.colliderComponent.checkWallCollision();
+
+        const lerpConfig = {
+            destination: new THREE.Vector3(0.0, 0.2, 0.0),
+            alpha: 0.01,
+            move: true
+          }
+
+
+          this.mesh.position.lerp(lerpConfig.destination, lerpConfig.alpha);
+        //this.mesh.translateOnAxis(this.dir, this.speed);
+
+        
+        // this.mesh.translateOnAxis(this.dir, this.speed);
+        // this.colliderComponent.checkWallCollision();
     }
 }
 

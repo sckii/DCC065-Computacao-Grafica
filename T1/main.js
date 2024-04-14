@@ -6,6 +6,7 @@ import {initRenderer,
         initCamera,
         createGroundPlaneXZ,
         initDefaultBasicLight,
+        setDefaultMaterial,
         SecondaryBox, 
         onWindowResize} from "../libs/util/util.js";
 
@@ -40,8 +41,9 @@ var groundPlane = createGroundPlaneXZ(10, 10, 40, 40); // width, height, resolut
 scene.add(groundPlane);
 
 // Create objects
-const redTank = new Tank(-3.0,  0.4,  3.0, "darkred");
-const blueTank = new Tank(-3.0,  0.4,  -3.0, "navy");
+const redTank = new Tank(-3.0,  0.6,  3.0, "darkred");
+const blueTank = new Tank(-3.0,  0.6,  -3.0, "navy");
+
 
 scene.add(redTank.geometry)
 scene.add(blueTank.geometry)
@@ -52,21 +54,22 @@ render();
 function keyboardUpdate() {
 
    keyboard.update();
-   
+
+   // Adicionando controles aos objetos
+   KeyboardMovement(redTank, "P1", scene);
+   KeyboardMovement(blueTank, "P2", scene);
+
    // Atalho para habilitar a camera secundaria (orbital)
    if ( keyboard.down("O") ) {
       camChangeOrbit = !camChangeOrbit;
    }
+   
 }
 
 function render()
 {
    keyboardUpdate();
    requestAnimationFrame(render);
-
-   // Adicionando controles aos objetos
-   KeyboardMovement(redTank.geometry, "P1");
-   KeyboardMovement(blueTank.geometry, "P2");
 
    // Verificando qual camera será utilizada
    if (camChangeOrbit)
