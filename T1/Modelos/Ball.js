@@ -3,18 +3,24 @@ import { Vector3 } from 'three';
 import SphereCollider from '../Physics/SphereCollider.js';
 import Collision from '../Physics/Collision.js';
 import AABBCollider from '../Physics/AABBCollider.js';
+import {setDefaultMaterial} from "../../libs/util/util.js";
+
 
 class Ball {
-    constructor(x, y, z, radius) {
+    constructor(x, y, z) {
         // visual
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.radius = radius;
         this.mesh = this.buildMesh(x, y, z, radius);
         this.position = this.mesh.position;
 
         // movimento
-        this.dir = new Vector3().random();
+        this.dir = new Vector3(5.0, 0.0, 3.0);
         this.dir.setY(0);
         this.dir.normalize();
-        this.speed = .2;
+        this.speed = 0.2;
 
         // colisão
         this.colliderComponent = new SphereCollider(this, radius);
@@ -25,11 +31,10 @@ class Ball {
         const material = new THREE.MeshPhongMaterial();
         material.color = new THREE.Color("rgb(0,166,32)");
 
-        const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.set(x, y, z);
-            mesh.castShadow = true;
+        const bola = new THREE.Mesh(geometry, material);
+        bola.position.set(this.x, this.y, this.z);
 
-        return mesh;
+        return bola;
     }
     
     /**

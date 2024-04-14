@@ -1,11 +1,12 @@
 import * as THREE from  'three';
 import KeyboardState from '../libs/util/KeyboardState.js'
-import { OrbitControls } from '../../build/jsm/controls/OrbitControls.js';
-import {TeapotGeometry} from '../build/jsm/geometries/TeapotGeometry.js';
+import { OrbitControls } from '../build/jsm/controls/OrbitControls.js';
 import {initRenderer, 
         initDefaultSpotlight,
         initCamera,
         createGroundPlaneXZ,
+        initDefaultBasicLight,
+        setDefaultMaterial,
         SecondaryBox, 
         onWindowResize} from "../libs/util/util.js";
 
@@ -14,13 +15,14 @@ import MainCamera from './Funcoes/MainCamera.js';
 import KeyboardMovement from './Funcoes/KeyboardMovement.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
-scene = new THREE.Scene();    // Create main scene
-renderer = initRenderer();    // View function in util/utils
-light = initDefaultSpotlight(scene, new THREE.Vector3(5.0, 5.0, 5.0)); // Use default light    
+scene = new THREE.Scene();
+renderer = initRenderer();
+light = initDefaultBasicLight(scene); // Create a basic light to illuminate the scene
+//light = initDefaultSpotlight(scene, new THREE.Vector3(5.0, 5.0, 5.0));   
 
 // Manipulação de camera
 // variavel para armazenar se a camera orbital foi chamada
-camChangeOrbit = false;
+camChangeOrbit = true; //mudei enquanto usava
 
 // Cria a camera main e adiciona na cena
 mainCamera = new MainCamera(-10, 8, 0);
@@ -39,8 +41,9 @@ var groundPlane = createGroundPlaneXZ(10, 10, 40, 40); // width, height, resolut
 scene.add(groundPlane);
 
 // Create objects
-const redTank = new Tank(-3.0,  0.1,  3.0, Math.random() * 0xffffff);
-const blueTank = new Tank(-3.0,  0.1,  -3.0, Math.random() * 0xffffff);
+const redTank = new Tank(-3.0,  0.6,  3.0, "darkred");
+const blueTank = new Tank(-3.0,  0.6,  -3.0, "navy");
+
 
 scene.add(redTank.geometry)
 scene.add(blueTank.geometry)
@@ -51,21 +54,22 @@ render();
 function keyboardUpdate() {
 
    keyboard.update();
-   
+
+   // Adicionando controles aos objetos
+   KeyboardMovement(redTank, "P1", scene);
+   KeyboardMovement(blueTank, "P2", scene);
+
    // Atalho para habilitar a camera secundaria (orbital)
    if ( keyboard.down("O") ) {
       camChangeOrbit = !camChangeOrbit;
    }
+   
 }
 
 function render()
 {
    keyboardUpdate();
    requestAnimationFrame(render);
-
-   // Adicionando controles aos objetos
-   KeyboardMovement(redTank.geometry, "P1");
-   KeyboardMovement(blueTank.geometry, "P2");
 
    // Verificando qual camera será utilizada
    if (camChangeOrbit)
