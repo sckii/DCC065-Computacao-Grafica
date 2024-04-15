@@ -3,6 +3,7 @@ import {setDefaultMaterial} from "../../libs/util/util.js";
 import Ball from './Ball.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 import GameOver from '../Funcoes/GameOver.js';
+import { Vector3 } from '../../build/three.module.js';
 
 
 class Tank {
@@ -62,15 +63,17 @@ class Tank {
     }
 
     shoot(scene, updateList, physics){
-
-        var direcaoTiro =  new THREE.Vector3(0, 0, -1);
+        var direcaoTiro = new Vector3;
         this.geometry.getWorldDirection(direcaoTiro);
+        direcaoTiro.applyAxisAngle(new Vector3(0,1,0), THREE.MathUtils.degToRad(90));
 
-        const tiro = new Ball(this.position, 0.25, direcaoTiro);
-        tiro.mesh.rotateY(THREE.MathUtils.degToRad(90))
+        let tiroPosition = new Vector3()
+        tiroPosition.copy(this.position);
+        tiroPosition.x += 3;
+        const tiro = new Ball(tiroPosition, 0.25, direcaoTiro);
 
         scene.add(tiro.mesh);
-        physics.add(tiro.colliderComponent);   
+        physics.add(tiro.colliderComponent);
         updateList.push(tiro); 
     }
 

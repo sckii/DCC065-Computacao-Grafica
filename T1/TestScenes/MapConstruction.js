@@ -10,9 +10,11 @@ import {initRenderer,
 import { buildMap } from '../Funcoes/Map.js'
 import Ball from '../Modelos/Ball.js';
 import PhysicsEnvironment from '../Physics/PhysicsEnvironment.js';
+import { setScene } from '../Funcoes/removerDaScene.js';
 
 let scene, renderer, camera, material, light, orbit; // Initial variables
 scene = new THREE.Scene();    // Create main scene
+setScene(scene);
 renderer = initRenderer();    // Init a basic renderer
 camera = initCamera(new THREE.Vector3(0, 15, 30)); // Init camera in this position
 material = setDefaultMaterial(); // create a basic material
@@ -63,7 +65,9 @@ let blocks = buildMap(scene, matrix);
 physics.addToMap(blocks);
 
 for (let i = 0; i < 20; i++) {
-    let ball = new Ball(((i%6) * 3) +2, 1, Math.floor(i/6) * 3 +2, .5);
+    let pos = new THREE.Vector3(((i%6) * 3) +2, 1, Math.floor(i/6) * 3 +2)
+    let dir = new THREE.Vector3(Math.random(), Math.random(), Math.random())
+    let ball = new Ball(pos, .5, dir);
     scene.add(ball.mesh);
     physics.add(ball.colliderComponent);
     updateList.push(ball);

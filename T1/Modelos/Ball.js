@@ -1,23 +1,16 @@
 import * as THREE from  'three';
-import { Vector3 } from 'three';
 import SphereCollider from '../Physics/SphereCollider.js';
 import Collision from '../Physics/Collision.js';
-import AABBCollider from '../Physics/AABBCollider.js';
 import {setDefaultMaterial} from "../../libs/util/util.js";
-import PhysicsEnvironment from '../Physics/PhysicsEnvironment.js';
-import {removerDaScene } from '../main.js';
 import Tank from './Tank.js';
-
+import { removerDaScene } from '../Funcoes/removerDaScene.js';
 
 
 class Ball {
     constructor(position, radius, dir) {
         // visual
-        this.x = position.x;
-        this.y = 1;
-        this.z = position.z;
         this.radius = radius;
-        this.mesh = this.buildMesh();
+        this.mesh = this.buildMesh(position.x, 1, position.z);
         this.position = this.mesh.position;
 
         // movimento
@@ -31,12 +24,12 @@ class Ball {
         this.nColisoes = 0;
     }
 
-    buildMesh() {
+    buildMesh(x, y, z) {
         const geometry = new THREE.SphereGeometry(this.radius,15,15);
         const material = setDefaultMaterial("white");
 
         const bola = new THREE.Mesh(geometry, material);
-        bola.position.set(this.x+3, this.y, this.z);
+        bola.position.set(x+3, y, z);
 
         return bola;
     }
@@ -48,9 +41,11 @@ class Ball {
     onCollisionEntered(collision) {
         this.nColisoes = this.nColisoes + 1;
         if (collision.other instanceof Tank){
-            removerDaScene(this);
             collision.other.vida -= 1;
+            removerDaScene(this);
+            return;
         }
+        console.log(`${collision.getNormal().x}, ${collision.getNormal().z}`);
         this.dir.reflect(collision.getNormal());
         this.dir.normalize();
     }
@@ -66,7 +61,7 @@ class Ball {
     update() {
         this.mesh.translateOnAxis(this.dir, this.speed);
     
-        console.log(this.nColisoes);
+        //console.log(this.nColisoes);
         if (this.nColisoes >= 4 ){
                 removerDaScene(this);
         }

@@ -13,11 +13,12 @@ import MainCamera from './Funcoes/MainCamera.js';
 import KeyboardMovement from './Funcoes/KeyboardMovement.js';
 import { buildMap } from './Funcoes/Map.js'
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
-import Ball from './Modelos/Ball.js';
-
+import { setScene } from './Funcoes/removerDaScene.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
+setScene(scene);
+
 renderer = initRenderer();
 light = initDefaultBasicLight(scene);
 
@@ -57,10 +58,10 @@ const matrix = [
    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
  ]
 
-let physics = new PhysicsEnvironment();
-let updateList = [];
+scene.physics = new PhysicsEnvironment();
+scene.updateList = [];
 let blocks = buildMap(scene, matrix);
-physics.addToMap(blocks);
+scene.physics.addToMap(blocks);
 
 
 
@@ -74,12 +75,12 @@ const redTank = new Tank(4.0,  0.7,  4.0, "darkred");
 const blueTank = new Tank(4.0,  0.7,  28.0, "navy");
 
 scene.add(redTank.geometry)
-physics.add(redTank.colliderComponent); 
-updateList.push(redTank);
+scene.physics.add(redTank.colliderComponent); 
+scene.updateList.push(redTank);
 
 scene.add(blueTank.geometry)
-updateList.push(blueTank);
-physics.add(blueTank.colliderComponent);
+scene.updateList.push(blueTank);
+scene.physics.add(blueTank.colliderComponent);
 
 mainCamera.setTracking(redTank.geometry, blueTank.geometry);
 
@@ -90,26 +91,13 @@ function keyboardUpdate() {
    keyboard.update();
 
    // Adicionando controles aos objetos
-   KeyboardMovement(redTank, "P1", scene, updateList, physics);
-   KeyboardMovement(blueTank, "P2", scene, updateList, physics);
+   KeyboardMovement(redTank, "P1", scene, scene.updateList, scene.physics);
+   KeyboardMovement(blueTank, "P2", scene, scene.updateList, scene.physics);
 
    // Atalho para habilitar a camera secundaria (orbital)
    if ( keyboard.down("O") ) {
       camChangeOrbit = !camChangeOrbit;
    }
-}
-
-
-export function removerDaScene(obj){
-      
-      scene.remove(obj.mesh);
-      obj.mesh = null;
-      const index = updateList.indexOf(obj);
-      if (index > -1) { // only splice array when item is found
-         updateList.splice(index, 1); // 2nd parameter means remove one item only
-      }
-      //physics.remove(obj.colliderComponent);
-
 }
 
 
@@ -125,10 +113,10 @@ function render()
    if (!camChangeOrbit)
       renderer.render(scene, mainCamera.update()) // Render scene
 
-   updateList.forEach(element => {
+   scene.updateList.forEach(element => {
       element.update(scene);
    });
 
-   physics.update();
+   scene.physics.update();
    
 }
