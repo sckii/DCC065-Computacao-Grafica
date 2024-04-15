@@ -56,6 +56,7 @@ class AABBCollider {
      * @param {Collision} collision 
      */
     onCollision(collision) {
+        this.object.onCollision(collision);
         if (!this.collisions.has(collision.other)) {
             this.collisions.add(collision.other);
             this.object.onCollisionEntered(collision);
@@ -79,7 +80,7 @@ class AABBCollider {
      * @param {Vector3} point 
      * @returns 
      */
-    getNormal(point) {
+    getCollisionNormal(point) {
         let normal = new Vector3().subVectors(point, this.object.position);
         if (normal.x == normal.z) {
             return normal;

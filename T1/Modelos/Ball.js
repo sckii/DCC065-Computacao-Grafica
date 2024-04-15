@@ -5,6 +5,8 @@ import Collision from '../Physics/Collision.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 import {setDefaultMaterial} from "../../libs/util/util.js";
 import PhysicsEnvironment from '../Physics/PhysicsEnvironment.js';
+import {removerDaScene } from '../main.js';
+import Tank from './Tank.js';
 
 
 
@@ -34,7 +36,7 @@ class Ball {
         const material = setDefaultMaterial("white");
 
         const bola = new THREE.Mesh(geometry, material);
-        bola.position.set(this.x, this.y, this.z);
+        bola.position.set(this.x+3, this.y, this.z);
 
         return bola;
     }
@@ -44,6 +46,11 @@ class Ball {
      * @param {Collision} collision 
      */
     onCollisionEntered(collision) {
+        this.nColisoes = this.nColisoes + 1;
+        if (collision.other instanceof Tank){
+            removerDaScene(this);
+            collision.other.vida -= 1;
+        }
         this.dir.reflect(collision.getNormal());
         this.dir.normalize();
     }
@@ -53,16 +60,15 @@ class Ball {
      * @param {Collider} other 
      */
     onCollisionExit(other) {
-        this.nColisoes = this.nColisoes + 1;
+        
     }
 
-    update(removeList) {
+    update() {
         this.mesh.translateOnAxis(this.dir, this.speed);
-        
-
+    
         console.log(this.nColisoes);
-        if (this.nColisoes === 200 ){
-                removeList.push(this.geometry);
+        if (this.nColisoes >= 4 ){
+                removerDaScene(this);
         }
         
         //this.colliderComponent.checkBoundCollision();

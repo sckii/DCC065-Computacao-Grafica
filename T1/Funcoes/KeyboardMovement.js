@@ -8,7 +8,8 @@ function KeyboardMovement(tanque, player = "P1", scene, updateList, physics) {
     
     if (player === "P1") {
         if ( keyboard.pressed("W") ) {
-            tanque.geometry.translateX(0.1);
+            tanque.geometry.translateOnAxis(tanque.direcaoTanque, 0.1);
+            //tanque.geometry.translateX(0.1);
         }
     
         if ( keyboard.pressed("S") ) {

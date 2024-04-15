@@ -13,6 +13,7 @@ import MainCamera from './Funcoes/MainCamera.js';
 import KeyboardMovement from './Funcoes/KeyboardMovement.js';
 import { buildMap } from './Funcoes/Map.js'
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
+import Ball from './Modelos/Ball.js';
 
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
@@ -58,9 +59,10 @@ const matrix = [
 
 let physics = new PhysicsEnvironment();
 let updateList = [];
-let removeList = [];
 let blocks = buildMap(scene, matrix);
 physics.addToMap(blocks);
+
+
 
 let n = new THREE.Vector3(1,0,1).normalize();
 let d = new THREE.Vector3(-1,0,1);
@@ -72,12 +74,12 @@ const redTank = new Tank(4.0,  0.7,  4.0, "darkred");
 const blueTank = new Tank(4.0,  0.7,  28.0, "navy");
 
 scene.add(redTank.geometry)
-//physics.add(redTank.colliderComponent); 
+physics.add(redTank.colliderComponent); 
 updateList.push(redTank);
 
 scene.add(blueTank.geometry)
 updateList.push(blueTank);
-//physics.add(blueTank.colliderComponent);
+physics.add(blueTank.colliderComponent);
 
 mainCamera.setTracking(redTank.geometry, blueTank.geometry);
 
@@ -97,6 +99,20 @@ function keyboardUpdate() {
    }
 }
 
+
+export function removerDaScene(obj){
+      
+      scene.remove(obj.mesh);
+      obj.mesh = null;
+      const index = updateList.indexOf(obj);
+      if (index > -1) { // only splice array when item is found
+         updateList.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      //physics.remove(obj.colliderComponent);
+
+}
+
+
 function render()
 {
    keyboardUpdate();
@@ -109,18 +125,10 @@ function render()
    if (!camChangeOrbit)
       renderer.render(scene, mainCamera.update()) // Render scene
 
-   
    updateList.forEach(element => {
-      element.update(removeList);
+      element.update(scene);
    });
 
-   removeList.forEach(element => {
-      scene.remove(element.geometry);
-      element.geometry = null;
-   })
-
-   if(redTank.colliderComponent.intersctsPoint(4.0,  0.7,  28.0)) //testando se um tanque batia no outro
-      console.log("bateu");
-
    physics.update();
+   
 }

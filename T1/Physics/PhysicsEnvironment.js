@@ -35,18 +35,20 @@ class PhysicsEnvironment {
             for (let j = 0; j < this.map.length; j++) {
                 point = this.colliders[i].getClosestPointTo(this.map[j].colliderComponent.object.position);
                 if (this.map[j].colliderComponent.intersctsPoint(point)) {
-                    normal.add(this.map[j].colliderComponent.getNormal(point));
+                    normal.add(this.map[j].colliderComponent.getCollisionNormal(point));
                     colidiuComMapa = true;
                 }
                 else
                     this.colliders[i].onNoCollision(this.map[j].colliderComponent);
             }
 
-            // Arendonda a normal para cima, baixo ou lados
-            normal.x = Math.round(normal.x);
-            normal.z = Math.round(normal.z);
+            if(colidiuComMapa){
+                // Arendonda a normal para cima, baixo ou lados
+                normal.x = Math.round(normal.x);
+                normal.z = Math.round(normal.z);
+                this.colliders[i].onCollision( new Collision(this.map[0], point, normal.normalize()) );
+            }
             
-            this.colliders[i].onCollision( new Collision(this.map[0], point, normal.normalize()) );
          
             if (!colidiuComMapa) { // Da priorida á colião com o mapa (evita que as bolas saiam do mapa)
                 for (let j = i+1; j < this.colliders.length; j++) {

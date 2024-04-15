@@ -15,7 +15,9 @@ class Tank {
         this.geometry = this.buildGeometry();
         this.position = this.geometry.position;
 
-        this.colliderComponent = new AABBCollider(this, 2, 2);      //não entendi como funciona isso
+        this.direcaoTanque =  new THREE.Vector3(0, 0, 0);
+
+        this.colliderComponent = new AABBCollider(this, 2, 2); 
         this.vida = 10;
     }
 
@@ -61,10 +63,11 @@ class Tank {
 
     shoot(scene, updateList, physics){
 
-        var direcaoTiro = new THREE.Vector3(0, 0, -1);
+        var direcaoTiro =  new THREE.Vector3(0, 0, -1);
         this.geometry.getWorldDirection(direcaoTiro);
 
         const tiro = new Ball(this.position, 0.25, direcaoTiro);
+        tiro.mesh.rotateY(THREE.MathUtils.degToRad(90))
 
         scene.add(tiro.mesh);
         physics.add(tiro.colliderComponent);   
@@ -76,7 +79,7 @@ class Tank {
      * @param {Collision} collision 
      */
     onCollisionEntered(collision) {
-        console.log("Entrou em colosão");   //testando colisão, aqui ele não entra nunca em colisão 
+
     }
 
     /**
@@ -84,7 +87,13 @@ class Tank {
      * @param {Collider} other 
      */
     onCollisionExit(other) {
-        console.log("Parou de colidir");    //testando colisão, aqui fica infinito
+        
+    }
+
+    onCollision(collision){
+        
+        this.direcaoTanque.projectOnPlane(this.geometry.worldToLocal(collision.getNormal()));
+        
     }
 
     update() {
@@ -92,7 +101,9 @@ class Tank {
             let fala = "Tanque " + this.color + " perdeu!";
             GameOver(fala);
         }
-        
+
+        this.direcaoTanque.set(1,0,0);
+
     }
 
 }
