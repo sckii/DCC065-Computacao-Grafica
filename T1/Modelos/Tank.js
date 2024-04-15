@@ -8,18 +8,21 @@ import Collision from '../Physics/Collision.js';
 
 
 class Tank {
+    
     constructor(x, y, z, color ) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.color = color;
-
+        
         this.geometry = this.buildGeometry();
         this.position = this.geometry.position;
-
+        
         this.direcaoTanque =  new THREE.Vector3(0, 0, 0);
+        
+        this.colliderComponent = new AABBCollider(this, 2.5, 2.5); 
+        this.worldDir = new Vector3();
 
-        this.colliderComponent = new AABBCollider(this, 2, 2); 
         this.vida = 10;
     }
 
@@ -97,7 +100,7 @@ class Tank {
     /**
      * @param {Collision} collision 
      */
-    onCollision(collision){
+    /* onCollision(collision){
         let localNormal = new Vector3().copy(collision.getNormal())
         //this.geometry.localToWorld(localNormal);
         localNormal.transformDirection(this.geometry.matrix);
@@ -108,15 +111,23 @@ class Tank {
             dir: ${this.direcaoTanque.x}, ${this.direcaoTanque.y}, ${this.direcaoTanque.z}
             dot: ${localNormal.dot(this.direcaoTanque)}
         `);
-
+        
         if (localNormal.dot(this.direcaoTanque) < 0) {
             this.direcaoTanque = this.direcaoTanque.projectOnPlane(localNormal);        
         }
-    }
-    /* onCollision(collision){
-        let worldDir = new Vector3().copy(this.direcaoTanque);
-        worldDir.transformDirection(this.geometry.matrixWorld);
     } */
+    
+    onCollision(collision){
+
+        
+        if (collision.getNormal().dot(this.worldDir) < 0)
+            this.worldDir.projectOnPlane(collision.getNormal());
+        
+        console.log(`
+            normal: ${collision.getNormal().x}, ${collision.getNormal().y}, ${collision.getNormal().z}
+            worldDir: ${this.worldDir.x}, ${this.worldDir.y}, ${this.worldDir.z}
+        `);
+    }
 
     update() {
         if (this.vida <=0){
@@ -124,8 +135,17 @@ class Tank {
             GameOver(fala);
         }
 
-        this.geometry.translateOnAxis(this.direcaoTanque, 0.1);
+        
 
+        //this.geometry.translateOnAxis(this.direcaoTanque, 0.1);
+        this.worldDir.multiplyScalar(0.1);
+        this.position.add(this.worldDir);
+
+    }
+
+    setDir(direcaoTanque) {
+        this.worldDir = new Vector3(direcaoTanque,0,0);
+        this.worldDir.transformDirection(this.geometry.matrixWorld);
     }
 
 }
