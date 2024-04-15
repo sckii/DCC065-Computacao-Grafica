@@ -7,6 +7,8 @@ import {initRenderer,
         SecondaryBox,
         onWindowResize} from "../libs/util/util.js";
 
+import Stats from '../../build/jsm/libs/stats.module.js'
+
 import Tank from './Modelos/Tank.js';
 
 import MainCamera from './Funcoes/MainCamera.js';
@@ -37,6 +39,12 @@ window.addEventListener( 'resize', function(){onWindowResize(secondCamera, rende
 
 // Keyboard set variable
 keyboard = new KeyboardState();
+
+// fps
+var clock = new THREE.Clock();
+var time = 0;
+var stats = new Stats();
+document.getElementById("webgl-output").appendChild(stats.domElement);
 
 const matrix = [
    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -103,6 +111,7 @@ function keyboardUpdate() {
 
 function render()
 {
+   var dt = clock.getDelta();
    keyboardUpdate();
    requestAnimationFrame(render);
    
@@ -112,6 +121,10 @@ function render()
       element.update(scene);
    });
    
+
+   time += dt;
+	stats.update();
+
       // Verificando qual camera será utilizada
       if (camChangeOrbit)
          renderer.render(scene, secondCamera) // Render scene

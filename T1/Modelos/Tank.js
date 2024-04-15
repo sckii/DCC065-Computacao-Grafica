@@ -97,7 +97,11 @@ class Tank {
     /**
      * @param {Collision} collision 
      */
-    onCollision(collision){
+    onCollision(collision) {
+        this.position.add(collision.getNormal().multiplyScalar(.1));
+    }
+
+    /* onCollision(collision){
         let localNormal = new Vector3().copy(collision.getNormal())
         //this.geometry.localToWorld(localNormal);
         localNormal.transformDirection(this.geometry.matrix);
@@ -112,7 +116,7 @@ class Tank {
         if (localNormal.dot(this.direcaoTanque) < 0) {
             this.direcaoTanque = this.direcaoTanque.projectOnPlane(localNormal);        
         }
-    }
+    } */
     /* onCollision(collision){
         let worldDir = new Vector3().copy(this.direcaoTanque);
         worldDir.transformDirection(this.geometry.matrixWorld);
