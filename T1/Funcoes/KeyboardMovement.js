@@ -1,12 +1,10 @@
 import KeyboardState from '../../libs/util/KeyboardState.js'
 import * as THREE from  'three';
-import Tank from '../Modelos/Tank.js';
-import Ball from '../Modelos/Ball.js';
 
 
 const keyboard = new KeyboardState();
 
-function KeyboardMovement(tanque, player = "P1", scene) {
+function KeyboardMovement(tanque, player = "P1", scene, updateList, physics) {
     
     if (player === "P1") {
         if ( keyboard.pressed("W") ) {
@@ -26,8 +24,8 @@ function KeyboardMovement(tanque, player = "P1", scene) {
         }
 
         if (keyboard.down("space") || keyboard.down("Q")){
-            tanque.shoot(scene);
-        }
+            tanque.shoot(scene, updateList, physics);
+        }        
     }
 
     if (player === "P2") {
@@ -47,7 +45,7 @@ function KeyboardMovement(tanque, player = "P1", scene) {
             tanque.geometry.rotateY(THREE.MathUtils.degToRad(-5))
         }
         if ((keyboard.down("/")) || keyboard.down(",")){    //não consegui o /
-            tanque.shoot(scene);
+            tanque.shoot(scene, updateList, physics);
         }
     }
 }

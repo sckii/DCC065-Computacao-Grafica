@@ -1,6 +1,8 @@
 import * as THREE from  'three';
 import {setDefaultMaterial} from "../../libs/util/util.js";
 import Ball from './Ball.js';
+import AABBCollider from '../Physics/AABBCollider.js';
+import GameOver from '../Funcoes/GameOver.js';
 
 
 class Tank {
@@ -11,14 +13,16 @@ class Tank {
         this.color = color;
 
         this.geometry = this.buildGeometry();
+        this.position = this.geometry.position;
+
+        this.colliderComponent = new AABBCollider(this, 2, 2);
+        this.vida = 10;
     }
 
     buildGeometry(){
 
         //cria a box inicial
 
-        //const material = new THREE.MeshPhongMaterial({color: this.color, shininess:"200"});
-        //    material.side = THREE.DoubleSide;
         const geometry = new THREE.BoxGeometry(2.5, 0.5, 1.7);
         const material = setDefaultMaterial(this.color);
         const caixa = new THREE.Mesh(geometry, material);
@@ -55,21 +59,41 @@ class Tank {
         return caixa;    
     }
 
-    shoot(scene){
+    shoot(scene, updateList, physics){
 
-        const tiro = new Ball(this.geometry.position.x, this.geometry.position.y, this.geometry.position.z, 0.25);
+        var direcaoTiro = new THREE.Vector3(0, 0, -1);
+        this.geometry.getWorldDirection(direcaoTiro);
+
+        const tiro = new Ball(this.position, 0.25, direcaoTiro);
+
         scene.add(tiro.mesh);
-
-        tiro.update();        
+        physics.add(tiro.colliderComponent);   
+        updateList.push(tiro); 
     }
 
-    checkColision() {
+    /**
+     * Esse método é chamado quando esse objeto entra em colisão com outro.
+     * @param {Collision} collision 
+     */
+    onCollisionEntered(collision) {
+        console.log("Entrou em colosão");
+    }
 
+    /**
+     * Esse método é chamado quando um objeto para de colidir com este
+     * @param {Collider} other 
+     */
+    onCollisionExit(other) {
+        console.log("Parou de colidir");
     }
 
     update() {
+        if (this.vida <=0){
+            let fala = "Tanque " + this.color + " perdeu!";
+            GameOver(fala);
+        }
         
-    }        
+    }
 
 }
 
