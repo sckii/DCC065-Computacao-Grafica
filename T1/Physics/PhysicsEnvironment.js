@@ -44,9 +44,10 @@ class PhysicsEnvironment {
 
             if(colidiuComMapa){
                 // Arendonda a normal para cima, baixo ou lados
+                normal.normalize();
                 normal.x = Math.round(normal.x);
                 normal.z = Math.round(normal.z);
-                this.colliders[i].onCollision( new Collision(this.map[0], point, normal.normalize()) );
+                this.colliders[i].onCollision( new Collision(this.map[0], point, normal) );
             }
             
          

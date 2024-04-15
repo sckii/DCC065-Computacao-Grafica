@@ -4,6 +4,7 @@ import Ball from './Ball.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 import GameOver from '../Funcoes/GameOver.js';
 import { Vector3 } from '../../build/three.module.js';
+import Collision from '../Physics/Collision.js';
 
 
 class Tank {
@@ -93,11 +94,29 @@ class Tank {
         
     }
 
+    /**
+     * @param {Collision} collision 
+     */
     onCollision(collision){
-        
-        this.direcaoTanque.projectOnPlane(this.geometry.worldToLocal(collision.getNormal()));
-        
+        let localNormal = new Vector3().copy(collision.getNormal())
+        //this.geometry.localToWorld(localNormal);
+        localNormal.transformDirection(this.geometry.matrix);
+        localNormal.z = -localNormal.z
+        console.log(`
+            normal: ${collision.getNormal().x}, ${collision.getNormal().y}, ${collision.getNormal().z}
+            local: ${localNormal.x}, ${localNormal.y}, ${localNormal.z}
+            dir: ${this.direcaoTanque.x}, ${this.direcaoTanque.y}, ${this.direcaoTanque.z}
+            dot: ${localNormal.dot(this.direcaoTanque)}
+        `);
+
+        if (localNormal.dot(this.direcaoTanque) < 0) {
+            this.direcaoTanque = this.direcaoTanque.projectOnPlane(localNormal);        
+        }
     }
+    /* onCollision(collision){
+        let worldDir = new Vector3().copy(this.direcaoTanque);
+        worldDir.transformDirection(this.geometry.matrixWorld);
+    } */
 
     update() {
         if (this.vida <=0){
@@ -105,7 +124,7 @@ class Tank {
             GameOver(fala);
         }
 
-        this.direcaoTanque.set(1,0,0);
+        this.geometry.translateOnAxis(this.direcaoTanque, 0.1);
 
     }
 

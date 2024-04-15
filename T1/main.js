@@ -105,18 +105,18 @@ function render()
 {
    keyboardUpdate();
    requestAnimationFrame(render);
-
-   // Verificando qual camera será utilizada
-   if (camChangeOrbit)
-      renderer.render(scene, secondCamera) // Render scene
-
-   if (!camChangeOrbit)
-      renderer.render(scene, mainCamera.update()) // Render scene
-
+   
+   scene.physics.update();
+   
    scene.updateList.forEach(element => {
       element.update(scene);
    });
-
-   scene.physics.update();
    
+      // Verificando qual camera será utilizada
+      if (camChangeOrbit)
+         renderer.render(scene, secondCamera) // Render scene
+   
+      if (!camChangeOrbit)
+         renderer.render(scene, mainCamera.update()) // Render scene
+
 }

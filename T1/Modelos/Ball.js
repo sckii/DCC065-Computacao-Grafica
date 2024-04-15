@@ -45,7 +45,6 @@ class Ball {
             removerDaScene(this);
             return;
         }
-        console.log(`${collision.getNormal().x}, ${collision.getNormal().z}`);
         this.dir.reflect(collision.getNormal());
         this.dir.normalize();
     }
