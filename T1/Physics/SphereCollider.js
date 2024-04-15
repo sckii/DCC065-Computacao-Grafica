@@ -41,12 +41,17 @@ class SphereCollider {
         return closestPoint;
     }
 
+
+    //Entendi que aqui chama quando está acontecendo uma colisão, ent coloquei o nColisoes aqui para
+    //   crescer mas ele fica o tempo todo tendo colisão
+
     /**
      * Chamado quando uma colisão está acontecendo
      * @param {Collision} collision 
      */
     onCollision(collision) {
         if (!this.colliders.has(collision.other)) {
+            this.object.nColisoes += 1;
             this.colliders.add(collision.other);
             this.object.onCollisionEntered(collision);
         }

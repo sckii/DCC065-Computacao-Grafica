@@ -15,7 +15,7 @@ class Tank {
         this.geometry = this.buildGeometry();
         this.position = this.geometry.position;
 
-        this.colliderComponent = new AABBCollider(this, 2, 2);
+        this.colliderComponent = new AABBCollider(this, 2, 2);      //não entendi como funciona isso
         this.vida = 10;
     }
 
@@ -76,7 +76,7 @@ class Tank {
      * @param {Collision} collision 
      */
     onCollisionEntered(collision) {
-        console.log("Entrou em colosão");
+        console.log("Entrou em colosão");   //testando colisão, aqui ele não entra nunca em colisão 
     }
 
     /**
@@ -84,7 +84,7 @@ class Tank {
      * @param {Collider} other 
      */
     onCollisionExit(other) {
-        console.log("Parou de colidir");
+        console.log("Parou de colidir");    //testando colisão, aqui fica infinito
     }
 
     update() {

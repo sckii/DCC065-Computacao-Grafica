@@ -58,6 +58,7 @@ const matrix = [
 
 let physics = new PhysicsEnvironment();
 let updateList = [];
+let removeList = [];
 let blocks = buildMap(scene, matrix);
 physics.addToMap(blocks);
 
@@ -110,8 +111,16 @@ function render()
 
    
    updateList.forEach(element => {
-      element.update();
+      element.update(removeList);
    });
+
+   removeList.forEach(element => {
+      scene.remove(element.geometry);
+      element.geometry = null;
+   })
+
+   if(redTank.colliderComponent.intersctsPoint(4.0,  0.7,  28.0)) //testando se um tanque batia no outro
+      console.log("bateu");
 
    physics.update();
 }

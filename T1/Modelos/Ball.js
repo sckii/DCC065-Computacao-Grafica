@@ -19,13 +19,13 @@ class Ball {
         this.position = this.mesh.position;
 
         // movimento
-        this.dir = dir;     
+        this.dir = dir;     //tiro está saindo torto mas estou mexendo nisso
         this.dir.setY(0);
         this.dir.normalize();
         this.speed = 0.2;
 
         // colisão
-        this.colliderComponent = new SphereCollider(this, radius);
+        this.colliderComponent = new SphereCollider(this, radius);  //ele só colide se tiver 1 de altura, menos ou mais ele vai pra outra direção
         this.nColisoes = 0;
     }
 
@@ -56,7 +56,7 @@ class Ball {
         this.nColisoes = this.nColisoes + 1;
     }
 
-    update() {
+    update(removeList) {
         this.mesh.translateOnAxis(this.dir, this.speed);
         
 
