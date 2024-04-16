@@ -1,5 +1,6 @@
 import * as THREE from  'three';
 import KeyboardState from '../libs/util/KeyboardState.js'
+import GUI from '../libs/util/dat.gui.module.js'
 import { OrbitControls } from '../build/jsm/controls/OrbitControls.js';
 import {initRenderer, 
         initCamera,
@@ -13,6 +14,7 @@ import KeyboardMovement from './Funcoes/KeyboardMovement.js';
 import { buildMap } from './Funcoes/Map.js'
 import { setScene } from './Funcoes/removerDaScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
+import GameOver from './Funcoes/GameOver.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -85,7 +87,19 @@ scene.physics.add(blueTank.colliderComponent);
 
 // infobox com a vida dos tanques
 var str = "Vidas vermelho: " + redTank.vida + "  |  Vidas azul: " + blueTank.vida;
-var infoBox = new SecondaryBox(str);
+var secondaryBox = new SecondaryBox(str);
+secondaryBox.changeStyle("rgba(0,0,0,0.5)");
+
+// para criar botão de reiniciar a fase
+var recomecar = false;
+var controls = new function ()
+  {
+    this.restart = function(){
+      recomecar = !recomecar;
+    };
+  };
+var gui = new GUI();
+gui.add(controls, 'restart', true).name("Recomeçar");
 
 mainCamera.setTracking(redTank.geometry, blueTank.geometry);
 
@@ -105,7 +119,6 @@ function keyboardUpdate() {
    }
 }
 
-
 function render()
 {
    keyboardUpdate();
@@ -124,6 +137,10 @@ function render()
    if (!camChangeOrbit){
       renderer.render(scene, mainCamera.update()) // Render scene
    }
-   var str = "Vidas vermelho: " + redTank.vida + "  |  Vidas azul: " + blueTank.vida;
-   infoBox.changeMessage(str); 
+
+   var str = "Vidas vermelho: " + redTank.vida + "  |    Vidas azul: " + blueTank.vida;
+   secondaryBox.changeMessage(str); 
+
+
+   if(recomecar) location.reload();    // verificando se é pra recomeçar
 }
