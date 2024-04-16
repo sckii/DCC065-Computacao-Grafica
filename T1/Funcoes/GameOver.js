@@ -1,7 +1,9 @@
+//import Stats from       '../build/jsm/libs/stats.module.js';
 
-function GameOver(fala){
+function GameOver(tankColor){
     
-    console.log(fala);      // temporário para teste
+    console.log("O tanque da cor " + tankColor + " perdeu!");
+    
 
 }
 

@@ -7,20 +7,23 @@ import { removerDaScene } from '../Funcoes/removerDaScene.js';
 
 
 class Ball {
-    constructor(position, radius, dir) {
+    constructor(position, radius, dir, tanque) {
+
+        this.tanque = tanque;
+
         // visual
         this.radius = radius;
         this.mesh = this.buildMesh(position.x, 1, position.z);
         this.position = this.mesh.position;
 
         // movimento
-        this.dir = dir;     //tiro está saindo torto mas estou mexendo nisso
+        this.dir = dir;    
         this.dir.setY(0);
         this.dir.normalize();
-        this.speed = 0.2;
+        this.speed = 0.3;
 
         // colisão
-        this.colliderComponent = new SphereCollider(this, radius);  //ele só colide se tiver 1 de altura, menos ou mais ele vai pra outra direção
+        this.colliderComponent = new SphereCollider(this, radius);
         this.nColisoes = 0;
     }
 
@@ -29,7 +32,7 @@ class Ball {
         const material = setDefaultMaterial("white");
 
         const bola = new THREE.Mesh(geometry, material);
-        bola.position.set(x+3, y, z);
+        bola.position.set(x, y, z);
 
         return bola;
     }
@@ -39,14 +42,19 @@ class Ball {
      * @param {Collision} collision 
      */
     onCollisionEntered(collision) {
-        this.nColisoes = this.nColisoes + 1;
-        if (collision.other instanceof Tank){
-            collision.other.vida -= 1;
-            removerDaScene(this);
+        if(collision.other === this.tanque || collision.other instanceof Ball){
             return;
         }
-        this.dir.reflect(collision.getNormal());
-        this.dir.normalize();
+        else{
+            this.nColisoes = this.nColisoes + 1;
+            if (collision.other instanceof Tank){
+                collision.other.vida -= 1;
+                removerDaScene(this);
+                return;
+            }
+            this.dir.reflect(collision.getNormal());
+            this.dir.normalize();
+        }
     }
 
     /**
@@ -61,7 +69,7 @@ class Ball {
         this.mesh.translateOnAxis(this.dir, this.speed);
     
         //console.log(this.nColisoes);
-        if (this.nColisoes >= 4 ){
+        if (this.nColisoes >= 3 ){
                 removerDaScene(this);
         }
         

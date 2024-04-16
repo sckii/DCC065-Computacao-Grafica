@@ -8,12 +8,13 @@ import Collision from '../Physics/Collision.js';
 
 
 class Tank {
-    constructor(x, y, z, color ) {
+    constructor(x, y, z, colors ) {
+
+        //
         this.x = x;
         this.y = y;
         this.z = z;
-        this.color = color;
-
+        this.color = colors[Math.floor(Math.random() * colors.length)];
         this.geometry = this.buildGeometry();
         this.position = this.geometry.position;
 
@@ -26,20 +27,18 @@ class Tank {
     buildGeometry(){
 
         //cria a box inicial
-
         const geometry = new THREE.BoxGeometry(2.5, 0.5, 1.7);
         const material = setDefaultMaterial(this.color);
         const caixa = new THREE.Mesh(geometry, material);
             caixa.position.set(this.x, this.y, this.z);
-            caixa.castShadow = true;
-          
-        //cria rodas
+
+        //define as rodas
         const materialRoda = setDefaultMaterial("black");
         const geometryRoda = new THREE.CylinderGeometry(0.4, 0.4, 0.5, 32); 
         geometryRoda.rotateX(THREE.MathUtils.degToRad(90));
 
-        for (let z = -0.65; z<=0.65; z = z + 1.3){
-            for(let x = -0.75; x<=0.75; x = x + 0.75){      //cria rodas esquerdas
+        for (let z = -0.65; z<=0.65; z = z + 1.3){      // cria as rodas
+            for(let x = -0.75; x<=0.75; x = x + 0.75){      
                 let roda = new THREE.Mesh(geometryRoda, materialRoda);
                 roda.position.set(x, -0.3, z);
                 caixa.add(roda);
@@ -70,8 +69,7 @@ class Tank {
 
         let tiroPosition = new Vector3()
         tiroPosition.copy(this.position);
-        tiroPosition.x += 3;
-        const tiro = new Ball(tiroPosition, 0.25, direcaoTiro);
+        const tiro = new Ball(tiroPosition, 0.25, direcaoTiro, this);
 
         scene.add(tiro.mesh);
         physics.add(tiro.colliderComponent);
@@ -120,8 +118,7 @@ class Tank {
 
     update() {
         if (this.vida <=0){
-            let fala = "Tanque " + this.color + " perdeu!";
-            GameOver(fala);
+            GameOver(this.color);
         }
 
         this.geometry.translateOnAxis(this.direcaoTanque, 0.1);

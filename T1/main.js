@@ -5,15 +5,14 @@ import {initRenderer,
         initCamera,
         initDefaultBasicLight,
         SecondaryBox,
+        InfoBox,
         onWindowResize} from "../libs/util/util.js";
-
-import Tank from './Modelos/Tank.js';
-
+import Tank from './Modelos/Tank.js';                                
 import MainCamera from './Funcoes/MainCamera.js';
 import KeyboardMovement from './Funcoes/KeyboardMovement.js';
 import { buildMap } from './Funcoes/Map.js'
-import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import { setScene } from './Funcoes/removerDaScene.js';
+import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -63,17 +62,19 @@ scene.updateList = [];
 let blocks = buildMap(scene, matrix);
 scene.physics.addToMap(blocks);
 
-
-
 let n = new THREE.Vector3(1,0,1).normalize();
 let d = new THREE.Vector3(-1,0,1);
 
 d.reflect(n);
 
-// Create objects
-const redTank = new Tank(4.0,  0.7,  4.0, "darkred");
-const blueTank = new Tank(4.0,  0.7,  28.0, "navy");
+// Define as possíveis cores dos tanques
+const redColors = ["crimson", "darkred", "firebrick", "red"];
+const blueColors = ["blue", "darkblue", "dodgerblue", "midnightblue", "navy", "royalblue"];
+// Cria os tanques
+const redTank = new Tank(4.0,  0.7,  4.0, redColors);
+const blueTank = new Tank(4.0,  0.7,  28.0, blueColors);
 
+// Adiciona eles a cena, a física e a lista de update
 scene.add(redTank.geometry)
 scene.physics.add(redTank.colliderComponent); 
 scene.updateList.push(redTank);
@@ -81,6 +82,10 @@ scene.updateList.push(redTank);
 scene.add(blueTank.geometry)
 scene.updateList.push(blueTank);
 scene.physics.add(blueTank.colliderComponent);
+
+// infobox com a vida dos tanques
+var str = "Vidas vermelho: " + redTank.vida + "  |  Vidas azul: " + blueTank.vida;
+var infoBox = new SecondaryBox(str);
 
 mainCamera.setTracking(redTank.geometry, blueTank.geometry);
 
@@ -112,11 +117,13 @@ function render()
       element.update(scene);
    });
    
-      // Verificando qual camera será utilizada
-      if (camChangeOrbit)
-         renderer.render(scene, secondCamera) // Render scene
-   
-      if (!camChangeOrbit)
-         renderer.render(scene, mainCamera.update()) // Render scene
-
+   // Verificando qual camera será utilizada
+   if (camChangeOrbit){
+      renderer.render(scene, secondCamera) // Render scene
+   }
+   if (!camChangeOrbit){
+      renderer.render(scene, mainCamera.update()) // Render scene
+   }
+   var str = "Vidas vermelho: " + redTank.vida + "  |  Vidas azul: " + blueTank.vida;
+   infoBox.changeMessage(str); 
 }
