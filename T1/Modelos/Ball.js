@@ -3,7 +3,7 @@ import SphereCollider from '../Physics/SphereCollider.js';
 import Collision from '../Physics/Collision.js';
 import {setDefaultMaterial} from "../../libs/util/util.js";
 import Tank from './Tank.js';
-import { removerDaScene } from '../Funcoes/removerDaScene.js';
+import { removeFromScene } from '../Funcoes/RemoveFromScene.js';
 
 
 class Ball {
@@ -49,7 +49,7 @@ class Ball {
             this.nColisoes = this.nColisoes + 1;
             if (collision.other instanceof Tank){
                 collision.other.vida -= 1;
-                removerDaScene(this);
+                removeFromScene(this);
                 return;
             }
             this.dir.reflect(collision.getNormal());
@@ -70,7 +70,7 @@ class Ball {
     
         //console.log(this.nColisoes);
         if (this.nColisoes >= 3 ){
-                removerDaScene(this);
+            removeFromScene(this);
         }
         
         //this.colliderComponent.checkBoundCollision();

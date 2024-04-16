@@ -4,7 +4,7 @@ export function setScene(s) {
     scene = s;
 }
 
-export function removerDaScene(obj){
+export function removeFromScene(obj){
       
     scene.remove(obj.mesh);
     obj.mesh = null;
@@ -12,6 +12,6 @@ export function removerDaScene(obj){
     if (index > -1) { 
        scene.updateList.splice(index, 1);
     }
-    //physics.remove(obj.colliderComponent);
+    scene.physics.remove(obj.colliderComponent);
 
 }

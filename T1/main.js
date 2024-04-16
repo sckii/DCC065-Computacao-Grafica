@@ -12,7 +12,7 @@ import Tank from './Modelos/Tank.js';
 import MainCamera from './Funcoes/MainCamera.js';
 import KeyboardMovement from './Funcoes/KeyboardMovement.js';
 import { buildMap } from './Funcoes/Map.js'
-import { setScene } from './Funcoes/removerDaScene.js';
+import { setScene } from './Funcoes/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import GameOver from './Funcoes/GameOver.js';
 
@@ -85,12 +85,12 @@ scene.add(blueTank.geometry)
 scene.updateList.push(blueTank);
 scene.physics.add(blueTank.colliderComponent);
 
-// infobox com a vida dos tanques
+// Infobox com a vida dos tanques
 var str = "Vidas vermelho: " + redTank.vida + "  |  Vidas azul: " + blueTank.vida;
 var secondaryBox = new SecondaryBox(str);
 secondaryBox.changeStyle("rgba(0,0,0,0.5)");
 
-// para criar botão de reiniciar a fase
+// Criar botão de reiniciar a fase
 var recomecar = false;
 var controls = new function ()
   {
@@ -142,5 +142,5 @@ function render()
    secondaryBox.changeMessage(str); 
 
 
-   if(recomecar) location.reload();    // verificando se é pra recomeçar
+   if(recomecar) location.reload();    // Verificando se é pra recomeçar
 }

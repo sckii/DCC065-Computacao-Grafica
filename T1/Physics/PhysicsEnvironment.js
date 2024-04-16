@@ -66,6 +66,13 @@ class PhysicsEnvironment {
             }
         }
     }
+
+    remove(obj) {
+        const index = this.colliders.indexOf(obj);
+        if (index > -1) { 
+            this.colliders.splice(index, 1);
+        }
+    }
 }
 
 export default PhysicsEnvironment;
