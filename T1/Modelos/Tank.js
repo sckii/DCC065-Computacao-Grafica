@@ -95,32 +95,12 @@ class Tank {
     }
 
     /**
+     * Chamado todos os fremes para cada colisão acontecendo com esse objeto
      * @param {Collision} collision 
      */
     onCollision(collision) {
         this.position.add(collision.getNormal().multiplyScalar(.1));
     }
-
-    /* onCollision(collision){
-        let localNormal = new Vector3().copy(collision.getNormal())
-        //this.geometry.localToWorld(localNormal);
-        localNormal.transformDirection(this.geometry.matrix);
-        localNormal.z = -localNormal.z
-        console.log(`
-            normal: ${collision.getNormal().x}, ${collision.getNormal().y}, ${collision.getNormal().z}
-            local: ${localNormal.x}, ${localNormal.y}, ${localNormal.z}
-            dir: ${this.direcaoTanque.x}, ${this.direcaoTanque.y}, ${this.direcaoTanque.z}
-            dot: ${localNormal.dot(this.direcaoTanque)}
-        `);
-
-        if (localNormal.dot(this.direcaoTanque) < 0) {
-            this.direcaoTanque = this.direcaoTanque.projectOnPlane(localNormal);        
-        }
-    } */
-    /* onCollision(collision){
-        let worldDir = new Vector3().copy(this.direcaoTanque);
-        worldDir.transformDirection(this.geometry.matrixWorld);
-    } */
 
     update() {
         if (this.vida <=0){
