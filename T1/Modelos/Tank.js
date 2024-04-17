@@ -98,35 +98,12 @@ class Tank {
     }
 
     /**
+     * Chamado todos os frames para cada colisão com este objeto
      * @param {Collision} collision 
-     */
-    /* onCollision(collision){
-        let localNormal = new Vector3().copy(collision.getNormal())
-        //this.geometry.localToWorld(localNormal);
-        localNormal.transformDirection(this.geometry.matrix);
-        localNormal.z = -localNormal.z
-        console.log(`
-            normal: ${collision.getNormal().x}, ${collision.getNormal().y}, ${collision.getNormal().z}
-            local: ${localNormal.x}, ${localNormal.y}, ${localNormal.z}
-            dir: ${this.direcaoTanque.x}, ${this.direcaoTanque.y}, ${this.direcaoTanque.z}
-            dot: ${localNormal.dot(this.direcaoTanque)}
-        `);
-        
-        if (localNormal.dot(this.direcaoTanque) < 0) {
-            this.direcaoTanque = this.direcaoTanque.projectOnPlane(localNormal);        
-        }
-    } */
-    
+     */   
     onCollision(collision){
-
-        
-        if (collision.getNormal().dot(this.worldDir) < 0)
-            this.worldDir.projectOnPlane(collision.getNormal());
-        
-        // console.log(`
-        //     normal: ${collision.getNormal().x}, ${collision.getNormal().y}, ${collision.getNormal().z}
-        //     worldDir: ${this.worldDir.x}, ${this.worldDir.y}, ${this.worldDir.z}
-        // `);
+        if (collision.other.isBlock || collision.other instanceof Tank)
+            this.position.add(collision.getNormal().multiplyScalar(.15));
     }
 
     update() {

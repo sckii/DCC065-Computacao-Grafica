@@ -8,15 +8,11 @@ const keyboard = new KeyboardState();
 function KeyboardMovement(tanque, player = "P1", scene, updateList, physics) {
     
     if (player === "P1") {
-        tanque.direcaoTanque.set(0,0,0);
         if ( keyboard.pressed("W") ) {
-            //tanque.direcaoTanque.set(1,0,0);
-            //tanque.geometry.translateX(0.1);
             tanque.setDir(1);
         }
         
         if ( keyboard.pressed("S") ) {
-            //tanque.direcaoTanque.set(-1,0,0);
             tanque.setDir(-1);
         }
         

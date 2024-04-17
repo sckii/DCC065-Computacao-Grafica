@@ -46,16 +46,17 @@ class Ball {
         if(collision.other === this.tanque || collision.other instanceof Ball){     
             return;
         }
-        else{
-            this.nColisoes = this.nColisoes + 1;
-            if (collision.other instanceof Tank){
-                collision.other.vida -= 1;
-                removeFromScene(this);
-                return;
-            }
-            this.dir.reflect(collision.getNormal());
-            this.dir.normalize();
+        
+        this.position.add(collision.getNormal().multiplyScalar(.1));
+        
+        this.nColisoes = this.nColisoes + 1;
+        if (collision.other instanceof Tank){
+            collision.other.vida -= 1;
+            removeFromScene(this);
+            return;
         }
+        this.dir.reflect(collision.getNormal());
+        this.dir.normalize();
     }
 
     /**

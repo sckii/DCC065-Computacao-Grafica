@@ -22,6 +22,7 @@ export function buildMap(scene, matrix) {
                 matrix[i][j] = block;
                 blocks.add(block);
                 block.colliderComponent = new AABBCollider(block, blockSize, blockSize);
+                block.isBlock = true;
 
                 // if ( (i + j) % 2 == 0)
                 //     block.material.color = new Color(.3,.3,.3);

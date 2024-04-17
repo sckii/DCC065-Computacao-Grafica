@@ -32,7 +32,7 @@ class PhysicsEnvironment {
 
             let normal = new THREE.Vector3(0,0,0);
             let point;
-            for (let j = 0; j < this.map.length; j++) {
+            for (let j = 0; j < this.map.length; j++) { // para cada objeto, verificar colisão com cada bloco
                 point = this.colliders[i].getClosestPointTo(this.map[j].colliderComponent.object.position);
                 if (this.map[j].colliderComponent.intersctsPoint(point)) {
                     normal.add(this.map[j].colliderComponent.getCollisionNormal(point));
@@ -47,11 +47,12 @@ class PhysicsEnvironment {
                 normal.normalize();
                 normal.x = Math.round(normal.x);
                 normal.z = Math.round(normal.z);
+                normal.normalize();
                 this.colliders[i].onCollision( new Collision(this.map[0], point, normal) );
             }
             
          
-            if (!colidiuComMapa) { // Da priorida á colião com o mapa (evita que as bolas saiam do mapa)
+            if (!colidiuComMapa) { // Da priorida á colião com o mapa
                 for (let j = i+1; j < this.colliders.length; j++) {
                     let point = this.colliders[i].getClosestPointTo(this.colliders[j].object.position)
                     if (this.colliders[j].intersctsPoint(point)) {
