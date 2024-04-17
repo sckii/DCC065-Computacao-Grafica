@@ -1,19 +1,19 @@
 import * as THREE from  'three';
 
 class MainCamera {
-    constructor(x, y, z) {
+    constructor(height) {
         // Criando camera perspectiva
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         
         // Criando um camera holder para transformações envolvendo a câmera
         this.cameraHolder = new THREE.Object3D();
-        this.cameraHolder.position.set(x, y, z);
+        this.cameraHolder.position.set(0, height, 0);
         this.cameraHolder.add(this.camera)
 
         // Setando as posições da camera
-        this.x = x; 
-        this.y = y; 
-        this.z = z;
+        this.x = 0; 
+        this.y = height; 
+        this.z = 0;
     }
 
     // Main camera
@@ -31,13 +31,17 @@ class MainCamera {
 
         // Atribuindo x, y e z do pivot como cendo o ponto central
         pivot.x = (this.obj_1.position.x + this.obj_2.position.x) / 2;
-        pivot.y = (this.obj_1.position.y + this.obj_2.position.y) / 2;
         pivot.z = (this.obj_1.position.z + this.obj_2.position.z) / 2;
+
+        this.pivot = pivot;
 
         // movimentação camera holder
         this.cameraHolder.position.x = ((this.obj_1.position.x + this.obj_2.position.x) / 2) - 8;
-        // this.cameraHolder.position.y = 10
-        this.cameraHolder.position.z = ((this.obj_1.position.z + this.obj_2.position.z) / 2);
+        this.cameraHolder.position.z = (this.obj_1.position.z + this.obj_2.position.z) / 2;
+
+        // Atribuindo os valores da camera atual
+        this.x = this.cameraHolder.position.x;
+        this.z = this.cameraHolder.position.z;
 
         // Camera e o camera holder "olhem" para o pivot
         this.cameraHolder.lookAt(pivot);

@@ -14,7 +14,6 @@ import KeyboardMovement from './Funcoes/KeyboardMovement.js';
 import { buildMap } from './Funcoes/Map.js'
 import { setScene } from './Funcoes/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
-import GameOver from './Funcoes/GameOver.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -27,13 +26,15 @@ light = initDefaultBasicLight(scene);
 camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
 
 // Cria a camera main e adiciona na cena
-mainCamera = new MainCamera(0, 8, 0);
+mainCamera = new MainCamera(8);
 scene.add(mainCamera.cameraHolder)
 window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update(), renderer)}, false );
 
 // Cria a camera secundario que terá os contres de orbita
-secondCamera = initCamera(new THREE.Vector3(mainCamera.x, mainCamera.y, mainCamera.z)); // Init second camera in this position
-orbit = new OrbitControls( secondCamera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
+secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
+orbit = new OrbitControls( secondCamera, renderer.domElement ); // Habilitando mouse rotation, pan, zoom etc.
+secondCamera.lookAt(11, 0, 16); // Alterando onde 
+orbit.target = new THREE.Vector3(11, 0, 16);
 window.addEventListener( 'resize', function(){onWindowResize(secondCamera, renderer)}, false );
 
 // Keyboard set variable
@@ -137,13 +138,13 @@ function render()
       recomecar = false;
       location.reload();    // Verificando se é pra recomeçar
    } 
-   
+
    // Verificando qual camera será utilizada
    if (camChangeOrbit){
-      renderer.render(scene, secondCamera) // Render scene
+      renderer.render(scene, secondCamera); // Render scene
    }
    if (!camChangeOrbit){
-      renderer.render(scene, mainCamera.update()) // Render scene
+      renderer.render(scene, mainCamera.update()); // Render scene
    }
 
 
