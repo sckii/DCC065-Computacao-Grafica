@@ -10,16 +10,18 @@ import Collision from '../Physics/Collision.js';
 class Tank {
     constructor(x, y, z, colors ) {
 
-        //
+        // Define a posição incial do tanque
         this.x = x;
         this.y = y;
         this.z = z;
+        this.direcaoTanque =  new THREE.Vector3(0, 0, 0);
+
+        // VisuaL
         this.color = colors[Math.floor(Math.random() * colors.length)];
         this.geometry = this.buildGeometry();
         this.position = this.geometry.position;
         
-        this.direcaoTanque =  new THREE.Vector3(0, 0, 0);
-        
+        // Adiciona colisão ao tanque   
         this.colliderComponent = new AABBCollider(this, 2.5, 2.5); 
         this.worldDir = new Vector3();
 
@@ -120,18 +122,16 @@ class Tank {
         if (collision.getNormal().dot(this.worldDir) < 0)
             this.worldDir.projectOnPlane(collision.getNormal());
         
-        console.log(`
-            normal: ${collision.getNormal().x}, ${collision.getNormal().y}, ${collision.getNormal().z}
-            worldDir: ${this.worldDir.x}, ${this.worldDir.y}, ${this.worldDir.z}
-        `);
+        // console.log(`
+        //     normal: ${collision.getNormal().x}, ${collision.getNormal().y}, ${collision.getNormal().z}
+        //     worldDir: ${this.worldDir.x}, ${this.worldDir.y}, ${this.worldDir.z}
+        // `);
     }
 
     update() {
         if (this.vida <=0){
             GameOver(this.color);
         }
-
-        
 
         //this.geometry.translateOnAxis(this.direcaoTanque, 0.1);
         this.worldDir.multiplyScalar(0.1);

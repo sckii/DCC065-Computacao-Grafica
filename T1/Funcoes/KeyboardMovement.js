@@ -36,11 +36,13 @@ function KeyboardMovement(tanque, player = "P1", scene, updateList, physics) {
 
     if (player === "P2") {
         if ( keyboard.pressed("up") ) {
-            tanque.geometry.translateX(0.1);
+            //tanque.geometry.translateX(0.1);
+            tanque.setDir(1);
         }
     
         if ( keyboard.pressed("down") ) {
-            tanque.geometry.translateX(-0.1);
+            //tanque.geometry.translateX(-0.1);
+            tanque.setDir(-1);
         }
     
         if ( keyboard.pressed("left") ) {
@@ -50,7 +52,7 @@ function KeyboardMovement(tanque, player = "P1", scene, updateList, physics) {
         if ( keyboard.pressed("right") ) {
             tanque.geometry.rotateY(THREE.MathUtils.degToRad(-5))
         }
-        if ((keyboard.down("/")) || keyboard.down(",")){    //não consegui o /
+        if ((keyboard.down("/")) || keyboard.down(",")){ 
             tanque.shoot(scene, updateList, physics);
         }
     }

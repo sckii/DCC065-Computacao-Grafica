@@ -9,20 +9,20 @@ import { removeFromScene } from '../Funcoes/RemoveFromScene.js';
 class Ball {
     constructor(position, radius, dir, tanque) {
 
-        this.tanque = tanque;
+        this.tanque = tanque;   // Tanque que atirou
 
-        // visual
+        // Visual
         this.radius = radius;
         this.mesh = this.buildMesh(position.x, 1, position.z);
         this.position = this.mesh.position;
 
-        // movimento
+        // Movimento
         this.dir = dir;    
         this.dir.setY(0);
         this.dir.normalize();
         this.speed = 0.3;
 
-        // colisão
+        // Colisão
         this.colliderComponent = new SphereCollider(this, radius);
         this.nColisoes = 0;
     }
@@ -42,7 +42,8 @@ class Ball {
      * @param {Collision} collision 
      */
     onCollisionEntered(collision) {
-        if(collision.other === this.tanque || collision.other instanceof Ball){
+        // Faz com que o tiro não bata em outros e no próprio tanque
+        if(collision.other === this.tanque || collision.other instanceof Ball){     
             return;
         }
         else{
