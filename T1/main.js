@@ -130,6 +130,14 @@ function render()
       element.update(scene);
    });
    
+   var str = "Vidas vermelho: " + redTank.vida + "  |    Vidas azul: " + blueTank.vida;
+   secondaryBox.changeMessage(str); 
+
+   if(recomecar) {
+      recomecar = false;
+      location.reload();    // Verificando se é pra recomeçar
+   } 
+   
    // Verificando qual camera será utilizada
    if (camChangeOrbit){
       renderer.render(scene, secondCamera) // Render scene
@@ -138,9 +146,5 @@ function render()
       renderer.render(scene, mainCamera.update()) // Render scene
    }
 
-   var str = "Vidas vermelho: " + redTank.vida + "  |    Vidas azul: " + blueTank.vida;
-   secondaryBox.changeMessage(str); 
 
-
-   if(recomecar) location.reload();    // Verificando se é pra recomeçar
 }
