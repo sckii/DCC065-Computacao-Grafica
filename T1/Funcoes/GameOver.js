@@ -10,9 +10,8 @@ function GameOver(tankColor){
     // vencedor.add(str);
     // vencedor.show();
 
-    setTimeout(function() {     // Espera 5seg antes de reiniciar a fase
-        location.reload();
-      }, 3000);
+    location.reload();
+
 
 }
 
