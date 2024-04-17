@@ -27,7 +27,7 @@ light = initDefaultBasicLight(scene);
 camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
 
 // Cria a camera main e adiciona na cena
-mainCamera = new MainCamera(-10, 8, 0);
+mainCamera = new MainCamera(0, 8, 0);
 scene.add(mainCamera.cameraHolder)
 window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update(), renderer)}, false );
 
