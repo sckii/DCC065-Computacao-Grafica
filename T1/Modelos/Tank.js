@@ -26,6 +26,7 @@ class Tank {
         this.worldDir = new Vector3();
 
         this.vida = 10;
+        this.morto = false;
     }
 
     buildGeometry(){
@@ -129,7 +130,8 @@ class Tank {
     }
 
     update() {
-        if (this.vida <=0){
+        if (this.vida <=0 && !this.morto){
+            this.morto = true;
             GameOver(this.color);
         }
 
