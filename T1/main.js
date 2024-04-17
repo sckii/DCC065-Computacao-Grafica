@@ -32,8 +32,12 @@ scene.add(mainCamera.cameraHolder)
 window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update(), renderer)}, false );
 
 // Cria a camera secundario que terá os contres de orbita
-secondCamera = initCamera(new THREE.Vector3(mainCamera.x, mainCamera.y, mainCamera.z)); // Init second camera in this position
-orbit = new OrbitControls( secondCamera, renderer.domElement ); // Enable mouse rotation, pan, zoom etc.
+secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
+orbit = new OrbitControls( secondCamera, renderer.domElement ); // Habilitando mouse rotation, pan, zoom etc.
+
+// Alterando para onde aponta a camera orbital e a secundaria
+secondCamera.lookAt(11, 0, 16);  
+orbit.target = new THREE.Vector3(11, 0, 16);
 window.addEventListener( 'resize', function(){onWindowResize(secondCamera, renderer)}, false );
 
 // Keyboard set variable
