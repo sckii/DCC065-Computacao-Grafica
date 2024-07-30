@@ -1,10 +1,10 @@
 import * as THREE from  'three';
 import {setDefaultMaterial} from "../../libs/util/util.js";
-import Ball from './Ball.js';
 import AABBCollider from '../Physics/AABBCollider.js';
-import GameOver from '../Funcoes/GameOver.js';
+import GameOver from '../Functions/GameOver.js';
 import { Vector3 } from '../../build/three.module.js';
 import Collision from '../Physics/Collision.js';
+import Bullet from './Bullet.js';
 
 
 class Tank {
@@ -14,7 +14,7 @@ class Tank {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.direcaoTanque =  new THREE.Vector3(0, 0, 0);
+        this.directionTank =  new THREE.Vector3(0, 0, 0);
 
         // VisuaL
         this.color = colors[Math.floor(Math.random() * colors.length)];
@@ -25,8 +25,8 @@ class Tank {
         this.colliderComponent = new AABBCollider(this, 2.5, 2.5); 
         this.worldDir = new Vector3();
 
-        this.vida = 10;
-        this.morto = false;
+        this.lifePoints = 10;
+        this.isDead = false;
     }
 
     buildGeometry(){
@@ -34,51 +34,51 @@ class Tank {
         //cria a box inicial
         const geometry = new THREE.BoxGeometry(2.5, 0.5, 1.7);
         const material = setDefaultMaterial(this.color);
-        const caixa = new THREE.Mesh(geometry, material);
-            caixa.position.set(this.x, this.y, this.z);
+        const box = new THREE.Mesh(geometry, material);
+            box.position.set(this.x, this.y, this.z);
 
         //define as rodas
-        const materialRoda = setDefaultMaterial("black");
-        const geometryRoda = new THREE.CylinderGeometry(0.4, 0.4, 0.5, 32); 
-        geometryRoda.rotateX(THREE.MathUtils.degToRad(90));
+        const materialWhell = setDefaultMaterial("black");
+        const geometryWhell = new THREE.CylinderGeometry(0.4, 0.4, 0.5, 32); 
+        geometryWhell.rotateX(THREE.MathUtils.degToRad(90));
 
         for (let z = -0.65; z<=0.65; z = z + 1.3){      // cria as rodas
             for(let x = -0.75; x<=0.75; x = x + 0.75){      
-                let roda = new THREE.Mesh(geometryRoda, materialRoda);
-                roda.position.set(x, -0.3, z);
-                caixa.add(roda);
+                let whell = new THREE.Mesh(geometryWhell, materialWhell);
+                whell.position.set(x, -0.3, z);
+                box.add(whell);
             } 
         }
    
         //cria a parte de cima
-        const geometryCima = new THREE.SphereGeometry(0.75, 32, 32);
-        const cima = new THREE.Mesh(geometryCima, material);
-        cima.castShadow = true;
-        cima.position.set(-0.4, 0.3, 0.0);
-        caixa.add(cima);
+        const geometryTop = new THREE.SphereGeometry(0.75, 32, 32);
+        const top = new THREE.Mesh(geometryTop, material);
+        top.castShadow = true;
+        top.position.set(-0.4, 0.3, 0.0);
+        box.add(top);
 
         //cria o cano
-        const geometryCano = new THREE.CylinderGeometry(0.2, 0.2, 2.0, 32);
-        const cano = new THREE.Mesh(geometryCano, material);
-        cano.rotateZ(THREE.MathUtils.degToRad(90));
-        cano.position.set(1.0, 0.4, 0.0)
-        cima.add(cano);
+        const geometryBarrel = new THREE.CylinderGeometry(0.2, 0.2, 2.0, 32);
+        const barrel = new THREE.Mesh(geometryBarrel, material);
+        barrel.rotateZ(THREE.MathUtils.degToRad(90));
+        barrel.position.set(1.0, 0.4, 0.0)
+        top.add(barrel);
 
-        return caixa;    
+        return box;    
     }
 
     shoot(scene, updateList, physics){
-        var direcaoTiro = new Vector3;
-        this.geometry.getWorldDirection(direcaoTiro);
-        direcaoTiro.applyAxisAngle(new Vector3(0,1,0), THREE.MathUtils.degToRad(90));
+        var shootDirection = new Vector3;
+        this.geometry.getWorldDirection(shootDirection);
+        shootDirection.applyAxisAngle(new Vector3(0,1,0), THREE.MathUtils.degToRad(90));
 
-        let tiroPosition = new Vector3()
-        tiroPosition.copy(this.position);
-        const tiro = new Ball(tiroPosition, 0.25, direcaoTiro, this);
+        let shootPosition = new Vector3()
+        shootPosition.copy(this.position);
+        const shoot = new Bullet(shootPosition, 0.25, shootDirection, this);
 
-        scene.add(tiro.mesh);
-        physics.add(tiro.colliderComponent);
-        updateList.push(tiro); 
+        scene.add(shoot.mesh);
+        physics.add(shoot.colliderComponent);
+        updateList.push(shoot); 
     }
 
     /**
@@ -107,19 +107,19 @@ class Tank {
     }
 
     update() {
-        if (this.vida <=0 && !this.morto){
-            this.morto = true;
+        if (this.lifePoints <=0 && !this.isDead){
+            this.isDead = true;
             GameOver(this.color);
         }
 
-        //this.geometry.translateOnAxis(this.direcaoTanque, 0.1);
+        //this.geometry.translateOnAxis(this.directionTank, 0.1);
         this.worldDir.multiplyScalar(0.1);
         this.position.add(this.worldDir);
 
     }
 
-    setDir(direcaoTanque) {
-        this.worldDir = new Vector3(direcaoTanque,0,0);
+    setDir(directionTank) {
+        this.worldDir = new Vector3(directionTank,0,0);
         this.worldDir.transformDirection(this.geometry.matrixWorld);
     }
 

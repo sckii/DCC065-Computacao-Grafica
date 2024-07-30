@@ -8,13 +8,13 @@ import {initRenderer,
         SecondaryBox,
         InfoBox,
         onWindowResize} from "../libs/util/util.js";
-import Tank from './Modelos/Tank.js';                                
-import MainCamera from './Funcoes/MainCamera.js';
-import KeyboardMovement from './Funcoes/KeyboardMovement.js';
-import { buildMap } from './Funcoes/Map.js'
-import { setScene } from './Funcoes/RemoveFromScene.js';
+import Tank from './Models/Tank.js';                                
+import MainCamera from './Functions/MainCamera.js';
+import KeyboardMovement from './Functions/KeyboardMovement.js';
+import { buildMap } from './Functions/Map.js'
+import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
-import GameOver from './Funcoes/GameOver.js';
+import GameOver from './Functions/GameOver.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -90,7 +90,7 @@ scene.updateList.push(blueTank);
 scene.physics.add(blueTank.colliderComponent);
 
 // Infobox com a vida dos tanques
-var str = "Vidas vermelho: " + redTank.vida + "  |  Vidas azul: " + blueTank.vida;
+var str = "Vidas vermelho: " + redTank.lifePoints + "  |  Vidas azul: " + blueTank.lifePoints;
 var secondaryBox = new SecondaryBox(str);
 secondaryBox.changeStyle("rgba(0,0,0,0.5)");
 
@@ -134,7 +134,7 @@ function render()
       element.update(scene);
    });
    
-   var str = "Vidas vermelho: " + redTank.vida + "  |    Vidas azul: " + blueTank.vida;
+   var str = "Vidas vermelho: " + redTank.lifePoints + "  |    Vidas azul: " + blueTank.lifePoints;
    secondaryBox.changeMessage(str); 
 
    if(recomecar) {
