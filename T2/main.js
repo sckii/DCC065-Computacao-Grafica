@@ -113,9 +113,8 @@ function keyboardUpdate() {
 
    keyboard.update();
 
-   // Adicionando controles aos objetos
-   KeyboardMovement(redTank, "P1", scene, scene.updateList, scene.physics);
-   KeyboardMovement(blueTank, "P2", scene, scene.updateList, scene.physics);
+   // Adicionando controles aos tanque
+   KeyboardMovement(redTank, scene, scene.updateList, scene.physics);
 
    // Atalho para habilitar a camera secundaria (orbital)
    if ( keyboard.down("O") ) {
