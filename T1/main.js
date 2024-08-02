@@ -95,11 +95,11 @@ var secondaryBox = new SecondaryBox(str);
 secondaryBox.changeStyle("rgba(0,0,0,0.5)");
 
 // Criar botão de reiniciar a fase
-var recomecar = false;
+var restart = false;
 var controls = new function ()
   {
     this.restart = function(){
-      recomecar = !recomecar;
+      restart = !restart;
     };
   };
 var gui = new GUI();
@@ -137,8 +137,8 @@ function render()
    var str = "Vidas vermelho: " + redTank.lifePoints + "  |    Vidas azul: " + blueTank.lifePoints;
    secondaryBox.changeMessage(str); 
 
-   if(recomecar) {
-      recomecar = false;
+   if(restart) {
+      restart = false;
       location.reload();    // Verificando se é pra recomeçar
    } 
    

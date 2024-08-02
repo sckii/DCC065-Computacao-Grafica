@@ -14,7 +14,6 @@ import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildMap } from './Functions/Map.js'
 import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
-import GameOver from './Functions/GameOver.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
