@@ -7,13 +7,16 @@ import {initRenderer,
         initDefaultBasicLight,
         SecondaryBox,
         InfoBox,
-        onWindowResize} from "../libs/util/util.js";
+        onWindowResize,
+        degreesToRadians} from "../libs/util/util.js";
 import Tank from './Models/Tank.js';                                
 import MainCamera from './Functions/MainCamera.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildMap } from './Functions/Map.js'
 import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
+import { GLTFLoader } from '../build/jsm/loaders/GLTFLoader.js';
+import NewTank from './Models/NewTank.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -73,11 +76,9 @@ let d = new THREE.Vector3(-1,0,1);
 d.reflect(n);
 
 // Define as possíveis cores dos tanques
-const redColors = ["crimson", "darkred", "firebrick", "red"];
-const blueColors = ["blue", "darkblue", "dodgerblue", "midnightblue", "navy", "royalblue"];
-// Cria os tanques
-const redTank = new Tank(4.0,  0.7,  4.0, redColors);
-const blueTank = new Tank(4.0,  0.7,  28.0, blueColors);
+const newTank = new NewTank(4.0,  0.0,  4.0, scene);
+const redTank = new Tank(4.0,  0.7,  4.0 );
+const blueTank = new Tank(4.0,  0.7,  28.0);
 
 // Adiciona eles a cena, a física e a lista de update
 scene.add(redTank.geometry)
@@ -87,11 +88,6 @@ scene.updateList.push(redTank);
 scene.add(blueTank.geometry)
 scene.updateList.push(blueTank);
 scene.physics.add(blueTank.colliderComponent);
-
-// Infobox com a vida dos tanques
-var str = "Vidas vermelho: " + redTank.lifePoints + "  |  Vidas azul: " + blueTank.lifePoints;
-var secondaryBox = new SecondaryBox(str);
-secondaryBox.changeStyle("rgba(0,0,0,0.5)");
 
 // Criar botão de reiniciar a fase
 var restart = false;
@@ -131,9 +127,6 @@ function render()
    scene.updateList.forEach(element => {
       element.update(scene);
    });
-   
-   var str = "Vidas vermelho: " + redTank.lifePoints + "  |    Vidas azul: " + blueTank.lifePoints;
-   secondaryBox.changeMessage(str); 
 
    if(restart) {
       restart = false;

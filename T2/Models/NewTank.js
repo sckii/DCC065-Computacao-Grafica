@@ -8,8 +8,8 @@ import Bullet from './Bullet.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 
 
-class Tank {
-    constructor(x, y, z ) {
+class NewTank {
+    constructor(x, y, z, scene) {
 
         // Define a posição incial do tanque
         this.x = x;
@@ -17,55 +17,33 @@ class Tank {
         this.z = z;
         this.directionTank =  new THREE.Vector3(0, 0, 0);
 
-        // VisuaL
-        this.color = "darkred"
-        this.geometry = this.buildGeometry();
-        this.position = this.geometry.position;
+        this.geometry = this.buildGeometry(scene);
+        // Visual
+        
         
         // Adiciona colisão ao tanque   
-        this.colliderComponent = new AABBCollider(this, 2.5, 2.5); 
-        this.worldDir = new Vector3();
+        // this.colliderComponent = new AABBCollider(this, 2.5, 2.5); 
+        // this.worldDir = new Vector3();
 
         this.lifePoints = 10;
         this.isDead = false;
     }
 
-    buildGeometry(){
+    buildGeometry(scene){
+        var loader = new GLTFLoader( );
+        loader.load( './Models/tank.glb', function ( gltf ) {
+            var playerTank = gltf.scene;
+            playerTank.traverse( function ( child ) {
+            if( child.isMesh ) child.castShadow = true;
+        });
+        
+        console.log(playerTank);
 
-        //cria a box inicial
-        const geometry = new THREE.BoxGeometry(2.5, 0.5, 1.7);
-        const material = setDefaultMaterial(this.color);
-        const box = new THREE.Mesh(geometry, material);
-            box.position.set(this.x, this.y, this.z);
-
-        //define as rodas
-        const materialWhell = setDefaultMaterial("black");
-        const geometryWhell = new THREE.CylinderGeometry(0.4, 0.4, 0.5, 32); 
-        geometryWhell.rotateX(THREE.MathUtils.degToRad(90));
-
-        for (let z = -0.65; z<=0.65; z = z + 1.3){      // cria as rodas
-            for(let x = -0.75; x<=0.75; x = x + 0.75){      
-                let whell = new THREE.Mesh(geometryWhell, materialWhell);
-                whell.position.set(x, -0.3, z);
-                box.add(whell);
-            } 
-        }
-   
-        //cria a parte de cima
-        const geometryTop = new THREE.SphereGeometry(0.75, 32, 32);
-        const top = new THREE.Mesh(geometryTop, material);
-        top.castShadow = true;
-        top.position.set(-0.4, 0.3, 0.0);
-        box.add(top);
-
-        //cria o cano
-        const geometryBarrel = new THREE.CylinderGeometry(0.2, 0.2, 2.0, 32);
-        const barrel = new THREE.Mesh(geometryBarrel, material);
-        barrel.rotateZ(THREE.MathUtils.degToRad(90));
-        barrel.position.set(1.0, 0.4, 0.0)
-        top.add(barrel);
-
-        return box;    
+        playerTank.position.set(4.0,  0.0,  4.0);
+        playerTank.rotateY(THREE.MathUtils.degToRad(90));
+        scene.add ( playerTank );
+        });
+           
     }
 
     shoot(scene, updateList, physics){
@@ -126,4 +104,4 @@ class Tank {
 
 }
 
-export default Tank;
+export default NewTank;
