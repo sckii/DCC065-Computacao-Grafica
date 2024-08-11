@@ -20,6 +20,7 @@ import { GLTFLoader } from '../build/jsm/loaders/GLTFLoader.js';
 import NewTank from './Models/NewTank.js';
 import Cannon from './Models/NewTank.js';
 import { CSG } from '../libs/other/CSGMesh.js'        
+import { MathUtils } from '../build/three.module.js';
 
 
 
@@ -100,9 +101,8 @@ let d = new THREE.Vector3(-1, 0, 1);
 
 d.reflect(n);
 
-let cannon = new Cannon(3, 9);
-
-
+let cannon = new Cannon(5, 16);
+scene.add(cannon.geometry);
 
 // Criar botão de reiniciar a fase
 var restart = false;
@@ -114,7 +114,7 @@ var controls = new function () {
 var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
-mainCamera.setTracking(wheelL, wheelR);
+mainCamera.setTracking(cannon, cannon);
 
 render();
 
