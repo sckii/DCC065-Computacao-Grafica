@@ -1,24 +1,28 @@
 import * as THREE from  'three';
-import {setDefaultMaterial} from "../../libs/util/util.js";
 import AABBCollider from '../Physics/AABBCollider.js';
 import GameOver from '../Functions/GameOver.js';
-import { Vector3 } from '../../build/three.module.js';
 import Collision from '../Physics/Collision.js';
 import Bullet from './Bullet.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 
 
 class NewTank {
-    constructor(x, y, z, scene) {
+    constructor(x, z) {
 
         // Define a posição incial do tanque
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.directionTank =  new THREE.Vector3(0, 0, 0);
+        this.position = new THREE.Vector3(x, 0, z);
+        this.mesh = this.buildGeometry();
+        
+        //this.geometry = 
+        // scene.add(this.model.traverse(function (child) {
+        //     if (child.isMesh) {
 
-        this.geometry = this.buildGeometry(scene);
-        // Visual
+        //         scene.add(child.geometry);
+        //     }
+        // }));
+
+
+        this.directionTank =  new THREE.Vector3(0, 0, 0);
         
         
         // Adiciona colisão ao tanque   
@@ -29,22 +33,24 @@ class NewTank {
         this.isDead = false;
     }
 
-    buildGeometry(scene){
+    buildGeometry(){
         var loader = new GLTFLoader( );
+        let mesh = new THREE.Object3D()
         loader.load( './Models/tank.glb', function ( gltf ) {
-            var playerTank = gltf.scene;
-            playerTank.traverse( function ( child ) {
-            if( child.isMesh ) child.castShadow = true;
+            let obj = gltf.scene;
+            obj.traverse( (child) => {
+                child.material = new THREE.MeshPhongMaterial({
+                    color: 'rgb(200,50,50)',
+                    shininess: "200",
+                    specular: "rgb(255,255,255)"
+                });
+            });
+            mesh.add(gltf.scene);
+            mesh.castShadow = true;
         });
-        
-        console.log(playerTank);
-
-        playerTank.position.set(4.0,  0.0,  4.0);
-        playerTank.rotateY(THREE.MathUtils.degToRad(90));
-        scene.add ( playerTank );
-        });
-           
-    }
+        console.log(mesh);
+        return mesh;
+        };
 
     shoot(scene, updateList, physics){
         var shootDirection = new Vector3;
