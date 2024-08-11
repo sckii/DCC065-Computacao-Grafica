@@ -102,13 +102,6 @@ d.reflect(n);
 
 let cannon = new Cannon(3, 9);
 
-// Constroi o cano
-const barrelGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2.0, 32);
-let barrelMaterial = new THREE.MeshPhongMaterial({
-   color: "rgb(255,66,20)",
-   shininess: "200",
-   specular: "rgb(255,255,255)"
-})
 
 
 // Criar botão de reiniciar a fase

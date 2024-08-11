@@ -53,15 +53,24 @@ class Cannon{
         let wheelL = CSG.toMesh(csgWheel, new THREE.Matrix4(), wheelMaterial);
         let wheelR = wheelL.clone();
                  
-        // Constroi o cano
-        let barrelGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2.0, 32);
+    // Cria o cano
         let barrelMaterial = new THREE.MeshPhongMaterial({
-            color: "rgb(255,66,20)",
+            color: "rgb(46,46,46)",
             shininess: "200",
             specular: "rgb(255,255,255)"
         })
-        const barrel = new THREE.Mesh(barrelGeometry, barrelMaterial);
-        barrel.rotateZ(THREE.MathUtils.degToRad(90));        
+        // Geometrias usadas
+        let mainCylinder = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.4, 2.5, 32));
+        let backSphere = new THREE.Mesh(new THREE.SphereGeometry(0.5,32,32));
+        let subtractCylinder =new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 2.5, 32));
+        backSphere.position.set(0, 1.25, 0);
+        updateObject(backSphere);
+
+        let csgBarrel = CSG.fromMesh(mainCylinder).union(CSG.fromMesh(backSphere));
+        csgBarrel = csgBarrel.subtract(CSG.fromMesh(subtractCylinder));
+        let barrel = CSG.toMesh(csgBarrel, new THREE.Matrix4, barrelMaterial);
+
+
     }
 }
 
