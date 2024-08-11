@@ -31,7 +31,7 @@ renderer = initRenderer();
 light = initDefaultBasicLight(scene);
 
 // Manipulação de camera
-camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
+camChangeOrbit = true; // variavel para armazenar se a camera orbital foi chamada
 
 // Cria a camera main e adiciona na cena
 mainCamera = new MainCamera(0, 8, 0);
@@ -102,9 +102,6 @@ d.reflect(n);
 
 let cannon = new Cannon(3, 9);
 
-// Constroi a caixa de suporte
-let boxGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5 );
-
 // Constroi o cano
 const barrelGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2.0, 32);
 let barrelMaterial = new THREE.MeshPhongMaterial({
@@ -112,10 +109,6 @@ let barrelMaterial = new THREE.MeshPhongMaterial({
    shininess: "200",
    specular: "rgb(255,255,255)"
 })
-let box = new THREE.Mesh(boxGeometry, barrelMaterial);
-box.position.set( 6, 1, 16);
-scene.add(box);     
-
 
 
 // Criar botão de reiniciar a fase
@@ -128,7 +121,7 @@ var controls = new function () {
 var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
-mainCamera.setTracking(box, box);
+mainCamera.setTracking(wheelL, wheelR);
 
 render();
 
