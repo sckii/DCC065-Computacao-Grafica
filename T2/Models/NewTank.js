@@ -11,6 +11,7 @@ class NewTank {
 
         // Define a posição incial do tanque
         this.position = new THREE.Vector3(x, 0, z);
+
         this.mesh = this.buildGeometry();
         
         //this.geometry = 
@@ -48,9 +49,30 @@ class NewTank {
             mesh.add(gltf.scene);
             mesh.castShadow = true;
         });
-        console.log(mesh);
         return mesh;
-        };
+    };
+
+    movement(){
+        if ( keyboard.pressed("W") || keyboard.pressed("up") ) {
+            tank.setDir(1);
+        }
+        
+        if ( keyboard.pressed("S") || keyboard.pressed("down") ) {
+            tank.setDir(-1);
+        }
+        
+        if ( keyboard.pressed("A") || keyboard.pressed("left")) {
+            tank.geometry.rotateY(THREE.MathUtils.degToRad(5))
+        }
+        
+        if ( keyboard.pressed("D") || keyboard.pressed("right") ) {
+            tank.geometry.rotateY(THREE.MathUtils.degToRad(-5))
+            //tank.geometry.translateZ(.1);
+        }
+        if (keyboard.down("space") || keyboard.down("Q")){
+            this.shoot(scene, updateList, physics);
+        }    
+    }
 
     shoot(scene, updateList, physics){
         var shootDirection = new Vector3;

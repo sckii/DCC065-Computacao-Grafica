@@ -3,12 +3,13 @@ import Collision from '../Physics/Collision.js';
 import Bullet from './Bullet.js';
 
 class Cannon{
-    constructor(x, z){
-        this.position = new THREE.Vector3(x, 1, z);
-        this.geometry = this.buildGeometry();
+    constructor(x, z,scene){
+        //this.position = new THREE.Vector3(x, 1, z);
+        console.log("hi")
+        this.geometry = this.buildGeometry(scene);
     }
 
-    buildGeometry(){
+    buildGeometry(scene){
     // Constroi a caixa inicial
         let boxMaterial = new THREE.MeshPhongMaterial({
             color: "rgb(17,17,17)",
@@ -84,8 +85,16 @@ class Cannon{
         supportBox.add(barrel);
         supportBox.add(wheelL);
         supportBox.add(wheelR);
-
+        scene.add(supportBox);
         return supportBox;
+    }
+
+    setTracking(){      // Função pra selecionar o tanque mais próximo
+
+    }
+
+    rotate(){           // Função para rotacionar
+        
     }
 }
 

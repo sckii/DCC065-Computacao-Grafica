@@ -101,8 +101,8 @@ let d = new THREE.Vector3(-1, 0, 1);
 
 d.reflect(n);
 
-let cannon = new Cannon(5, 16);
-scene.add(cannon.geometry);
+let cannon = new Cannon(5, 16, scene);
+//scene.add(cannon.geometry);
 
 // Criar botão de reiniciar a fase
 var restart = false;
@@ -155,9 +155,4 @@ function render() {
    }
 
 
-}
-function updateObject(mesh)
-{
-   mesh.matrixAutoUpdate = false;
-   mesh.updateMatrix();
 }
