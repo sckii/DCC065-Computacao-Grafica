@@ -18,7 +18,7 @@ import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import { GLTFLoader } from '../build/jsm/loaders/GLTFLoader.js';
 import NewTank from './Models/NewTank.js';
-import Cannon from './Models/NewTank.js';
+import Cannon from './Models/Cannon.js';
 import { CSG } from '../libs/other/CSGMesh.js'        
 import { MathUtils } from '../build/three.module.js';
 
@@ -101,8 +101,8 @@ let d = new THREE.Vector3(-1, 0, 1);
 
 d.reflect(n);
 
-let cannon = new Cannon(5, 16, scene);
-//scene.add(cannon.geometry);
+let cannon = new Cannon(11, 17);
+scene.add(cannon.geometry);
 
 // Criar botão de reiniciar a fase
 var restart = false;
@@ -114,7 +114,8 @@ var controls = new function () {
 var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
-mainCamera.setTracking(cannon, cannon);
+let rObj = new THREE.Object3D();
+mainCamera.setTracking(cannon, rObj);
 
 render();
 
@@ -128,6 +129,11 @@ function keyboardUpdate() {
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
       camChangeOrbit = !camChangeOrbit;
+   }
+   
+   if (keyboard.pressed("C")) {
+      cannon.rotate();
+      cannon.shoot(scene, scene.updateList, scene.physics);
    }
 }
 
