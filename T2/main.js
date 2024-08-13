@@ -78,12 +78,17 @@ const redColors = ["crimson", "darkred", "firebrick", "red"];
 const blueColors = ["blue", "darkblue", "dodgerblue", "midnightblue", "navy", "royalblue"];
 // Cria os tanques
 const redTank = new Tank(4.0,  0.7,  4.0, redColors);
+const rrTank = new Tank(17.0,  0.7,  4.0, redColors);
 const blueTank = new Tank(4.0,  0.7,  28.0, blueColors);
 
 // Adiciona eles a cena, a física e a lista de update
 scene.add(redTank.geometry)
 scene.physics.add(redTank.colliderComponent); 
 scene.updateList.push(redTank);
+
+scene.add(rrTank.geometry)
+scene.physics.add(rrTank.colliderComponent); 
+scene.updateList.push(rrTank);
 
 scene.add(blueTank.geometry)
 scene.updateList.push(blueTank);
@@ -105,7 +110,7 @@ var controls = new function ()
 var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
-mainCamera.setTracking([redTank.geometry, blueTank.geometry]);
+mainCamera.setTracking([redTank.geometry, blueTank.geometry, rrTank.geometry]);
 
 render();
 

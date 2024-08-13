@@ -26,6 +26,13 @@ class MainCamera {
         // Criando um pivot para pegar o ponto central
         const pivot = new THREE.Vector3();
 
+        let sorted = this.objList.sort((box1, box2) => 
+            box1.position.x - box2.position.x && 
+            box1.position.z - box2.position.z);
+
+        this.obj_1 = sorted[0];
+        this.obj_2 = sorted[sorted.length - 1];
+
         // Calculando a distancia entre dois objetos no espaço
         const distance = this.calculateDistance();
 
@@ -47,7 +54,6 @@ class MainCamera {
         let w = window.innerWidth;
         let realDistance = -100 + w/10;
 
-        console.log(realDistance)
         if (realDistance > -10) {
             realDistance = -10;
         }
@@ -63,11 +69,7 @@ class MainCamera {
 
     // Recebe dois objetos para a camera seguir
     setTracking(objList) {
-        let sorted = objList.sort((box1, box2) => 
-            box1.position.x < box2.position.x && box1.position.z < box2.position.z);
-
-        this.obj_1 = sorted[0];
-        this.obj_2 = sorted[sorted.length - 1];
+        this.objList = objList;
     }
     // Calcula distancia entre dois objetos
     calculateDistance() {
