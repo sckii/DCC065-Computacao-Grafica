@@ -3,38 +3,38 @@ import SphereCollider from '../Physics/SphereCollider.js';
 import Collision from '../Physics/Collision.js';
 import {setDefaultMaterial} from "../../libs/util/util.js";
 import Tank from './Tank.js';
-import { removeFromScene } from '../Funcoes/RemoveFromScene.js';
+import { removeFromScene } from '../Functions/RemoveFromScene.js';
 
 
-class Ball {
-    constructor(position, radius, dir, tanque) {
+class Bullet {
+    constructor(position, radius, dir, tank) {
 
-        this.tanque = tanque;
+        this.tank = tank;   // Tanque que atirou
 
-        // visual
+        // Visual
         this.radius = radius;
         this.mesh = this.buildMesh(position.x, 1, position.z);
         this.position = this.mesh.position;
 
-        // movimento
+        // Movimento
         this.dir = dir;    
         this.dir.setY(0);
         this.dir.normalize();
         this.speed = 0.3;
 
-        // colisão
+        // Colisão
         this.colliderComponent = new SphereCollider(this, radius);
-        this.nColisoes = 0;
+        this.numColision = 0;
     }
 
     buildMesh(x, y, z) {
         const geometry = new THREE.SphereGeometry(this.radius,15,15);
         const material = setDefaultMaterial("white");
 
-        const bola = new THREE.Mesh(geometry, material);
-        bola.position.set(x, y, z);
+        const bullet = new THREE.Mesh(geometry, material);
+        bullet.position.set(x, y, z);
 
-        return bola;
+        return bullet;
     }
     
     /**
@@ -42,19 +42,21 @@ class Ball {
      * @param {Collision} collision 
      */
     onCollisionEntered(collision) {
-        if(collision.other === this.tanque || collision.other instanceof Ball){
+        // Faz com que o tiro não bata em outros e no próprio tanque
+        if(collision.other === this.tank || collision.other instanceof Bullet){     
             return;
         }
-        else{
-            this.nColisoes = this.nColisoes + 1;
-            if (collision.other instanceof Tank){
-                collision.other.vida -= 1;
-                removeFromScene(this);
-                return;
-            }
-            this.dir.reflect(collision.getNormal());
-            this.dir.normalize();
+        
+        this.position.add(collision.getNormal().multiplyScalar(.1));
+        
+        this.numColision = this.numColision + 1;
+        if (collision.other instanceof Tank){
+            collision.other.lifePoints -= 1;
+            removeFromScene(this);
+            return;
         }
+        this.dir.reflect(collision.getNormal());
+        this.dir.normalize();
     }
 
     /**
@@ -68,8 +70,8 @@ class Ball {
     update() {
         this.mesh.translateOnAxis(this.dir, this.speed);
     
-        //console.log(this.nColisoes);
-        if (this.nColisoes >= 3 ){
+        //console.log(this.numColision);
+        if (this.numColision >= 3 ){
             removeFromScene(this);
         }
         
@@ -77,4 +79,4 @@ class Ball {
     }
 }
 
-export default Ball;
+export default Bullet;

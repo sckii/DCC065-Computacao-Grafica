@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { createGroundPlane } from '../../libs/util/util.js';
+import { createGroundPlane,
+         setDefaultMaterial } from '../../libs/util/util.js';
 import { Color, Vector2, Vector3 } from '../../build/three.module.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 
@@ -21,11 +22,12 @@ export function buildMap(scene, matrix) {
                 matrix[i][j] = block;
                 blocks.add(block);
                 block.colliderComponent = new AABBCollider(block, blockSize, blockSize);
+                block.isBlock = true;
 
-                if ( (i + j) % 2 == 0)
-                    block.material.color = new Color(.3,.3,.3);
-                else
-                    block.material.color = new Color(.1,.1,.1);
+                // if ( (i + j) % 2 == 0)
+                //     block.material.color = new Color(.3,.3,.3);
+                // else
+                //     block.material.color = new Color(.1,.1,.1);
             }
         }
     }
@@ -35,9 +37,8 @@ export function buildMap(scene, matrix) {
 
 function getBlock(pos) {
     const blockGeometry = new THREE.BoxGeometry(blockSize,blockSize,blockSize);
-    const material = new THREE.MeshStandardMaterial();
-        //material.color = new THREE.Color("rgb(100,100,100)");
-        material.color = new THREE.Color(Math.random() * 0xffffff);
+    const material = setDefaultMaterial("gray");
+        // material.color = new THREE.Color(Math.random() * 0xffffff);
     
     const mesh = new THREE.Mesh(blockGeometry, material);
         mesh.position.set(pos.x, pos.y, pos.z);

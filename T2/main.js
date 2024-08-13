@@ -14,10 +14,7 @@ import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildMap } from './Functions/Map.js'
 import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
-<<<<<<< HEAD
-=======
 import GameOver from './Functions/GameOver.js';
->>>>>>> main
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -30,20 +27,16 @@ light = initDefaultBasicLight(scene);
 camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
 
 // Cria a camera main e adiciona na cena
-mainCamera = new MainCamera(8);
+mainCamera = new MainCamera(0, 8, 0);
 scene.add(mainCamera.cameraHolder)
 window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update(), renderer)}, false );
 
 // Cria a camera secundario que terá os contres de orbita
 secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
 orbit = new OrbitControls( secondCamera, renderer.domElement ); // Habilitando mouse rotation, pan, zoom etc.
-<<<<<<< HEAD
-secondCamera.lookAt(11, 0, 16); // Alterando onde 
-=======
 
 // Alterando para onde aponta a camera orbital e a secundaria
 secondCamera.lookAt(11, 0, 16);  
->>>>>>> main
 orbit.target = new THREE.Vector3(11, 0, 16);
 window.addEventListener( 'resize', function(){onWindowResize(secondCamera, renderer)}, false );
 
@@ -102,17 +95,17 @@ var secondaryBox = new SecondaryBox(str);
 secondaryBox.changeStyle("rgba(0,0,0,0.5)");
 
 // Criar botão de reiniciar a fase
-var recomecar = false;
+var restart = false;
 var controls = new function ()
   {
     this.restart = function(){
-      recomecar = !recomecar;
+      restart = !restart;
     };
   };
 var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
-mainCamera.setTracking(redTank.geometry, blueTank.geometry);
+mainCamera.setTracking([redTank.geometry, blueTank.geometry]);
 
 render();
 
@@ -120,9 +113,8 @@ function keyboardUpdate() {
 
    keyboard.update();
 
-   // Adicionando controles aos objetos
-   KeyboardMovement(redTank, "P1", scene, scene.updateList, scene.physics);
-   KeyboardMovement(blueTank, "P2", scene, scene.updateList, scene.physics);
+   // Adicionando controles aos tanque
+   KeyboardMovement(redTank, scene, scene.updateList, scene.physics);
 
    // Atalho para habilitar a camera secundaria (orbital)
    if ( keyboard.down("O") ) {
@@ -144,17 +136,17 @@ function render()
    var str = "Vidas vermelho: " + redTank.lifePoints + "  |    Vidas azul: " + blueTank.lifePoints;
    secondaryBox.changeMessage(str); 
 
-   if(recomecar) {
-      recomecar = false;
+   if(restart) {
+      restart = false;
       location.reload();    // Verificando se é pra recomeçar
    } 
-
+   
    // Verificando qual camera será utilizada
    if (camChangeOrbit){
-      renderer.render(scene, secondCamera); // Render scene
+      renderer.render(scene, secondCamera) // Render scene
    }
    if (!camChangeOrbit){
-      renderer.render(scene, mainCamera.update()); // Render scene
+      renderer.render(scene, mainCamera.update()) // Render scene
    }
 
 
