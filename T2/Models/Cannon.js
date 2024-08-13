@@ -87,13 +87,15 @@ class Cannon{
 
         let wheelR = wheelL.clone();
         wheelR.position.set(0, -0.22, 0.8)
-
-    // Adciona todas as coisas em uma mesh so
+        
+        // Adciona todas as coisas em uma mesh so
         supportBox.add(barrel);
         supportBox.add(wheelL);
         supportBox.add(wheelR);
-        console.log(supportBox);
-        
+
+        wheelL.name = "WheelL";
+        wheelR.name = "WheelR";
+        barrel.name = "barrel";        
         return supportBox;
     }
 
@@ -101,18 +103,27 @@ class Cannon{
 
     }
 
-    rotate(){           // Função para rotacionar
-        if(true)
-        {
-            let angle = THREE.MathUtils.degToRad(1);
-            angle+=0.001;
-            
-            var mat4 = new THREE.Matrix4(); 
-            this.geometry.rotateY(angle);
-            this.geometry.matrix.multiply(mat4.makeRotationY(angle));
-            this.updateObject(this.geometry)
-            
+    rotate(way){     // Função para rotacionar
+        let angle = way * THREE.MathUtils.degToRad(0.5);
+        
+        this.geometry.rotateY(angle);
+        this.updateObject(this.geometry)
+
+        //let angle = THREE.MathUtils.degToRad(0.5);
+        if(angle>0){
+            this.geometry.children[1].rotateY(angle);
+            this.updateObject(this.geometry.children[1]);
+            this.geometry.children[2].rotateY(-angle);
+            this.updateObject(this.geometry.children[2])
         }
+        if(angle<0){
+            this.geometry.children[1].rotateY(angle);
+            this.updateObject(this.geometry.children[1]);
+            this.geometry.children[2].rotateY(-angle);
+            this.updateObject(this.geometry.children[2])
+        }
+        
+        
     }
 
     shoot(scene, updateList, physics){
@@ -132,6 +143,30 @@ class Cannon{
     updateObject(mesh){
         mesh.matrixAutoUpdate = false;
         mesh.updateMatrix();
+    }
+
+    /**
+     * Esse método é chamado quando esse objeto entra em colisão com outro.
+     * @param {Collision} collision 
+     */
+    onCollisionEntered(collision) {
+
+    }
+
+    /**
+     * Esse método é chamado quando um objeto para de colidir com este
+     * @param {Collider} other 
+     */
+    onCollisionExit(other) {
+        
+    }
+
+    /**
+     * Chamado todos os frames para cada colisão com este objeto
+     * @param {Collision} collision 
+     */   
+    onCollision(collision){
+        
     }
 }
 

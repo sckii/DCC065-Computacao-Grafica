@@ -132,8 +132,10 @@ function keyboardUpdate() {
    }
    
    if (keyboard.pressed("C")) {
-      cannon.rotate();
-      cannon.shoot(scene, scene.updateList, scene.physics);
+      cannon.rotate(1);
+   }
+   if (keyboard.pressed("V")) {
+      cannon.rotate(-1);
    }
 }
 
