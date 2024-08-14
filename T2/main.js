@@ -15,6 +15,7 @@ import { buildMap } from './Functions/Map.js'
 import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import GameOver from './Functions/GameOver.js';
+import TankAI from './Functions/TankIA.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -111,6 +112,8 @@ var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
 mainCamera.setTracking([redTank.geometry, blueTank.geometry, rrTank.geometry]);
+const aiTank = new TankAI(rrTank.geometry, 10);
+aiTank.setPlayerTank(redTank.geometry);
 
 render();
 
@@ -154,5 +157,5 @@ function render()
       renderer.render(scene, mainCamera.update()) // Render scene
    }
 
-
+   aiTank.update();
 }
