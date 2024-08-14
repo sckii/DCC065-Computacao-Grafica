@@ -1,26 +1,21 @@
 import * as THREE from  'three';
-import {setDefaultMaterial} from "../../libs/util/util.js";
 import AABBCollider from '../Physics/AABBCollider.js';
 import GameOver from '../Functions/GameOver.js';
-import { Vector3 } from '../../build/three.module.js';
 import Collision from '../Physics/Collision.js';
 import Bullet from './Bullet.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
+import { Vector3 } from '../../build/three.module.js';
 
 
 class Tank {
-    constructor(x, y, z ) {
+    constructor(x, z, color) {
 
-        // Define a posição incial do tanque
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.directionTank =  new THREE.Vector3(0, 0, 0);
-
-        // VisuaL
-        this.color = "darkred"
-        this.geometry = this.buildGeometry();
+        this.geometry = this.buildGeometry(color); // nao da pra usar this.color pq ele nao ta no msm scopo
+        this.geometry.position.set(x, 0, z);
         this.position = this.geometry.position;
+        this.color = color;
+
+        this.directionTank =  new THREE.Vector3(0, 0, 0);        
         
         // Adiciona colisão ao tanque   
         this.colliderComponent = new AABBCollider(this, 2.5, 2.5); 
@@ -30,52 +25,64 @@ class Tank {
         this.isDead = false;
     }
 
-    buildGeometry(){
-
-        //cria a box inicial
-        const geometry = new THREE.BoxGeometry(2.5, 0.5, 1.7);
-        const material = setDefaultMaterial(this.color);
-        const box = new THREE.Mesh(geometry, material);
-            box.position.set(this.x, this.y, this.z);
-
-        //define as rodas
-        const materialWhell = setDefaultMaterial("black");
-        const geometryWhell = new THREE.CylinderGeometry(0.4, 0.4, 0.5, 32); 
-        geometryWhell.rotateX(THREE.MathUtils.degToRad(90));
-
-        for (let z = -0.65; z<=0.65; z = z + 1.3){      // cria as rodas
-            for(let x = -0.75; x<=0.75; x = x + 0.75){      
-                let whell = new THREE.Mesh(geometryWhell, materialWhell);
-                whell.position.set(x, -0.3, z);
-                box.add(whell);
-            } 
+    buildGeometry(color){
+        var loader = new GLTFLoader( );
+        let mesh = new THREE.Object3D();
+        loader.load( './Models/tank.glb', function ( gltf ) {
+            let obj = gltf.scene;
+            obj.traverse( (child) => {
+                if(color == "Red"){
+                    if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){
+                    child.material = new THREE.MeshPhongMaterial({
+                        color: "rgb(220,60,60)",
+                        shininess: "200",
+                        specular: "rgb(255,255,255)"
+                        });
+                    }
+                }
+                else if(color == "Blue"){
+                    if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){
+                        child.material = new THREE.MeshPhongMaterial({
+                            color: "rgb(60,60,220)",
+                            shininess: "200",
+                            specular: "rgb(255,255,255)"
+                        });
+                    }
+                }
+                else {
+                    if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){
+                        child.material = new THREE.MeshPhongMaterial({
+                            color: "rgb(60,220,60)",
+                            shininess: "200",
+                            specular: "rgb(255,255,255)"
+                        });
+                    }
+                }
+            });
+            mesh.add(gltf.scene);
+            mesh.castShadow = true;
+        });
+        if(color == "Red"){
+            mesh.rotateY(THREE.MathUtils.degToRad(90))
         }
-   
-        //cria a parte de cima
-        const geometryTop = new THREE.SphereGeometry(0.75, 32, 32);
-        const top = new THREE.Mesh(geometryTop, material);
-        top.castShadow = true;
-        top.position.set(-0.4, 0.3, 0.0);
-        box.add(top);
-
-        //cria o cano
-        const geometryBarrel = new THREE.CylinderGeometry(0.2, 0.2, 2.0, 32);
-        const barrel = new THREE.Mesh(geometryBarrel, material);
-        barrel.rotateZ(THREE.MathUtils.degToRad(90));
-        barrel.position.set(1.0, 0.4, 0.0)
-        top.add(barrel);
-
-        return box;    
-    }
+        else if(color == "Blue"){
+            mesh.rotateY(THREE.MathUtils.degToRad(180))
+        }
+        else {
+            mesh.rotateY(THREE.MathUtils.degToRad(-90))
+        }
+        let scale = 0.65
+        mesh.scale.set(scale, scale, scale);
+        return mesh;
+    };
 
     shoot(scene, updateList, physics){
         var shootDirection = new Vector3;
         this.geometry.getWorldDirection(shootDirection);
-        shootDirection.applyAxisAngle(new Vector3(0,1,0), THREE.MathUtils.degToRad(90));
 
         let shootPosition = new Vector3()
-        shootPosition.copy(this.position);
-        const shoot = new Bullet(shootPosition, 0.25, shootDirection, this);
+        shootPosition.copy(this.geometry.position);
+        const shoot = new Bullet(shootPosition, shootDirection, this);
 
         scene.add(shoot.mesh);
         physics.add(shoot.colliderComponent);
@@ -104,7 +111,7 @@ class Tank {
      */   
     onCollision(collision){
         if (collision.other.isBlock || collision.other instanceof Tank)
-            this.position.add(collision.getNormal().multiplyScalar(.15));
+            this.geometry.position.add(collision.getNormal().multiplyScalar(.15));
     }
 
     update() {
@@ -115,12 +122,12 @@ class Tank {
 
         //this.geometry.translateOnAxis(this.directionTank, 0.1);
         this.worldDir.multiplyScalar(0.1);
-        this.position.add(this.worldDir);
+        this.geometry.position.add(this.worldDir);
 
     }
 
     setDir(directionTank) {
-        this.worldDir = new Vector3(directionTank,0,0);
+        this.worldDir = new Vector3(0,0,directionTank);
         this.worldDir.transformDirection(this.geometry.matrixWorld);
     }
 

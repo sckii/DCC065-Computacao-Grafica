@@ -10,16 +10,13 @@ import {
    InfoBox,
    onWindowResize,
    degreesToRadians} from "../libs/util/util.js";
-import Tank from './Models/Tank.js';
 import MainCamera from './Functions/MainCamera.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildMap } from './Functions/Map.js';
 import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
-import { GLTFLoader } from '../build/jsm/loaders/GLTFLoader.js';
-import NewTank from './Models/NewTank.js';
+import Tank from './Models/Tank.js';
 import Cannon from './Models/Cannon.js';
-import { CSG } from '../libs/other/CSGMesh.js'        
 import { MathUtils } from '../build/three.module.js';
 
 
@@ -108,17 +105,17 @@ scene.add(cannon.geometry);
 scene.physics.add(cannon.colliderComponent); 
 scene.updateList.push(cannon);
 
-let newTank = new NewTank(18, 4);
+let newTank = new Tank(18, 4);
 scene.add(newTank.geometry);
 scene.physics.add(newTank.colliderComponent); 
 scene.updateList.push(newTank);
 
-let blueTank = new NewTank(18, 30, "Blue");
+let blueTank = new Tank(18, 30, "Blue");
 scene.add(blueTank.geometry);
 scene.physics.add(blueTank.colliderComponent); 
 scene.updateList.push(blueTank);
 
-let redTank = new NewTank(4, 30, "Red");
+let redTank = new Tank(4, 30, "Red");
 scene.add(redTank.geometry);
 scene.physics.add(redTank.colliderComponent); 
 scene.updateList.push(redTank);

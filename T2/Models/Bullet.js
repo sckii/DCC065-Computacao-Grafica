@@ -1,10 +1,9 @@
 import * as THREE from  'three';
 import SphereCollider from '../Physics/SphereCollider.js';
 import Collision from '../Physics/Collision.js';
-import Tank from './Tank.js';
 import { removeFromScene } from '../Functions/RemoveFromScene.js';
 import Cannon from './Cannon.js';
-import NewTank from './NewTank.js';
+import Tank from './Tank.js';
 
 
 class Bullet {
@@ -44,7 +43,7 @@ class Bullet {
                 color:"rgb(46,46,46)"
             });
         }
-        if(this.shooter instanceof NewTank){
+        if(this.shooter instanceof Tank){
             if(this.shooter.color == "Red"){
                 material = new THREE.MeshLambertMaterial({
                     color: "rgb(220,60,60)"
@@ -82,7 +81,7 @@ class Bullet {
         this.position.add(collision.getNormal().multiplyScalar(.1));
         
         this.numColision = this.numColision + 1;
-        if (collision.other instanceof NewTank){
+        if (collision.other instanceof Tank){
             collision.other.lifePoints -= 1;
             removeFromScene(this);
             return;
