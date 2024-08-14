@@ -1,19 +1,20 @@
 import * as THREE from  'three';
 import SphereCollider from '../Physics/SphereCollider.js';
 import Collision from '../Physics/Collision.js';
-import {setDefaultMaterial} from "../../libs/util/util.js";
 import Tank from './Tank.js';
 import { removeFromScene } from '../Functions/RemoveFromScene.js';
+import Cannon from './Cannon.js';
+import NewTank from './NewTank.js';
 
 
 class Bullet {
-    constructor(position, radius, dir, tank) {
+    constructor(position, dir, shooter) {
 
-        this.tank = tank;   // Tanque que atirou
+        this.shooter = shooter;   // O que atirou
 
         // Visual
-        this.radius = radius;
-        this.mesh = this.buildMesh(position.x, 1, position.z);
+        this.radius = 0.25;
+        this.mesh = this.buildMesh(position.x, position.z);
         this.position = this.mesh.position;
 
         // Movimento
@@ -23,18 +24,44 @@ class Bullet {
         this.speed = 0.3;
 
         // Colisão
-        this.colliderComponent = new SphereCollider(this, radius);
+        this.colliderComponent = new SphereCollider(this, this.radius);
         this.numColision = 0;
     }
 
-    buildMesh(x, y, z) {
+    buildMesh(x, z) {
         const geometry = new THREE.SphereGeometry(this.radius,15,15);
-        const material = setDefaultMaterial("white");
-
+        const material = this.setMaterial();
         const bullet = new THREE.Mesh(geometry, material);
-        bullet.position.set(x, y, z);
+        bullet.position.set(x, 1, z);
 
         return bullet;
+    }
+
+    setMaterial(){
+        let material;
+        if(this.shooter instanceof Cannon){
+            material = new THREE.MeshLambertMaterial({
+                color:"rgb(46,46,46)"
+            });
+        }
+        if(this.shooter instanceof NewTank){
+            if(this.shooter.color == "Red"){
+                material = new THREE.MeshLambertMaterial({
+                    color: "rgb(220,60,60)"
+                });
+            }
+            else if(this.shooter.color == "Blue"){
+                material = new THREE.MeshLambertMaterial({
+                    color: "rgb(60,60,220)"
+                });
+            }
+            else {
+                material = new THREE.MeshLambertMaterial({
+                    color: "rgb(60,220,60)"
+                });
+            }
+        }
+        return material;
     }
     
     /**
@@ -43,14 +70,19 @@ class Bullet {
      */
     onCollisionEntered(collision) {
         // Faz com que o tiro não bata em outros e no próprio tanque
-        if(collision.other === this.tank || collision.other instanceof Bullet){     
+        if(collision.other === this.shooter || collision.other instanceof Bullet){     
+            return;
+        }
+        
+        if(collision.other instanceof Cannon){     
+            removeFromScene(this);
             return;
         }
         
         this.position.add(collision.getNormal().multiplyScalar(.1));
         
         this.numColision = this.numColision + 1;
-        if (collision.other instanceof Tank){
+        if (collision.other instanceof NewTank){
             collision.other.lifePoints -= 1;
             removeFromScene(this);
             return;

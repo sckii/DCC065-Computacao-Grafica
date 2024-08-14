@@ -84,6 +84,7 @@ const matrixLvl2 = [
    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
    [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -102,7 +103,25 @@ let d = new THREE.Vector3(-1, 0, 1);
 d.reflect(n);
 
 let cannon = new Cannon(11, 17);
+
 scene.add(cannon.geometry);
+scene.physics.add(cannon.colliderComponent); 
+scene.updateList.push(cannon);
+
+let newTank = new NewTank(18, 4);
+scene.add(newTank.geometry);
+scene.physics.add(newTank.colliderComponent); 
+scene.updateList.push(newTank);
+
+let blueTank = new NewTank(18, 30, "Blue");
+scene.add(blueTank.geometry);
+scene.physics.add(blueTank.colliderComponent); 
+scene.updateList.push(blueTank);
+
+let redTank = new NewTank(4, 30, "Red");
+scene.add(redTank.geometry);
+scene.physics.add(redTank.colliderComponent); 
+scene.updateList.push(redTank);
 
 // Criar botão de reiniciar a fase
 var restart = false;
@@ -124,7 +143,7 @@ function keyboardUpdate() {
    keyboard.update();
 
    // Adicionando controles aos tanque
-   KeyboardMovement(cannon, scene, scene.updateList, scene.physics);
+   KeyboardMovement(blueTank, scene, scene.updateList, scene.physics);
 
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
@@ -132,6 +151,7 @@ function keyboardUpdate() {
    }
    
    if (keyboard.pressed("C")) {
+      cannon.shoot(scene, scene.updateList, scene.physics);
       cannon.rotate(1);
    }
    if (keyboard.pressed("V")) {

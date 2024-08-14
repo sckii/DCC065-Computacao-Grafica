@@ -11,7 +11,7 @@ class Cannon{
         
         this.position = this.geometry.position;
 
-        this.colliderComponent = new AABBCollider(this, 2.5, 2.5); 
+        this.colliderComponent = new AABBCollider(this, 2, 2); 
         this.worldDir = new Vector3();
     }
 
@@ -132,8 +132,8 @@ class Cannon{
         shootDirection.applyAxisAngle(new Vector3(0,1,0), THREE.MathUtils.degToRad(90));
 
         let shootPosition = new Vector3()
-        shootPosition.copy(this.position);
-        const shoot = new Bullet(shootPosition, 0.25, shootDirection, this);
+        shootPosition.copy(this.geometry.position);
+        const shoot = new Bullet(shootPosition, shootDirection, this);
 
         scene.add(shoot.mesh);
         physics.add(shoot.colliderComponent);
@@ -145,6 +145,9 @@ class Cannon{
         mesh.updateMatrix();
     }
 
+    update() {
+
+    }
     /**
      * Esse método é chamado quando esse objeto entra em colisão com outro.
      * @param {Collision} collision 

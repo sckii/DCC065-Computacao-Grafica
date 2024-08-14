@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { createGroundPlane,
-         setDefaultMaterial } from '../../libs/util/util.js';
+import { createGroundPlane } from '../../libs/util/util.js';
 import { Color, Vector2, Vector3 } from '../../build/three.module.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 
@@ -37,8 +36,9 @@ export function buildMap(scene, matrix) {
 
 function getBlock(pos) {
     const blockGeometry = new THREE.BoxGeometry(blockSize,blockSize,blockSize);
-    const material = setDefaultMaterial("gray");
-        // material.color = new THREE.Color(Math.random() * 0xffffff);
+    let material = new THREE.MeshLambertMaterial({
+        color:"rgb(50,50,50)"     // Main color of the object
+     });
     
     const mesh = new THREE.Mesh(blockGeometry, material);
         mesh.position.set(pos.x, pos.y, pos.z);

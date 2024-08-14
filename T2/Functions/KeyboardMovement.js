@@ -22,7 +22,6 @@ function KeyboardMovement(tank, scene, updateList, physics) {
     
     if ( keyboard.pressed("D") || keyboard.pressed("right") ) {
         tank.geometry.rotateY(THREE.MathUtils.degToRad(-5))
-        //tank.geometry.translateZ(.1);
     }
 
     if (keyboard.down("space") || keyboard.down("Q")){
