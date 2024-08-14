@@ -88,9 +88,9 @@ scene.add(redTank.geometry)
 scene.physics.add(redTank.colliderComponent); 
 scene.updateList.push(redTank);
 
-scene.add(rrTank.geometry)
-scene.physics.add(rrTank.colliderComponent); 
-scene.updateList.push(rrTank);
+// scene.add(rrTank.geometry)
+// scene.physics.add(rrTank.colliderComponent); 
+// scene.updateList.push(rrTank);
 
 scene.add(blueTank.geometry)
 scene.updateList.push(blueTank);
@@ -112,11 +112,15 @@ var controls = new function ()
 var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
-mainCamera.setTracking([redTank.geometry, blueTank.geometry, rrTank.geometry]);
+mainCamera.setTracking([
+   redTank.geometry, 
+   blueTank.geometry, 
+   // rrTank.geometry
+]);
 
-const aiTank = new TankAI(rrTank, 8, scene);
-const ai2Tank = new TankAI(blueTank, 8, scene);
-aiTank.setPlayerTank(redTank.geometry);
+// const aiTank = new TankAI(rrTank, 8, blocks);
+const ai2Tank = new TankAI(blueTank, 10, blocks, scene);
+// aiTank.setPlayerTank(redTank.geometry);
 ai2Tank.setPlayerTank(redTank.geometry);
 
 render();
@@ -161,6 +165,6 @@ function render()
       renderer.render(scene, mainCamera.update()) // Render scene
    }
 
-   aiTank.update();
+   // aiTank.update();
    ai2Tank.update();
 }
