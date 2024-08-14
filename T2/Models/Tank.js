@@ -102,8 +102,10 @@ class Tank {
      * @param {Collision} collision 
      */   
     onCollision(collision){
-        if (collision.other.isBlock || collision.other instanceof Tank)
+        if (collision.other.isBlock || collision.other instanceof Tank) {
             this.position.add(collision.getNormal().multiplyScalar(.15));
+            this.normal = collision.getNormal();
+        }
     }
 
     update() {
