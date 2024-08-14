@@ -12,7 +12,7 @@ import {
    degreesToRadians} from "../libs/util/util.js";
 import MainCamera from './Functions/MainCamera.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
-import { buildMap } from './Functions/Map.js';
+import { buildLevel } from './Functions/Map.js';
 import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import Tank from './Models/Tank.js';
@@ -48,51 +48,10 @@ window.addEventListener('resize', function () { onWindowResize(secondCamera, ren
 // Keyboard set variable
 keyboard = new KeyboardState();
 
-const matrixLvl1 = [
-   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-]
-
-const matrixLvl2 = [
-   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-]
 
 scene.physics = new PhysicsEnvironment();
 scene.updateList = [];
-let blocks = buildMap(scene, matrixLvl2);
-scene.physics.addToMap(blocks);
+let mapLevel = buildLevel(2, scene, scene.updateList, scene.physics );
 
 let n = new THREE.Vector3(1, 0, 1).normalize();
 let d = new THREE.Vector3(-1, 0, 1);
@@ -140,7 +99,7 @@ function keyboardUpdate() {
    keyboard.update();
 
    // Adicionando controles aos tanque
-   KeyboardMovement(blueTank, scene, scene.updateList, scene.physics);
+   KeyboardMovement(newTank, scene, scene.updateList, scene.physics);
 
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
