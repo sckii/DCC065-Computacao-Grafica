@@ -1,19 +1,20 @@
 import * as THREE from  'three';
 import AABBCollider from '../Physics/AABBCollider.js';
-import GameOver from '../Functions/GameOver.js';
 import Collision from '../Physics/Collision.js';
 import Bullet from './Bullet.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
 
+// adicionar movimentacao na classe
 
 class Tank {
-    constructor(x, z, color) {
+    constructor(x, z, color, rotate) {
 
-        this.geometry = this.buildGeometry(color); // nao da pra usar this.color pq ele nao ta no msm scopo
+        this.color = color;
+        this.material = this.setMaterial(this.color);
+        this.geometry = this.buildGeometry(this.material, rotate); // nao da pra usar this.color pq ele nao ta no msm scopo
         this.geometry.position.set(x, 0, z);
         this.position = this.geometry.position;
-        this.color = color;
 
         this.directionTank =  new THREE.Vector3(0, 0, 0);        
         
@@ -25,56 +26,51 @@ class Tank {
         this.isDead = false;
     }
 
-    buildGeometry(color){
+    buildGeometry(material, rotate){
         var loader = new GLTFLoader( );
         let mesh = new THREE.Object3D();
         loader.load( './Models/tank.glb', function ( gltf ) {
             let obj = gltf.scene;
             obj.traverse( (child) => {
-                if(color == "Red"){
-                    if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){
-                    child.material = new THREE.MeshPhongMaterial({
-                        color: "rgb(220,60,60)",
-                        shininess: "200",
-                        specular: "rgb(255,255,255)"
-                        });
-                    }
-                }
-                else if(color == "Blue"){
-                    if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){
-                        child.material = new THREE.MeshPhongMaterial({
-                            color: "rgb(60,60,220)",
-                            shininess: "200",
-                            specular: "rgb(255,255,255)"
-                        });
-                    }
-                }
-                else {
-                    if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){
-                        child.material = new THREE.MeshPhongMaterial({
-                            color: "rgb(60,220,60)",
-                            shininess: "200",
-                            specular: "rgb(255,255,255)"
-                        });
-                    }
+                if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){
+                    child.material = material
                 }
             });
+            mesh.rotateY(rotate*THREE.MathUtils.degToRad(90))
             mesh.add(gltf.scene);
             mesh.castShadow = true;
         });
-        if(color == "Red"){
-            mesh.rotateY(THREE.MathUtils.degToRad(90))
-        }
-        else if(color == "Blue"){
-            mesh.rotateY(THREE.MathUtils.degToRad(180))
-        }
-        else {
-            mesh.rotateY(THREE.MathUtils.degToRad(-90))
-        }
+
         let scale = 0.65
         mesh.scale.set(scale, scale, scale);
         return mesh;
     };
+
+    setMaterial(color){
+        let material;
+        if(color == "Red"){
+            material = new THREE.MeshPhongMaterial({
+                color: "rgb(220,60,60)",
+                shininess: "200",
+                specular: "rgb(255,255,255)"
+            });
+        }
+        else if(color == "Blue"){
+            material = new THREE.MeshPhongMaterial({
+                    color: "rgb(60,60,220)",
+                    shininess: "200",
+                    specular: "rgb(255,255,255)"
+            });
+        }
+        else {
+            material = new THREE.MeshPhongMaterial({
+                    color: "rgb(60,220,60)",
+                    shininess: "200",
+                    specular: "rgb(255,255,255)"
+            });
+        }
+        return material;
+    }
 
     shoot(scene, updateList, physics){
         var shootDirection = new Vector3;
@@ -117,7 +113,6 @@ class Tank {
     update() {
         if (this.lifePoints <=0 && !this.isDead){
             this.isDead = true;
-            GameOver();
         }
 
         //this.geometry.translateOnAxis(this.directionTank, 0.1);

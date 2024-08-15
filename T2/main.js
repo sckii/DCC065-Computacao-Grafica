@@ -6,30 +6,26 @@ import {
    initRenderer,
    initCamera,
    initDefaultBasicLight,
-   SecondaryBox,
-   InfoBox,
    onWindowResize,
    degreesToRadians} from "../libs/util/util.js";
 import MainCamera from './Functions/MainCamera.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildLevel } from './Functions/Map.js';
-import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
-import Tank from './Models/Tank.js';
-import Cannon from './Models/Cannon.js';
-import { MathUtils } from '../build/three.module.js';
-
+import deleteScene from './Functions/DeleteScene.js';
 
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
-setScene(scene);
 
 renderer = initRenderer();
+
+// mudar a luz para a construcao de nivel
 light = initDefaultBasicLight(scene);
 
 // Manipulação de camera
 camChangeOrbit = true; // variavel para armazenar se a camera orbital foi chamada
+// alterei pra true para facilitar, mudar depois
 
 // Cria a camera main e adiciona na cena
 mainCamera = new MainCamera(0, 8, 0);
@@ -48,36 +44,15 @@ window.addEventListener('resize', function () { onWindowResize(secondCamera, ren
 // Keyboard set variable
 keyboard = new KeyboardState();
 
-
+// criacao de cena ficara na outra funcao?
 scene.physics = new PhysicsEnvironment();
 scene.updateList = [];
-let mapLevel = buildLevel(2, scene, scene.updateList, scene.physics );
+buildLevel(1, scene, scene.updateList, scene.physics );
 
 let n = new THREE.Vector3(1, 0, 1).normalize();
 let d = new THREE.Vector3(-1, 0, 1);
 
 d.reflect(n);
-
-let cannon = new Cannon(11, 17);
-
-scene.add(cannon.geometry);
-scene.physics.add(cannon.colliderComponent); 
-scene.updateList.push(cannon);
-
-let newTank = new Tank(18, 4);
-scene.add(newTank.geometry);
-scene.physics.add(newTank.colliderComponent); 
-scene.updateList.push(newTank);
-
-let blueTank = new Tank(18, 30, "Blue");
-scene.add(blueTank.geometry);
-scene.physics.add(blueTank.colliderComponent); 
-scene.updateList.push(blueTank);
-
-let redTank = new Tank(4, 30, "Red");
-scene.add(redTank.geometry);
-scene.physics.add(redTank.colliderComponent); 
-scene.updateList.push(redTank);
 
 // Criar botão de reiniciar a fase
 var restart = false;
@@ -89,8 +64,8 @@ var controls = new function () {
 var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
-let rObj = new THREE.Object3D();
-mainCamera.setTracking(cannon, rObj);
+let rObj = new THREE.Object3D();    // obj para as coisas funcionarem, remover depois
+mainCamera.setTracking(rObj, rObj);
 
 render();
 
@@ -99,20 +74,23 @@ function keyboardUpdate() {
    keyboard.update();
 
    // Adicionando controles aos tanque
-   KeyboardMovement(newTank, scene, scene.updateList, scene.physics);
+   KeyboardMovement(rObj, scene, scene.updateList, scene.physics);
 
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
       camChangeOrbit = !camChangeOrbit;
    }
+   if (keyboard.down("1")) {
+      deleteScene(scene);
+      buildLevel(1, scene, scene.updateList, scene.physics );
+
+   }
+   if (keyboard.down("2")) {
+      deleteScene(scene);
+      buildLevel(2, scene, scene.updateList, scene.physics );
+
+   }
    
-   if (keyboard.pressed("C")) {
-      cannon.shoot(scene, scene.updateList, scene.physics);
-      cannon.rotate(1);
-   }
-   if (keyboard.pressed("V")) {
-      cannon.rotate(-1);
-   }
 }
 
 function render() {
@@ -127,7 +105,8 @@ function render() {
 
    if (restart) {
       restart = false;
-      location.reload();    // Verificando se é pra recomeçar
+      // chamar delete scene
+      // chamar nivel atual (como?)
    }
 
    // Verificando qual camera será utilizada

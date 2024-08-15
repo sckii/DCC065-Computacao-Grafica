@@ -5,9 +5,7 @@ import * as THREE from  'three';
 
 const keyboard = new KeyboardState();
 
-function KeyboardMovement(tank, scene, updateList, physics) {
-    
-    
+function KeyboardMovement(tank, scene, updateList, physics) { 
     if ( keyboard.pressed("W") || keyboard.pressed("up") ) {
         tank.setDir(1);
     }
