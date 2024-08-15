@@ -5,9 +5,8 @@ export function setScene(s) {
 }
 
 export function removeFromScene(obj){
-      
-    scene.remove(obj.mesh);
-    obj.mesh = null;
+    scene.remove(obj.geometry);
+    obj.geometry = null;
     const index = scene.updateList.indexOf(obj);
     if (index > -1) { 
        scene.updateList.splice(index, 1);

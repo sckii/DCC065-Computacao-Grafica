@@ -80,7 +80,7 @@ class Tank {
         shootPosition.copy(this.geometry.position);
         const shoot = new Bullet(shootPosition, shootDirection, this);
 
-        scene.add(shoot.mesh);
+        scene.add(shoot.geometry);
         physics.add(shoot.colliderComponent);
         updateList.push(shoot); 
     }

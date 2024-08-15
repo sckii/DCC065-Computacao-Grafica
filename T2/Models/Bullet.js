@@ -13,8 +13,8 @@ class Bullet {
 
         // Visual
         this.radius = 0.25;
-        this.mesh = this.buildMesh(position.x, position.z);
-        this.position = this.mesh.position;
+        this.geometry = this.buildMesh(position.x, position.z);
+        this.position = this.geometry.position;
 
         // Movimento
         this.dir = dir;    
@@ -99,7 +99,7 @@ class Bullet {
     }
 
     update() {
-        this.mesh.translateOnAxis(this.dir, this.speed);
+        this.geometry.translateOnAxis(this.dir, this.speed);
     
         //console.log(this.numColision);
         if (this.numColision >= 3 ){

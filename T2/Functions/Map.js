@@ -2,6 +2,12 @@ import * as THREE from 'three';
 import Tank from '../Models/Tank.js';
 import Cannon from '../Models/Cannon.js';
 import { createGroundPlane } from '../../libs/util/util.js';
+import MainCamera from './MainCamera.js';
+import { OrbitControls } from '../../build/jsm/controls/OrbitControls.js';
+import {
+   initRenderer,
+   initCamera,
+   onWindowResize, } from "../../libs/util/util.js";
 import { Vector2, Vector3 } from '../../build/three.module.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 
@@ -19,7 +25,6 @@ export function buildLevel(nLvl, scene, updateList, physics){
 function level1(scene, updateList, physics){
     // Fazer cena?
 
-    // Fazer camera?
     
     // Constoi o mapa e sua fisica
     let matrixLvl1 = [
@@ -44,7 +49,15 @@ function level1(scene, updateList, physics){
     let blocks = buildMap(scene, matrixLvl1);
     physics.addToMap(blocks);
 
-    // Fazer iluminacao
+    // Iluminacao
+    let ambientColor = "rgb(50,50,50)"
+    let ambientLight = new THREE.AmbientLight(ambientColor);
+
+    let dirColor = "rgb(255,255,255)";
+    let dirLight = new THREE.DirectionalLight(dirColor, 0.2)
+
+    scene.add(dirLight);
+    scene.add(ambientLight);
 
     // Adiciona os tanques
     let redTank = new Tank(5, 5, "Red", 1);
@@ -88,7 +101,17 @@ function level2(scene, updateList, physics){
     let blocks = buildMap(scene, matrixLvl2);
     physics.addToMap(blocks);
 
-    // Fazer iluminacao
+    // Iluminacao
+    let ambientColor = "rgb(20,20,20)"
+    let ambientLight = new THREE.AmbientLight(ambientColor);
+
+    let dirColor = "rgb(80,80,80)";
+    let dirLight = new THREE.DirectionalLight(dirColor, 0.2);
+
+    // adicionar os spot lights
+
+    scene.add(dirLight);
+    scene.add(ambientLight);
 
     // Adiciona os tanques
     let greenTank = new Tank(18, 4, "", 3);
@@ -140,6 +163,7 @@ function buildMap(scene, matrix) {
 
 function getBlock(pos) {
     const blockGeometry = new THREE.BoxGeometry(blockSize,blockSize,blockSize);
+    // alterar cor de acordo com nivel
     let material = new THREE.MeshLambertMaterial({
         color:"rgb(50,50,50)"     // Main color of the object
     });
