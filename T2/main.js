@@ -81,7 +81,7 @@ const blueColors = ["blue", "darkblue", "dodgerblue", "midnightblue", "navy", "r
 // Cria os tanques
 const redTank = new Tank(4.0,  0.7,  4.0, redColors);
 const rrTank = new Tank(12.0,  0.7,  10.0, redColors);
-const blueTank = new Tank(4.0,  0.7,  28.0, blueColors);
+const blueTank = new Tank(20.0,  0.7,  20.0, blueColors);
 
 // Adiciona eles a cena, a física e a lista de update
 scene.add(redTank.geometry)
