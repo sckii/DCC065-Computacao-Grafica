@@ -4,15 +4,16 @@ import Collision from '../Physics/Collision.js';
 import Bullet from './Bullet.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
+import KeyboardMovement from '../Functions/KeyboardMovement.js';
 
-// adicionar movimentacao na classe
+
 
 class Tank {
     constructor(x, z, color, rotate) {
 
         this.color = color;
         this.material = this.setMaterial(this.color);
-        this.geometry = this.buildGeometry(this.material, rotate); // nao da pra usar this.color pq ele nao ta no msm scopo
+        this.geometry = this.buildGeometry(this.material, rotate);
         this.geometry.position.set(x, 0, z);
         this.position = this.geometry.position;
 
@@ -34,11 +35,12 @@ class Tank {
             obj.traverse( (child) => {
                 if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){
                     child.material = material
+                    child.castShadow = true;
+                    child.reciveShadow = true;   
                 }
             });
             mesh.rotateY(rotate*THREE.MathUtils.degToRad(90))
             mesh.add(gltf.scene);
-            mesh.castShadow = true;
         });
 
         let scale = 0.65
@@ -111,6 +113,7 @@ class Tank {
     }
 
     update() {
+
         if (this.lifePoints <=0 && !this.isDead){
             this.isDead = true;
         }

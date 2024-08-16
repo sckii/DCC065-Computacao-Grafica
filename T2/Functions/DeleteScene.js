@@ -11,6 +11,8 @@ export function deleteScene(scene, updateList, physics){
         // Remover o objeto da cena
         scene.remove(obj);
 
+        physics.remove(obj.colliderComponent);
+
         // Confere se o objto tem uma geometria e libera ela
         if (obj.geometry) {
             obj.geometry.dispose();
@@ -33,21 +35,10 @@ export function deleteScene(scene, updateList, physics){
     }
 
     // remover da cena da lista de update
-    // updateList.forEach(element => {
-    //     removeFromScene(element)
-    // });
+    updateList.forEach(element => {
+        removeFromScene(element)
+    });
 
-    // remomver tudo da fisica  
-    // physics.coliders.forEach(element => {
-    //     removeFromScene(element)
-    // });
-    // physics.map.forEach(element => {
-    //     removeFromScene(element)
-    // });
-
-    // remover plano
-    // remover luz
-    // remover cameras
-    // deletar cena
+    console.log(scene)
 }
 export default deleteScene;

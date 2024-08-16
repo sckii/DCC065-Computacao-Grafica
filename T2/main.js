@@ -11,7 +11,6 @@ import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildLevel } from './Functions/Map.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import deleteScene from './Functions/DeleteScene.js';
-import Tank from './Models/Tank.js';
 import { setScene } from './Functions/RemoveFromScene.js';
 
 
@@ -54,12 +53,6 @@ let d = new THREE.Vector3(-1, 0, 1);
 
 d.reflect(n);
 
-let greenTank = new Tank(18, 4, "", 3);
-    scene.add(greenTank.geometry);
-    scene.physics.add(greenTank.colliderComponent); 
-    scene.updateList.push(greenTank);
-
-   
 // Criar botão de reiniciar a fase
 var restart = false;
 var controls = new function () {
@@ -71,7 +64,8 @@ var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
 let rObj = new THREE.Object3D();    // obj para as coisas funcionarem, remover depois
-mainCamera.setTracking(greenTank, rObj);
+rObj.position.set(10,2,10)
+mainCamera.setTracking(rObj, rObj);
 // definir o tacking
 
 render();
@@ -81,14 +75,16 @@ function keyboardUpdate() {
    keyboard.update();
 
    // Adicionando controles aos tanque
-   KeyboardMovement(greenTank, scene, scene.updateList, scene.physics);
+   KeyboardMovement(rObj, scene, scene.updateList, scene.physics);
+   // resolver como vai funcionar o movimento do tanque
 
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
       camChangeOrbit = !camChangeOrbit;
    }
+
+   // Atalho para mudar o nível 
    if (keyboard.down("1")) {
-      console.log(scene)
       actualLevel = 1;
       deleteScene(scene, scene.updateList, scene.physics);
       buildLevel(actualLevel, scene, scene.updateList, scene.physics );
@@ -111,9 +107,10 @@ function render() {
       element.update(scene);
    });
 
+   // Botão de recomeçar a fase
    if (restart) {
       restart = false;
-      // chamar delete scene
+      deleteScene(scene, scene.updateList, scene.physics);
       buildLevel(actualLevel, scene, scene.updateList, scene.physics );
    }
 

@@ -12,5 +12,4 @@ export function removeFromScene(obj){
        scene.updateList.splice(index, 1);
     }
     scene.physics.remove(obj.colliderComponent);
-
 }
