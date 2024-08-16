@@ -46,7 +46,7 @@ keyboard = new KeyboardState();
 scene.physics = new PhysicsEnvironment();
 scene.updateList = [];
 
-let actualLevel = 1; // variavel para definir o nivel atual
+let actualLevel = 2; // variavel para definir o nivel atual
 buildLevel(actualLevel, scene, scene.updateList, scene.physics );
 
 let n = new THREE.Vector3(1, 0, 1).normalize();

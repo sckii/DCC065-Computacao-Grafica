@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import Tank from '../Models/Tank.js';
 import Cannon from '../Models/Cannon.js';
 import { createGroundPlane } from '../../libs/util/util.js';
@@ -25,7 +26,8 @@ export function buildLevel(nLvl, scene, updateList, physics){
 function level1(scene, updateList, physics){
     // Fazer cena?
 
-    
+    // Fazer camera?
+
     // Constoi o mapa e sua fisica
     let matrixLvl1 = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -102,16 +104,66 @@ function level2(scene, updateList, physics){
     physics.addToMap(blocks);
 
     // Iluminacao
-    let ambientColor = "rgb(20,20,20)"
+    let ambientColor = "rgb(30,30,30)";
     let ambientLight = new THREE.AmbientLight(ambientColor);
+    scene.add(ambientLight);
 
     let dirColor = "rgb(80,80,80)";
     let dirLight = new THREE.DirectionalLight(dirColor, 0.2);
-
-    // adicionar os spot lights
-
     scene.add(dirLight);
-    scene.add(ambientLight);
+
+    let spotLightMesh = getSpotLightMesh();
+    let spotLightMesh2 = getSpotLightMesh();
+    let spotLightMesh3 = getSpotLightMesh();
+    let spotLightMesh4 = getSpotLightMesh();
+
+    spotLightMesh.position.set(22,2,1);
+    spotLightMesh2.position.set(0,2,17);
+    spotLightMesh3.position.set(22,2,17);
+    spotLightMesh4.position.set(0.5,2,33);
+
+    spotLightMesh.rotateY(THREE.MathUtils.degToRad(-55));
+    spotLightMesh2.rotateY(THREE.MathUtils.degToRad(90));
+    spotLightMesh3.rotateY(THREE.MathUtils.degToRad(-90));
+    spotLightMesh4.rotateY(THREE.MathUtils.degToRad(-55));
+
+    scene.add(spotLightMesh)
+    scene.add(spotLightMesh2)
+    scene.add(spotLightMesh3)
+    scene.add(spotLightMesh4)
+
+    let spotLight = new THREE.SpotLight("rgb(255,255,255)");
+    spotLight.position.copy(spotLightMesh.position);
+    spotLight.distance = 0;
+    spotLight.penumbra = 0.7;
+    spotLight.intensity = 10;
+    // spotLight.angle= THREE.MathUtils.degToRad(40);
+    scene.add(spotLight);
+    
+    let spotLight2 = new THREE.SpotLight("rgb(255,255,255)");
+    spotLight2.position.copy(spotLightMesh2.position);
+    spotLight2.distance = 0;
+    spotLight2.penumbra = 0.7;
+    spotLight2.intensity = 10;
+    // spotLight2.angle= THREE.MathUtils.degToRad(40);
+    scene.add(spotLight2);
+
+    let spotLight3 = new THREE.SpotLight("rgb(255,255,255)");
+    spotLight3.position.copy(spotLightMesh3.position);
+    spotLight3.distance = 0;
+    spotLight3.penumbra = 0.7;
+    spotLight3.intensity = 10;
+    // spotLight3.angle= THREE.MathUtils.degToRad(40);
+    scene.add(spotLight3);
+
+    let spotLight4 = new THREE.SpotLight("rgb(255,255,255)");
+    spotLight4.position.copy(spotLightMesh4.position);
+    spotLight4.distance = 0;
+    spotLight4.penumbra = 0.7;
+    spotLight4.intensity = 10;
+    // spotLight4.angle= THREE.MathUtils.degToRad(40);
+    scene.add(spotLight4);
+        
 
     // Adiciona os tanques
     let greenTank = new Tank(18, 4, "", 3);
@@ -172,6 +224,27 @@ function getBlock(pos) {
         mesh.position.set(pos.x, pos.y, pos.z);
     
     return mesh;
+}
+
+function getSpotLightMesh(){
+    var loader = new GLTFLoader( );
+    let mesh = new THREE.Object3D();
+    loader.load( './Models/spotLightLamp.glb', function ( gltf ) {
+        let obj = gltf.scene;
+        let removeChild;
+        obj.traverse( (child) => {
+            if(child.name == "Floor"){
+                removeChild = child;
+            }
+        });
+        removeChild.parent.remove(removeChild);
+        mesh.add(gltf.scene);
+        mesh.castShadow = true;
+    });
+    let scale = 1.25
+    mesh.scale.set(scale, scale, scale);
+    
+    return mesh
 }
 
 function matrixToWorld(i, j) {
