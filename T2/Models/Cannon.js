@@ -5,7 +5,7 @@ import AABBCollider from '../Physics/AABBCollider.js';
 import { Vector3 } from '../../build/three.module.js';
 
 class Cannon{
-    constructor(x, z){
+    constructor(x, z, tankList){
         this.geometry = this.buildGeometry();
         this.geometry.position.set(x, 1, z);
         
@@ -99,30 +99,73 @@ class Cannon{
         return supportBox;
     }
 
-    setTracking(){      // Função pra selecionar o tanque mais próximo
+    setTracking(tankList){  // Função pra selecionar o tanque mais próximo
+        let closestTank = null;
+        let closestDistance = Infinity;
+        let angleToClosestTank = 0;
+
+        tankList.forEach((tank) => {
+            const distance = this.position.distanceTo(tank.position);
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestTank = tank;
+
+                // Calcular o vetor de direção do canhão ao tanque
+                const direction = new THREE.Vector3().subVectors(tank.position, this.position);
+
+                // Calcular o ângulo em relação ao eixo X
+                angleToClosestTank = Math.atan2(direction.z, direction.x);
+            }
+        }); 
+        // this.rotate(angleToClosestTank);
+        // console.log(closestDistance)
+        // console.log(angleToClosestTank)
 
     }
 
-    rotate(way){     // Função para rotacionar
-        let angle = way * THREE.MathUtils.degToRad(0.5);
-        
-        this.geometry.rotateY(angle);
-        this.updateObject(this.geometry)
+    rotate(tankList){     // Função para rotacionar
+        let closestTank = null;
+        let closestDistance = Infinity;
+        let angleToClosestTank = 0;
 
-        //let angle = THREE.MathUtils.degToRad(0.5);
-        if(angle>0){
-            this.geometry.children[1].rotateY(angle);
-            this.updateObject(this.geometry.children[1]);
-            this.geometry.children[2].rotateY(-angle);
-            this.updateObject(this.geometry.children[2])
+        tankList.forEach((tank) => {
+            const distance = this.position.distanceTo(tank.position);
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestTank = tank;
+
+                // Calcular o vetor de direção do canhão ao tanque
+                const direction = new THREE.Vector3().subVectors(tank.position, this.position);
+
+                // Calcular o ângulo em relação ao eixo X
+                angleToClosestTank = Math.atan2(direction.z, direction.x);
+            }
+        });
+        var cannonDirection = new Vector3;
+        this.geometry.getWorldDirection(cannonDirection)
+        let way = 0;
+        if (angleToClosestTank < 0) {let way = -1}
+        if (angleToClosestTank > 0) {let way = 1}
+
+        while(angleToClosestTank != cannonDirection){
+            let angle = way * THREE.MathUtils.degToRad(0.5);
+            this.geometry.rotateY(angle);
+            this.updateObject(this.geometry)
+
+            //let angle = THREE.MathUtils.degToRad(0.5);
+            if(angle>0){
+                this.geometry.children[1].rotateY(angle);
+                this.updateObject(this.geometry.children[1]);
+                this.geometry.children[2].rotateY(-angle);
+                this.updateObject(this.geometry.children[2])
+            }
+            if(angle<0){
+                this.geometry.children[1].rotateY(angle);
+                this.updateObject(this.geometry.children[1]);
+                this.geometry.children[2].rotateY(-angle);
+                this.updateObject(this.geometry.children[2])
+            }
         }
-        if(angle<0){
-            this.geometry.children[1].rotateY(angle);
-            this.updateObject(this.geometry.children[1]);
-            this.geometry.children[2].rotateY(-angle);
-            this.updateObject(this.geometry.children[2])
-        }
-        
         
     }
 
@@ -145,7 +188,8 @@ class Cannon{
         mesh.updateMatrix();
     }
 
-    update() {
+    update(scene) {
+        this.rotate(scene.tankList)
 
     }
     /**

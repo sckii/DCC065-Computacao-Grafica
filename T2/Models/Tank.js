@@ -5,6 +5,7 @@ import Bullet from './Bullet.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
 import KeyboardMovement from '../Functions/KeyboardMovement.js';
+import { removeFromScene } from '../Functions/RemoveFromScene.js';
 
 
 
@@ -118,6 +119,9 @@ class Tank {
             this.isDead = true;
         }
 
+        if(this.isDead){
+            removeFromScene(this);
+        }
         //this.geometry.translateOnAxis(this.directionTank, 0.1);
         this.worldDir.multiplyScalar(0.1);
         this.geometry.position.add(this.worldDir);

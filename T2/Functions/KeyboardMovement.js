@@ -7,7 +7,6 @@ const keyboard = new KeyboardState();
 
 function KeyboardMovement(tank, scene, updateList, physics) { 
     if ( keyboard.pressed("W") || keyboard.pressed("up") ) {
-        console.log(tank)
         tank.setDir(1);
     }
     

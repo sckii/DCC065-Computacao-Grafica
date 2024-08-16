@@ -15,22 +15,22 @@ import AABBCollider from '../Physics/AABBCollider.js';
 
 const blockSize = 2;
 
-export function buildLevel(nLvl, scene, updateList, physics){
+export function buildLevel(nLvl, scene, updateList, physics, tankList){
     if(nLvl==1){
-        level1(scene, updateList, physics);
+        level1(scene, updateList, physics, tankList);
     }
     if(nLvl==2){
-        level2(scene, updateList, physics);
+        level2(scene, updateList, physics, tankList);
     }
 }
 
-function level1(scene, updateList, physics){
+function level1(scene, updateList, physics, tankList){
 
-    // Fazer camera?
-
+    // Fazer camera
+    
     // Constoi o mapa e sua fisica
     let matrixLvl1 = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -66,18 +66,19 @@ function level1(scene, updateList, physics){
     scene.add(redTank.geometry);
     physics.add(redTank.colliderComponent); 
     updateList.push(redTank);
+    tankList.push(redTank);
     //KeyboardMovement(redTank, scene, scene.updateList, scene.physics);
 
     let blueTank = new Tank(5, 27, "Blue", 1);
     scene.add(blueTank.geometry);
     physics.add(blueTank.colliderComponent); 
     updateList.push(blueTank);
-
+    tankList.push(blueTank);
 }
 
-function level2(scene, updateList, physics){
+function level2(scene, updateList, physics, tankList){
 
-    // Fazer camera?
+    // Fazer camera
     
     // Constoi o mapa e sua fisica
     let matrixLvl2 = [
@@ -143,7 +144,7 @@ function level2(scene, updateList, physics){
     spotLight.castShadow = true;
     spotLight.distance = 15;
     spotLight.penumbra = 0.8;
-    spotLight.power = 500;
+    spotLight.intensity = 150;
     spotLight.shadow.camera.near = 3;    
     spotLight.shadow.camera.far = 15.0; 
     scene.add(spotLight);
@@ -156,7 +157,7 @@ function level2(scene, updateList, physics){
     spotLight2.castShadow = true;
     spotLight2.distance = 15;
     spotLight2.penumbra = 0.8;
-    spotLight2.power = 500;
+    spotLight2.intensity = 150;
     spotLight2.shadow.camera.near = 3;    
     spotLight2.shadow.camera.far = 10.0; 
     scene.add(spotLight2);
@@ -169,7 +170,7 @@ function level2(scene, updateList, physics){
     spotLight3.castShadow = true;
     spotLight3.distance = 15;
     spotLight3.penumbra = 0.8;
-    spotLight3.power = 500;
+    spotLight3.intensity = 150;
     spotLight3.shadow.camera.near = 3;    
     spotLight3.shadow.camera.far = 10.0; 
     scene.add(spotLight3);
@@ -182,7 +183,7 @@ function level2(scene, updateList, physics){
     spotLight4.castShadow = true;
     spotLight4.distance = 15;
     spotLight4.penumbra = 0.8;
-    spotLight4.power = 500;
+    spotLight4.intensity = 150;
     spotLight4.shadow.camera.near = 3;    
     spotLight4.shadow.camera.far = 15.0; 
     scene.add(spotLight4);
@@ -193,20 +194,22 @@ function level2(scene, updateList, physics){
     scene.add(greenTank.geometry);
     physics.add(greenTank.colliderComponent); 
     updateList.push(greenTank);
-    //KeyboardMovement(greenTank, scene, updateList, physics);
+    tankList.push(greenTank)
     
     let redTank = new Tank(4, 30, "Red", 1);
     scene.add(redTank.geometry);
     physics.add(redTank.colliderComponent); 
     updateList.push(redTank);
+    tankList.push(redTank)
 
     let blueTank = new Tank(18, 30, "Blue", 2.5);
     scene.add(blueTank.geometry);
     physics.add(blueTank.colliderComponent); 
     updateList.push(blueTank);
+    tankList.push(blueTank)
 
     // Adiciona o canhao
-    let cannon = new Cannon(11, 17);
+    let cannon = new Cannon(11, 17, tankList);
     scene.add(cannon.geometry);
     scene.physics.add(cannon.colliderComponent); 
     scene.updateList.push(cannon);

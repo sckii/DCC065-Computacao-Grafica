@@ -1,11 +1,11 @@
-import { setScene, removeFromScene } from './RemoveFromScene.js';
+import {removeFromScene } from './RemoveFromScene.js';
 
 
 export function deleteScene(scene, updateList, physics){
-    //setScene(scene);
 
     // Percorre todos os filhos da cena
     while (scene.children.length > 0) {
+        console.log(scene.children)
         const obj = scene.children[0];
         
         // Remover o objeto da cena
@@ -27,18 +27,12 @@ export function deleteScene(scene, updateList, physics){
                 obj.material.dispose();
             }
         }
-
-        // Se houver texturas no material, liberá-las também
-        if (obj.material && obj.material.map) {
-            obj.material.map.dispose();
-        }
     }
 
-    // remover da cena da lista de update
+    // remove da lista de update
     updateList.forEach(element => {
         removeFromScene(element)
     });
 
-    console.log(scene)
 }
 export default deleteScene;
