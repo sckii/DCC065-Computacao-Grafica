@@ -15,6 +15,7 @@ import { buildMap } from './Functions/Map.js'
 import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import GameOver from './Functions/GameOver.js';
+import { CSS2DRenderer, CSS2DObject } from '../build/jsm/Addons.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -30,6 +31,13 @@ camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chama
 mainCamera = new MainCamera(0, 8, 0);
 scene.add(mainCamera.cameraHolder)
 window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update(), renderer)}, false );
+
+// Criar labelRenderr
+let labelRenderer = new CSS2DRenderer();
+  labelRenderer.setSize( window.innerWidth, window.innerHeight );
+  labelRenderer.domElement.style.position = 'absolute';
+  labelRenderer.domElement.style.top = '0px';
+  document.body.appendChild( labelRenderer.domElement );
 
 // Cria a camera secundario que terá os contres de orbita
 secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
@@ -131,7 +139,9 @@ function render()
 {
    keyboardUpdate();
    requestAnimationFrame(render);
-   
+
+   labelRenderer.render( scene, mainCamera.camera );   
+
    scene.physics.update();
    
    scene.updateList.forEach(element => {
@@ -153,6 +163,4 @@ function render()
    if (!camChangeOrbit){
       renderer.render(scene, mainCamera.update()) // Render scene
    }
-
-
 }
