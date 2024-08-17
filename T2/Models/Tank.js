@@ -14,7 +14,9 @@ class Tank {
 
         this.color = color;
         this.material = this.setMaterial(this.color);
-        this.geometry = this.buildGeometry(this.material, rotate);
+        const { mesh, newObject } = this.buildGeometry(this.material, rotate);
+        this.mesh = newObject
+        this.geometry = mesh;
         this.geometry.position.set(x, 0, z);
         this.position = this.geometry.position;
 
@@ -29,27 +31,41 @@ class Tank {
 
         this.healthBar = new HealthBar( this.lifePoints );
         this.geometry.add( this.healthBar );
+
+        
     }
 
     buildGeometry(material, rotate){
         var loader = new GLTFLoader( );
         let mesh = new THREE.Object3D();
+        const geometry = new THREE.BoxGeometry(3, 3, 3); // Criar uma esfera
+        const material2 = new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.0, transparent: false }); // Material verde
+        const newObject = new THREE.Mesh(geometry, material2);
+
         loader.load( './Models/tank.glb', function ( gltf ) {
             let obj = gltf.scene;
             obj.traverse( (child) => {
                 if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){
                     child.material = material
                     child.castShadow = true;
-                    child.reciveShadow = true;   
+                    child.reciveShadow = true; 
                 }
             });
-            mesh.rotateY(rotate*THREE.MathUtils.degToRad(90))
+
+            // Posicionar o novo objeto
+            newObject.position.set(0, 0, 0);
+
+            // Adicionar o novo objeto ao modelo
+            obj.add(newObject);
+
+            mesh.rotateY(rotate*THREE.MathUtils.degToRad(90));
             mesh.add(gltf.scene);
         });
 
         let scale = 0.65
         mesh.scale.set(scale, scale, scale);
-        return mesh;
+        this.mesh = newObject;
+        return {mesh, newObject};
     };
 
     setMaterial(color){
@@ -112,8 +128,10 @@ class Tank {
      * @param {Collision} collision 
      */   
     onCollision(collision){
-        if (collision.other.isBlock || collision.other instanceof Tank)
-            this.geometry.position.add(collision.getNormal().multiplyScalar(.15));
+        if (collision.other.isBlock || collision.other instanceof Tank) {
+            this.position.add(collision.getNormal().multiplyScalar(.15));
+            this.normal = collision.getNormal();
+        }
     }
 
     update() {

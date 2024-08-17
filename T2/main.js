@@ -13,6 +13,7 @@ import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import deleteScene from './Functions/DeleteScene.js';
 import { setScene } from './Functions/RemoveFromScene.js';
 import { CSS2DRenderer } from '../build/jsm/Addons.js';
+import TankAI from './Functions/TankIA.js';
 
 let scene = new THREE.Scene();
 setScene(scene);
@@ -53,8 +54,8 @@ scene.cameraList = [];
 scene.cameraList.push(mainCamera);
 scene.cameraList.push(secondCamera);
 
-let actualLevel = 2; // variavel para definir o nivel atual
-buildLevel(actualLevel, scene);
+let actualLevel = 1; // variavel para definir o nivel atual
+let bots = buildLevel(actualLevel, scene);
 
 let n = new THREE.Vector3(1, 0, 1).normalize();
 let d = new THREE.Vector3(-1, 0, 1);
@@ -74,8 +75,8 @@ gui.add(controls, 'restart', true).name("Recomeçar");
 // Manipulação de camera
 let camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
 
+// definir o tracking
 mainCamera.setTracking(scene.tankList);
-// definir o tacking
 
 render();
 
@@ -121,7 +122,7 @@ function render() {
    if (restart) {
       restart = false;
       deleteScene(scene);
-      buildLevel(actualLevel);
+      bots = buildLevel(actualLevel);
    }
 
    // Fazer verificao do nivel 1 
@@ -133,4 +134,7 @@ function render() {
    if (!camChangeOrbit) {
       renderer.render(scene, mainCamera.update()) // Render scene
    }
+
+   // Bots update 
+   bots.forEach(bot => {if(bot) bot.update()});
 }
