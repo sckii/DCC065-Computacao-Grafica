@@ -46,7 +46,10 @@ function level1(scene){
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
-    let blocks = buildMap(scene, matrixLvl1);
+    let blockMaterial = new THREE.MeshLambertMaterial({
+        color:"rgb(178,34,34)"    
+    });
+    let blocks = buildMap(scene, matrixLvl1, blockMaterial);
     scene.physics.addToMap(blocks);
 
     // Iluminacao
@@ -75,8 +78,6 @@ function level1(scene){
 }
 
 function level2(scene){
-
-    // Fazer camera
     
     // Constoi o mapa e sua fisica
     let matrixLvl2 = [
@@ -99,7 +100,10 @@ function level2(scene){
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
-    let blocks = buildMap(scene, matrixLvl2);
+    let blockMaterial = new THREE.MeshLambertMaterial({
+        color:"rgb(50,50,50)"    
+    });
+    let blocks = buildMap(scene, matrixLvl2, blockMaterial);
     scene.physics.addToMap(blocks);
 
     // Iluminacao
@@ -213,7 +217,7 @@ function level2(scene){
     scene.updateList.push(cannon);
 }
 
-function buildMap(scene, matrix) {
+function buildMap(scene, matrix, blockMaterial) {
     let plane = createGroundPlane(matrix[0].length*blockSize, matrix.length*blockSize);
     let blocks = new Set();
     plane.position.set((matrix[0].length*blockSize)/2-blockSize/2,0,(matrix.length*blockSize)/2-blockSize/2);
@@ -223,7 +227,7 @@ function buildMap(scene, matrix) {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
             if (matrix[i][j] == 1) {
-                let block = getBlock(matrixToWorld(i, j));
+                let block = getBlock(matrixToWorld(i, j), blockMaterial);
                 block.castShadow = true;
                 block.reciveShadow = true;
                 scene.add(block);
@@ -237,14 +241,10 @@ function buildMap(scene, matrix) {
     return blocks;
 }
 
-function getBlock(pos) {
+function getBlock(pos, blockMaterial) {
     const blockGeometry = new THREE.BoxGeometry(blockSize,blockSize,blockSize);
-    // alterar cor de acordo com nivel
-    let material = new THREE.MeshLambertMaterial({
-        color:"rgb(50,50,50)"     // Main color of the object
-    });
     
-    const mesh = new THREE.Mesh(blockGeometry, material);
+    const mesh = new THREE.Mesh(blockGeometry, blockMaterial);
         mesh.position.set(pos.x, pos.y, pos.z);
     
     return mesh;
