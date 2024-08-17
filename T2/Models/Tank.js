@@ -5,7 +5,9 @@ import GameOver from '../Functions/GameOver.js';
 import { Vector3 } from '../../build/three.module.js';
 import Collision from '../Physics/Collision.js';
 import Bullet from './Bullet.js';
-import { CSS2DObject } from '../../build/jsm/Addons.js';
+
+import buildHealthBar from './HealthBar.js';
+import HealthBar from './HealthBar.js';
 
 
 class Tank {
@@ -29,15 +31,8 @@ class Tank {
         this.lifePoints = 10;
         this.isDead = false;
 
-        this.healthBarDiv = document.createElement( 'div' );
-        this.healthBarDiv.className = 'label';
-        this.healthBarDiv.textContent = 'Earth';
-        this.healthBarDiv.style.backgroundColor = 'red';
-
-        this.healthBar = new CSS2DObject( this.healthBarDiv );
-        this.healthBar.position.set( -.2, 2, 0 );
+        this.healthBar = new HealthBar( this.lifePoints );
         this.geometry.add( this.healthBar );
-        this.healthBar.layers.set( 0 );
     }
 
     buildGeometry(){
@@ -118,16 +113,19 @@ class Tank {
     }
 
     update() {
-        if (this.lifePoints <=0 && !this.isDead){
-            this.isDead = true;
-            GameOver(this.color);
-        }
-        this.healthBarDiv.textContent = this.lifePoints;
-
         //this.geometry.translateOnAxis(this.directionTank, 0.1);
         this.worldDir.multiplyScalar(0.1);
         this.position.add(this.worldDir);
 
+    }
+
+    reciveDamage(damage) {
+        this.lifePoints -= damage;
+        if (this.lifePoints <=0 && !this.isDead){
+            this.isDead = true;
+            GameOver(this.color);
+        }
+        this.healthBar.setAmount( this.lifePoints );
     }
 
     setDir(directionTank) {

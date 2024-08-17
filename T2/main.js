@@ -15,7 +15,7 @@ import { buildMap } from './Functions/Map.js'
 import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import GameOver from './Functions/GameOver.js';
-import { CSS2DRenderer, CSS2DObject } from '../build/jsm/Addons.js';
+import { CSS2DRenderer } from '../build/jsm/Addons.js';
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -34,10 +34,13 @@ window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update()
 
 // Criar labelRenderr
 let labelRenderer = new CSS2DRenderer();
-  labelRenderer.setSize( window.innerWidth, window.innerHeight );
-  labelRenderer.domElement.style.position = 'absolute';
-  labelRenderer.domElement.style.top = '0px';
-  document.body.appendChild( labelRenderer.domElement );
+   labelRenderer.setSize( window.innerWidth, window.innerHeight );
+   labelRenderer.domElement.style.position = 'absolute';
+   labelRenderer.domElement.style.top = '0px';
+   document.body.appendChild( labelRenderer.domElement );
+window.addEventListener( 'resize', () => {
+   labelRenderer.setSize( window.innerWidth, window.innerHeight );
+}, false );
 
 // Cria a camera secundario que terá os contres de orbita
 secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
