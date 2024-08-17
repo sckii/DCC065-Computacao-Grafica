@@ -1,5 +1,5 @@
 import * as THREE from  'three';
-import { convertVector3ToEuler, getChancesOf } from './Utils.js';
+import { getChancesOf, rotateObjectToVector } from './Utils.js';
 
 const raycaster = new THREE.Raycaster();
 
@@ -17,7 +17,7 @@ class TankAI {
     
     // Tank Shoot
     this.canShoot = true;
-    this.shootInterval = 2000;
+    this.shootInterval = 1200;
 
     this.scene = scene;
     this.updateList = scene.updateList;
@@ -44,10 +44,7 @@ class TankAI {
       const direction = botPosition.clone().sub(playerPosition).normalize();
 
       // Calcular a rotação desejada (virar o bot para a direção oposta ao player)
-      const targetRotation =  Math.atan2(direction.x, direction.z) - Math.PI/2
-      
-      // Suavizar a rotação do bot
-      this.tank.geometry.rotation.y = targetRotation
+      rotateObjectToVector(this.tank.geometry, direction)
       this.tank.setDir(1);
     }
   }
@@ -61,10 +58,9 @@ class TankAI {
 
     // TODO: Validar funcionamento
     if (this.tank.normal) {
-      const normal = this.normalQuandrant(this.tank.normal);
-      this.tank.geometry.rotation.y = THREE.MathUtils.degToRad(normal);
+      // Rotacionar o objeto para "olhar" na direção do vetor        
+      rotateObjectToVector(this.tank.geometry, this.tank.normal);
       this.tank.normal = null;
-      this.tank.setDir(1);
     }
 
     const distanceBetweenPlayer = playerPosition.distanceTo(botPosition);
@@ -104,35 +100,35 @@ class TankAI {
 
     const bestRicochet = {
       direction: null,
-      distanceToPlayer: Infinity,
+      angle: null
     }
 
     // Direções a serem testadas
     const rayDirections = this.generateRayDirections();
     rayDirections.forEach(rayDirection => {
+      const rawDirection = new THREE.Vector3().copy(rayDirection)
       // Direciona o raio em uma das direções a serem testadas
       const raycaster = new THREE.Raycaster(botPosition, rayDirection);
       const intersects = raycaster.intersectObjects(this.sceneBlocks);
-
+      
       if (intersects.length > 0) {
         const hitPoint = intersects[0].point;
         const normal = intersects[0].face.normal.clone();
-
+        
         // Calcula a direção refletida
         const ricochetDirection = rayDirection.reflect(normal).normalize();
-
+        
         // Cria um segundo raycaster para ver se acerta o player
         const ricochetRaycaster = new THREE.Raycaster(hitPoint, ricochetDirection);
         const playerIntersect = ricochetRaycaster.intersectObject(this.playerTank);
+        const wallIntersect = ricochetRaycaster.intersectObjects(this.sceneBlocks);
         
-        if (playerIntersect.length > 0) {
-          const distanceToPlayer = playerIntersect[0].distance;
-
+        
+        if (playerIntersect.length > 0 && playerIntersect[0].distance < wallIntersect[0].distance) {
+          this.scene.add(new THREE.ArrowHelper(rawDirection, botPosition, intersects[0].distance, 0xffff00));
+          this.scene.add(new THREE.ArrowHelper(ricochetRaycaster.ray.direction, ricochetRaycaster.ray.origin, wallIntersect[0].distance, 0xff0000));
           // Verificar se é a melhor trajetoria até o player
-          if (distanceToPlayer < bestRicochet.distanceToPlayer) {
-            bestRicochet.direction = rayDirection;
-            bestRicochet.distanceToPlayer = distanceToPlayer;
-          }
+          bestRicochet.direction = rawDirection
         }
       }
     })
@@ -163,22 +159,18 @@ class TankAI {
     const botPosition = this.tank.position; // Posição do bot
 
     const direction = new THREE.Vector3();
-
+    
     if (this.isPlayerVisible()) {
       direction.subVectors(playerPosition, botPosition).normalize();
-      const targetRotation =  Math.atan2(direction.x, direction.z) - Math.PI/2;
-
-      this.tank.geometry.rotation.y = targetRotation
+      // Rotacionar o objeto para "olhar" na direção do vetor        
+      rotateObjectToVector(this.tank.geometry, direction);
       this.tank.shoot(this.scene, this.updateList, this.physics);
     } else {
       // Se o player não estiver visível, calcule uma trajetória com ricochete
       const ricochetDirection = this.calculateRicochet().direction;
-
-      
-      if (ricochetDirection) {
-        const euler = convertVector3ToEuler(ricochetDirection);
-
-        this.tank.geometry.rotation.copy(euler)
+      if (ricochetDirection) {        
+        // Rotacionar o objeto para "olhar" na direção do vetor        
+        rotateObjectToVector(this.tank.geometry, ricochetDirection);
         this.tank.shoot(this.scene, this.updateList, this.physics);
       }
     }
@@ -204,19 +196,13 @@ class TankAI {
     return false
   }
 
-  
-
   update() {
     
     this.movement();
 
-    if (this.canShoot) {
-      this.tank.setDir(0)
-    }
-
     setInterval(() => {
       this.shoot();
-    }, this.shootInterval - 1000);
+    }, 500);
     
   }
 };

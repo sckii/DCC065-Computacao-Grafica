@@ -28,7 +28,7 @@ light = initDefaultBasicLight(scene);
 camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
 
 // Cria a camera main e adiciona na cena
-mainCamera = new MainCamera(0, 8, 0);
+mainCamera = new MainCamera(0, 10, 0);
 scene.add(mainCamera.cameraHolder)
 window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update(), renderer)}, false );
 
@@ -88,9 +88,9 @@ scene.add(redTank.geometry)
 scene.physics.add(redTank.colliderComponent); 
 scene.updateList.push(redTank);
 
-// scene.add(rrTank.geometry)
-// scene.physics.add(rrTank.colliderComponent); 
-// scene.updateList.push(rrTank);
+scene.add(rrTank.geometry)
+scene.physics.add(rrTank.colliderComponent); 
+scene.updateList.push(rrTank);
 
 scene.add(blueTank.geometry)
 scene.updateList.push(blueTank);
@@ -115,12 +115,12 @@ gui.add(controls, 'restart', true).name("Recomeçar");
 mainCamera.setTracking([
    redTank.geometry, 
    blueTank.geometry, 
-   // rrTank.geometry
+   rrTank.geometry
 ]);
 
-// const aiTank = new TankAI(rrTank, 8, blocks);
+const aiTank = new TankAI(rrTank, 8, blocks, scene);
 const ai2Tank = new TankAI(blueTank, 10, blocks, scene);
-// aiTank.setPlayerTank(redTank.geometry);
+aiTank.setPlayerTank(redTank.geometry);
 ai2Tank.setPlayerTank(redTank.geometry);
 
 render();
@@ -165,6 +165,6 @@ function render()
       renderer.render(scene, mainCamera.update()) // Render scene
    }
 
-   // aiTank.update();
+   aiTank.update();
    ai2Tank.update();
 }
