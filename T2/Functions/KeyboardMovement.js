@@ -5,9 +5,7 @@ import * as THREE from  'three';
 
 const keyboard = new KeyboardState();
 
-function KeyboardMovement(tank, scene, updateList, physics) {
-    
-    
+function KeyboardMovement(tank, scene) { 
     if ( keyboard.pressed("W") || keyboard.pressed("up") ) {
         tank.setDir(1);
     }
@@ -22,11 +20,10 @@ function KeyboardMovement(tank, scene, updateList, physics) {
     
     if ( keyboard.pressed("D") || keyboard.pressed("right") ) {
         tank.geometry.rotateY(THREE.MathUtils.degToRad(-5))
-        //tank.geometry.translateZ(.1);
     }
 
     if (keyboard.down("space") || keyboard.down("Q")){
-        tank.shoot(scene, updateList, physics);
+        tank.shoot(scene);
     }            
 }
 
