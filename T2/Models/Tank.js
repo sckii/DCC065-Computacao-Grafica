@@ -5,8 +5,6 @@ import GameOver from '../Functions/GameOver.js';
 import { Vector3 } from '../../build/three.module.js';
 import Collision from '../Physics/Collision.js';
 import Bullet from './Bullet.js';
-
-import buildHealthBar from './HealthBar.js';
 import HealthBar from './HealthBar.js';
 
 
