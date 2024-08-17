@@ -4,8 +4,9 @@ import { getChancesOf, rotateObjectToVector } from './Utils.js';
 const raycaster = new THREE.Raycaster();
 
 class TankAI {
-  constructor(tank, range, sceneBlocks, scene) {
+  constructor(tank, playerTank, range, sceneBlocks, scene) {
     this.tank = tank;
+    this.playerTank = playerTank.geometry;
     this.range = range;
 
     // Tank Movement
@@ -56,9 +57,9 @@ class TankAI {
     // Mantem afastado do jogador 
     this.getOutPlayer();
 
-    // TODO: Validar funcionamento
+    // Ao encontar uma parede virar o tank para o lado oposto
     if (this.tank.normal) {
-      // Rotacionar o objeto para "olhar" na direção do vetor        
+      // Rotacionar o objeto para "olhar" na direção do vetor normal  
       rotateObjectToVector(this.tank.geometry, this.tank.normal);
       this.tank.normal = null;
     }
@@ -66,10 +67,10 @@ class TankAI {
     const distanceBetweenPlayer = playerPosition.distanceTo(botPosition);
     if (distanceBetweenPlayer > this.range && !this.tank.normal) {
       if (getChancesOf(10)) {
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-30));
+        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-10));
       }
       if (getChancesOf(10)) {
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(30));
+        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(10));
       }
     }
 
@@ -180,28 +181,12 @@ class TankAI {
     }, this.shootInterval)
   }
 
-  normalQuandrant(normal) {
-    if (normal.x > 0 && normal.z === 0) {
-      return 0;
-    }
-    if (normal.x === 0 && normal.z > 0) {
-      return -90;
-    }
-    if (normal.x < 0 && normal.z === 0) {
-      return -180;
-    }
-    if (normal.x === 0 && normal.z < 0) {
-      return 90;
-    }
-    return false
-  }
-
   update() {
     
     this.movement();
 
     setInterval(() => {
-      this.shoot();
+      // this.shoot();
     }, 500);
     
   }

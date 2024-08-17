@@ -118,10 +118,8 @@ mainCamera.setTracking([
    rrTank.geometry
 ]);
 
-const aiTank = new TankAI(rrTank, 8, blocks, scene);
-const ai2Tank = new TankAI(blueTank, 10, blocks, scene);
-aiTank.setPlayerTank(redTank.geometry);
-ai2Tank.setPlayerTank(redTank.geometry);
+const aiTank = new TankAI(rrTank, redTank, 8, blocks, scene);
+const ai2Tank = new TankAI(blueTank, redTank, 10, blocks, scene);
 
 render();
 
