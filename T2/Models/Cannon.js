@@ -3,7 +3,6 @@ import { CSG } from '../../libs/other/CSGMesh.js'
 import Bullet from './Bullet.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 import { Vector3 } from '../../build/three.module.js';
-import { scene } from '../Functions/RemoveFromScene.js';
 
 class Cannon{
     constructor(x, z, scene){
@@ -117,6 +116,7 @@ class Cannon{
     }
 
     rotate(scene){     // Função para rotacionar
+        // nao estou conseguindo fazer ele rodar pra direcao do tanque mais proximo
         
         let closestTank = this.getClosestTank(scene);
         if (!closestTank) return;       // garante de que tem um tanque para mirar

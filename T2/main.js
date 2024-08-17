@@ -13,24 +13,19 @@ import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import deleteScene from './Functions/DeleteScene.js';
 import { setScene } from './Functions/RemoveFromScene.js';
 
-let orbit, scene, renderer, camChangeOrbit, mainCamera, secondCamera, keyboard;
-scene = new THREE.Scene();
+let scene = new THREE.Scene();
 setScene(scene);
 
-renderer = initRenderer();
-
-// Manipulação de camera
-camChangeOrbit = true; // variavel para armazenar se a camera orbital foi chamada
-// alterei pra true para facilitar, mudar depois
+let renderer = initRenderer();
 
 // Cria a camera main e adiciona na cena
-mainCamera = new MainCamera(0, 8, 0);
+let mainCamera = new MainCamera(0, 8, 0);
 scene.add(mainCamera.cameraHolder)
 window.addEventListener('resize', function () { onWindowResize(mainCamera.update(), renderer) }, false);
 
 // Cria a camera secundario que terá os contres de orbita
-secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
-orbit = new OrbitControls(secondCamera, renderer.domElement); // Habilitando mouse rotation, pan, zoom etc.
+let secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
+let orbit = new OrbitControls(secondCamera, renderer.domElement); // Habilitando mouse rotation, pan, zoom etc.
 
 // Alterando para onde aponta a camera orbital e a secundaria
 secondCamera.lookAt(11, 0, 16);
@@ -38,13 +33,16 @@ orbit.target = new THREE.Vector3(11, 0, 16);
 window.addEventListener('resize', function () { onWindowResize(secondCamera, renderer) }, false);
 
 // Keyboard set variable
-keyboard = new KeyboardState();
+let keyboard = new KeyboardState();
 
 scene.physics = new PhysicsEnvironment();
 scene.updateList = [];
 scene.tankList = [];
+scene.cameraList = [];
+scene.cameraList.push(mainCamera);
+scene.cameraList.push(secondCamera);
 
-let actualLevel = 2; // variavel para definir o nivel atual
+let actualLevel = 1; // variavel para definir o nivel atual
 buildLevel(actualLevel, scene);
 
 let n = new THREE.Vector3(1, 0, 1).normalize();
@@ -62,6 +60,9 @@ var controls = new function () {
 var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
+// Manipulação de camera
+let camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
+
 mainCamera.setTracking(scene.tankList[0], scene.tankList[1]);
 // definir o tacking
 
@@ -73,7 +74,6 @@ function keyboardUpdate() {
 
    // Adicionando controles aos tanque
    KeyboardMovement(scene.tankList[0], scene);
-   // resolver como vai funcionar o movimento do tanque
 
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
@@ -83,13 +83,13 @@ function keyboardUpdate() {
    // Atalho para mudar o nível 
    if (keyboard.down("1")) {
       actualLevel = 1;
-      deleteScene(scene, scene.updateList, scene.physics);
-      buildLevel(actualLevel, scene, scene.updateList, scene.physics, scene.tankList );
+      deleteScene(scene);     // depois que deleta a cena a camera vai de base e nao da pra controlar o tanque novo
+      buildLevel(actualLevel, scene);
    }
    if (keyboard.down("2")) {
       actualLevel = 2;
-      deleteScene(scene, scene.updateList, scene.physics);
-      buildLevel(actualLevel, scene, scene.updateList, scene.physics, scene.tankLis );
+      deleteScene(scene);
+      buildLevel(actualLevel, scene);
    }
    
 }
@@ -107,9 +107,11 @@ function render() {
    // Botão de recomeçar a fase
    if (restart) {
       restart = false;
-      deleteScene(scene, scene.updateList, scene.physics);
-      buildLevel(actualLevel, scene, scene.updateList, scene.physics, scene.tankList);
+      deleteScene(scene);
+      buildLevel(actualLevel);
    }
+
+   // Fazer verificao do nivel 1 
 
    // Verificando qual camera será utilizada
    if (camChangeOrbit) {

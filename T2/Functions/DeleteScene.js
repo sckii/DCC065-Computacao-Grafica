@@ -1,7 +1,7 @@
 import {removeFromScene } from './RemoveFromScene.js';
 
 
-export function deleteScene(scene, updateList, physics){
+export function deleteScene(scene){
 
     // Percorre todos os filhos da cena
     while (scene.children.length > 0) {
@@ -10,7 +10,7 @@ export function deleteScene(scene, updateList, physics){
         // Remover o objeto da cena
         scene.remove(obj);
 
-        physics.remove(obj.colliderComponent);
+        scene.physics.remove(obj.colliderComponent);
 
         // Confere se o objto tem uma geometria e libera ela
         if (obj.geometry) {
@@ -29,7 +29,7 @@ export function deleteScene(scene, updateList, physics){
     }
 
     // remove da lista de update
-    updateList.forEach(element => {
+    scene.updateList.forEach(element => {
         removeFromScene(element)
     });
 
