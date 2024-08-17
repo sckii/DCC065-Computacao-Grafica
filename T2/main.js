@@ -1,125 +1,81 @@
 import * as THREE from  'three';
-import KeyboardState from '../libs/util/KeyboardState.js'
-import GUI from '../libs/util/dat.gui.module.js'
+import KeyboardState from '../libs/util/KeyboardState.js';
+import GUI from '../libs/util/dat.gui.module.js';
 import { OrbitControls } from '../build/jsm/controls/OrbitControls.js';
-import {initRenderer, 
-        initCamera,
-        initDefaultBasicLight,
-        SecondaryBox,
-        InfoBox,
-        onWindowResize} from "../libs/util/util.js";
-import Tank from './Models/Tank.js';                                
+import {
+   initRenderer,
+   initCamera,
+   onWindowResize, } from "../libs/util/util.js";
 import MainCamera from './Functions/MainCamera.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
-import { buildMap } from './Functions/Map.js'
-import { setScene } from './Functions/RemoveFromScene.js';
+import { buildLevel } from './Functions/Map.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
-import GameOver from './Functions/GameOver.js';
-import TankAI from './Functions/TankIA.js';
+import deleteScene from './Functions/DeleteScene.js';
+import { setScene } from './Functions/RemoveFromScene.js';
+import { CSS2DRenderer } from '../build/jsm/Addons.js';
 
-let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
-scene = new THREE.Scene();
+let scene = new THREE.Scene();
 setScene(scene);
 
-renderer = initRenderer();
-light = initDefaultBasicLight(scene);
-
-// Manipulação de camera
-camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
+let renderer = initRenderer();
 
 // Cria a camera main e adiciona na cena
-mainCamera = new MainCamera(0, 10, 0);
+let mainCamera = new MainCamera(0, 8, 0);
 scene.add(mainCamera.cameraHolder)
-window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update(), renderer)}, false );
+window.addEventListener('resize', function () { onWindowResize(mainCamera.update(), renderer) }, false);
+
+// Criar labelRenderr
+let labelRenderer = new CSS2DRenderer();
+   labelRenderer.setSize( window.innerWidth, window.innerHeight );
+   labelRenderer.domElement.style.position = 'absolute';
+   labelRenderer.domElement.style.top = '0px';
+   document.body.appendChild( labelRenderer.domElement );
+window.addEventListener( 'resize', () => {
+   labelRenderer.setSize( window.innerWidth, window.innerHeight );
+}, false );
 
 // Cria a camera secundario que terá os contres de orbita
-secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
-orbit = new OrbitControls( secondCamera, renderer.domElement ); // Habilitando mouse rotation, pan, zoom etc.
+let secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
+let orbit = new OrbitControls(secondCamera, renderer.domElement); // Habilitando mouse rotation, pan, zoom etc.
 
 // Alterando para onde aponta a camera orbital e a secundaria
-secondCamera.lookAt(11, 0, 16);  
+secondCamera.lookAt(11, 0, 16);
 orbit.target = new THREE.Vector3(11, 0, 16);
-window.addEventListener( 'resize', function(){onWindowResize(secondCamera, renderer)}, false );
+window.addEventListener('resize', function () { onWindowResize(secondCamera, renderer) }, false);
 
 // Keyboard set variable
-keyboard = new KeyboardState();
-
-const matrix = [
-   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
- ]
+let keyboard = new KeyboardState();
 
 scene.physics = new PhysicsEnvironment();
 scene.updateList = [];
-let blocks = buildMap(scene, matrix);
-scene.physics.addToMap(blocks);
+scene.tankList = [];
+scene.cameraList = [];
+scene.cameraList.push(mainCamera);
+scene.cameraList.push(secondCamera);
 
-let n = new THREE.Vector3(1,0,1).normalize();
-let d = new THREE.Vector3(-1,0,1);
+let actualLevel = 2; // variavel para definir o nivel atual
+buildLevel(actualLevel, scene);
+
+let n = new THREE.Vector3(1, 0, 1).normalize();
+let d = new THREE.Vector3(-1, 0, 1);
 
 d.reflect(n);
 
-// Define as possíveis cores dos tanques
-const redColors = ["crimson", "darkred", "firebrick", "red"];
-const blueColors = ["blue", "darkblue", "dodgerblue", "midnightblue", "navy", "royalblue"];
-
-// Cria os tanques
-const redTank = new Tank(4.0,  0.7,  4.0, redColors);
-const rrTank = new Tank(12.0,  0.7,  10.0, redColors);
-const blueTank = new Tank(20.0,  0.7,  20.0, blueColors);
-
-// Adiciona eles a cena, a física e a lista de update
-scene.add(redTank.geometry)
-scene.physics.add(redTank.colliderComponent); 
-scene.updateList.push(redTank);
-
-scene.add(rrTank.geometry)
-scene.physics.add(rrTank.colliderComponent); 
-scene.updateList.push(rrTank);
-
-scene.add(blueTank.geometry)
-scene.updateList.push(blueTank);
-scene.physics.add(blueTank.colliderComponent);
-
-// Infobox com a vida dos tanques
-var str = "Vidas vermelho: " + redTank.lifePoints + "  |  Vidas azul: " + blueTank.lifePoints;
-var secondaryBox = new SecondaryBox(str);
-secondaryBox.changeStyle("rgba(0,0,0,0.5)");
-
 // Criar botão de reiniciar a fase
 var restart = false;
-var controls = new function ()
-  {
-    this.restart = function(){
+var controls = new function () {
+   this.restart = function () {
       restart = !restart;
-    };
-  };
+   };
+};
 var gui = new GUI();
 gui.add(controls, 'restart', true).name("Recomeçar");
 
-mainCamera.setTracking([
-   redTank.geometry, 
-   blueTank.geometry, 
-   rrTank.geometry
-]);
+// Manipulação de camera
+let camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
 
-const aiTank = new TankAI(rrTank, redTank, 8, blocks, scene);
-const ai2Tank = new TankAI(blueTank, redTank, 10, blocks, scene);
+mainCamera.setTracking(scene.tankList);
+// definir o tacking
 
 render();
 
@@ -128,41 +84,53 @@ function keyboardUpdate() {
    keyboard.update();
 
    // Adicionando controles aos tanque
-   KeyboardMovement(redTank, scene, scene.updateList, scene.physics);
+   KeyboardMovement(scene.tankList[0], scene);
 
    // Atalho para habilitar a camera secundaria (orbital)
-   if ( keyboard.down("O") ) {
+   if (keyboard.down("O")) {
       camChangeOrbit = !camChangeOrbit;
    }
+
+   // Atalho para mudar o nível 
+   if (keyboard.down("1")) {
+      actualLevel = 1;
+      deleteScene(scene);     // depois que deleta a cena a camera vai de base e nao da pra controlar o tanque novo
+      buildLevel(actualLevel, scene);
+   }
+   if (keyboard.down("2")) {
+      actualLevel = 2;
+      deleteScene(scene);
+      buildLevel(actualLevel, scene);
+   }
+   
 }
 
-function render()
-{
+function render() {
    keyboardUpdate();
    requestAnimationFrame(render);
-   
+
+   labelRenderer.render( scene, mainCamera.camera );   
+
    scene.physics.update();
-   
+
    scene.updateList.forEach(element => {
       element.update(scene);
    });
-   
-   var str = "Vidas vermelho: " + redTank.lifePoints + "  |    Vidas azul: " + blueTank.lifePoints;
-   secondaryBox.changeMessage(str); 
 
-   if(restart) {
+   // Botão de recomeçar a fase
+   if (restart) {
       restart = false;
-      location.reload();    // Verificando se é pra recomeçar
-   } 
-   
+      deleteScene(scene);
+      buildLevel(actualLevel);
+   }
+
+   // Fazer verificao do nivel 1 
+
    // Verificando qual camera será utilizada
-   if (camChangeOrbit){
+   if (camChangeOrbit) {
       renderer.render(scene, secondCamera) // Render scene
    }
-   if (!camChangeOrbit){
+   if (!camChangeOrbit) {
       renderer.render(scene, mainCamera.update()) // Render scene
    }
-
-   aiTank.update();
-   ai2Tank.update();
 }
