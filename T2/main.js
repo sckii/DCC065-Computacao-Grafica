@@ -53,7 +53,7 @@ scene.cameraList = [];
 scene.cameraList.push(mainCamera);
 scene.cameraList.push(secondCamera);
 
-let actualLevel = 1; // variavel para definir o nivel atual
+let actualLevel = 2; // variavel para definir o nivel atual
 buildLevel(actualLevel, scene);
 
 let n = new THREE.Vector3(1, 0, 1).normalize();
@@ -74,7 +74,7 @@ gui.add(controls, 'restart', true).name("Recomeçar");
 // Manipulação de camera
 let camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
 
-mainCamera.setTracking(scene.tankList[0], scene.tankList[1]);
+mainCamera.setTracking(scene.tankList);
 // definir o tacking
 
 render();

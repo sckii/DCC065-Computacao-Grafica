@@ -138,7 +138,6 @@ class Cannon{
         if (angleToClosestTank < 0) {way = -1}
         else if (angleToClosestTank > 0) {way = 1}
         else {way = 0}
-        console.log(way)
         let angle = way * THREE.MathUtils.degToRad(0.5);
         
         this.geometry.rotateY(angle);

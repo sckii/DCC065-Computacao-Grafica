@@ -124,6 +124,7 @@ class Tank {
 
         if(this.isDead){
             removeFromScene(this);
+            // remover da lista de tanques
         }
         //this.geometry.translateOnAxis(this.directionTank, 0.1);
         this.worldDir.multiplyScalar(0.1);
@@ -135,7 +136,6 @@ class Tank {
         this.lifePoints -= damage;
         if (this.lifePoints <=0 && !this.isDead){
             this.isDead = true;
-            GameOver(this.color);
         }
         this.healthBar.setAmount( this.lifePoints );
     }
@@ -144,7 +144,6 @@ class Tank {
         this.lifePoints -= damage;
         if (this.lifePoints <=0 && !this.isDead){
             this.isDead = true;
-            GameOver(this.color);
         }
         this.healthBar.setAmount( this.lifePoints );
     }
