@@ -125,8 +125,6 @@ class TankAI {
         const wallIntersect = ricochetRaycaster.intersectObjects(this.sceneBlocks);
         
         if (playerIntersect.length > 0 && playerIntersect[0].distance < wallIntersect[0].distance) {
-          this.scene.add(new THREE.ArrowHelper(rawDirection, botPosition, intersects[0].distance, 0xffff00));
-          this.scene.add(new THREE.ArrowHelper(ricochetRaycaster.ray.direction, ricochetRaycaster.ray.origin, 100, 0xff0000));
           // Verificar se é a melhor trajetoria até o player
           bestRicochet.direction = rawDirection
         }

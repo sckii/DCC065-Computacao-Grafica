@@ -39,7 +39,7 @@ class Tank {
         var loader = new GLTFLoader( );
         let mesh = new THREE.Object3D();
         const geometry = new THREE.BoxGeometry(3, 3, 3); // Criar uma esfera
-        const material2 = new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.0, transparent: false }); // Material verde
+        const material2 = new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.0, transparent: true }); // Material verde
         const newObject = new THREE.Mesh(geometry, material2);
 
         loader.load( './Models/tank.glb', function ( gltf ) {
