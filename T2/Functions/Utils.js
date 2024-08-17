@@ -27,7 +27,7 @@ export function rotateObjectToVector(object, targetVector) {
 
   // Criar um quaternion que rotaciona do eixo Z positivo para o vetor alvo
   const quaternion = new THREE.Quaternion().setFromUnitVectors(
-      new THREE.Vector3(1, 0, 0), // Vetor de referência (frente z+)
+      new THREE.Vector3(0, 0, 1), // Vetor de referência (frente z+)
       normalizedVector
   );
 

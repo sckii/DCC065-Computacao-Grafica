@@ -12,20 +12,21 @@ import {
    onWindowResize, } from "../../libs/util/util.js";
 import { Vector2, Vector3 } from '../../build/three.module.js';
 import AABBCollider from '../Physics/AABBCollider.js';
+import TankAI from './TankIA.js';
 
 const blockSize = 2;
 
 export function buildLevel(nLvl, scene){
     if(nLvl==1){
-        level1(scene);
+        return level1(scene);
     }
     if(nLvl==2){
-        level2(scene);
+        return level2(scene);
     }
 }
 
 function level1(scene){
-
+    scene.tankList = [];
     // Constoi o mapa e sua fisica
     let matrixLvl1 = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -75,9 +76,18 @@ function level1(scene){
     scene.physics.add(blueTank.colliderComponent); 
     scene.updateList.push(blueTank);
     scene.tankList.push(blueTank);
+    
+    // AI
+    const bots = scene.tankList.map(tank => {
+        if (tank.geometry.id !== scene.tankList[0].geometry.id)
+            return new TankAI(tank, scene.tankList[0], 7, blocks, scene);
+    })
+
+    return bots;
 }
 
 function level2(scene){
+    scene.tankList = [];
     
     // Constoi o mapa e sua fisica
     let matrixLvl2 = [
@@ -215,6 +225,15 @@ function level2(scene){
     scene.add(cannon.geometry);
     scene.physics.add(cannon.colliderComponent); 
     scene.updateList.push(cannon);
+
+        
+    // AI
+    const bots = scene.tankList.map(tank => {
+        if (tank && tank.geometry.id !== scene.tankList[0].geometry.id)
+            return new TankAI(tank, scene.tankList[0], 6, blocks, scene);
+    })
+
+    return bots;
 }
 
 function buildMap(scene, matrix, blockMaterial) {

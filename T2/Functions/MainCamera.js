@@ -37,8 +37,18 @@ class MainCamera {
         this.cameraHolder.lookAt(pivot);
         this.camera.lookAt(pivot);
 
+        // camera distance calculation
+        let w = window.innerWidth;
+        let realDistance = -100 + w/10;
+
+        if (realDistance > -5) {
+            realDistance = -5;
+        }
+        if (realDistance < -100) {
+            realDistance = -100;
+        }
         // Zoom in e Zoom out da camera
-        this.cameraHolder.translateZ(distance - 18);
+        this.cameraHolder.translateZ(realDistance - distance - 10);
         
         // Retornando o objeto camera
         return this.camera;
@@ -61,13 +71,17 @@ class MainCamera {
     }
 
     calculateDistance() {
-        let totalDistance = 0;
-
-        for (let i = 0; i < this.objList.length - 1; i++) {
-            totalDistance += this.objList[i].position.distanceTo(this.objList[i + 1].position);
+        let maxDistance = 0;
+        const n = this.objList.length;
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                const d = this.objList[i].position.distanceTo(this.objList[j].position);
+                if (d > maxDistance) {
+                    maxDistance = d;
+                }
+            }
         }
-    
-        return -totalDistance;
+        return maxDistance;
     }
 
 }

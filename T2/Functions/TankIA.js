@@ -108,10 +108,12 @@ class TankAI {
     const rayDirections = this.generateRayDirections();
     rayDirections.forEach(rayDirection => {
       const rawDirection = new THREE.Vector3().copy(rayDirection)
+
       // Direciona o raio em uma das direções a serem testadas
       const raycaster = new THREE.Raycaster(botPosition, rayDirection);
       const intersects = raycaster.intersectObjects(this.sceneBlocks);
       
+
       if (intersects.length > 0) {
         const hitPoint = intersects[0].point;
         const normal = intersects[0].face.normal.clone();
@@ -124,10 +126,9 @@ class TankAI {
         const playerIntersect = ricochetRaycaster.intersectObject(this.playerTank);
         const wallIntersect = ricochetRaycaster.intersectObjects(this.sceneBlocks);
         
-        
         if (playerIntersect.length > 0 && playerIntersect[0].distance < wallIntersect[0].distance) {
           this.scene.add(new THREE.ArrowHelper(rawDirection, botPosition, intersects[0].distance, 0xffff00));
-          this.scene.add(new THREE.ArrowHelper(ricochetRaycaster.ray.direction, ricochetRaycaster.ray.origin, wallIntersect[0].distance, 0xff0000));
+          this.scene.add(new THREE.ArrowHelper(ricochetRaycaster.ray.direction, ricochetRaycaster.ray.origin, 100, 0xff0000));
           // Verificar se é a melhor trajetoria até o player
           bestRicochet.direction = rawDirection
         }
@@ -166,6 +167,7 @@ class TankAI {
       // Rotacionar o objeto para "olhar" na direção do vetor        
       rotateObjectToVector(this.tank.geometry, direction);
       this.tank.shoot(this.scene, this.updateList, this.physics);
+
     } else {
       // Se o player não estiver visível, calcule uma trajetória com ricochete
       const ricochetDirection = this.calculateRicochet().direction;
@@ -186,7 +188,7 @@ class TankAI {
     this.movement();
 
     setInterval(() => {
-      // this.shoot();
+      this.shoot();
     }, 500);
     
   }
