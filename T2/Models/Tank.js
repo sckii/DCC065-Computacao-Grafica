@@ -2,6 +2,7 @@ import * as THREE from  'three';
 import AABBCollider from '../Physics/AABBCollider.js';
 import Collision from '../Physics/Collision.js';
 import Bullet from './Bullet.js';
+import HealthBar from './HealthBar.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
 import { removeFromScene } from '../Functions/RemoveFromScene.js';
@@ -25,6 +26,9 @@ class Tank {
 
         this.lifePoints = 10;
         this.isDead = false;
+
+        this.healthBar = new HealthBar( this.lifePoints );
+        this.geometry.add( this.healthBar );
     }
 
     buildGeometry(material, rotate){
@@ -125,6 +129,24 @@ class Tank {
         this.worldDir.multiplyScalar(0.1);
         this.geometry.position.add(this.worldDir);
 
+    }
+
+    reciveDamage(damage) {
+        this.lifePoints -= damage;
+        if (this.lifePoints <=0 && !this.isDead){
+            this.isDead = true;
+            GameOver(this.color);
+        }
+        this.healthBar.setAmount( this.lifePoints );
+    }
+
+    reciveDamage(damage) {
+        this.lifePoints -= damage;
+        if (this.lifePoints <=0 && !this.isDead){
+            this.isDead = true;
+            GameOver(this.color);
+        }
+        this.healthBar.setAmount( this.lifePoints );
     }
 
     setDir(directionTank) {

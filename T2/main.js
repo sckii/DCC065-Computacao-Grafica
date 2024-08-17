@@ -12,6 +12,7 @@ import { buildLevel } from './Functions/Map.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import deleteScene from './Functions/DeleteScene.js';
 import { setScene } from './Functions/RemoveFromScene.js';
+import { CSS2DRenderer } from '../build/jsm/Addons.js';
 
 let scene = new THREE.Scene();
 setScene(scene);
@@ -22,6 +23,16 @@ let renderer = initRenderer();
 let mainCamera = new MainCamera(0, 8, 0);
 scene.add(mainCamera.cameraHolder)
 window.addEventListener('resize', function () { onWindowResize(mainCamera.update(), renderer) }, false);
+
+// Criar labelRenderr
+let labelRenderer = new CSS2DRenderer();
+   labelRenderer.setSize( window.innerWidth, window.innerHeight );
+   labelRenderer.domElement.style.position = 'absolute';
+   labelRenderer.domElement.style.top = '0px';
+   document.body.appendChild( labelRenderer.domElement );
+window.addEventListener( 'resize', () => {
+   labelRenderer.setSize( window.innerWidth, window.innerHeight );
+}, false );
 
 // Cria a camera secundario que terá os contres de orbita
 let secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
@@ -97,6 +108,8 @@ function keyboardUpdate() {
 function render() {
    keyboardUpdate();
    requestAnimationFrame(render);
+
+   labelRenderer.render( scene, mainCamera.camera );   
 
    scene.physics.update();
 
