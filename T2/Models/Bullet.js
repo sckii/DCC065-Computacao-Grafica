@@ -51,7 +51,7 @@ class Bullet {
         
         this.numColision = this.numColision + 1;
         if (collision.other instanceof Tank){
-            collision.other.lifePoints -= 1;
+            collision.other.reciveDamage(1);
             removeFromScene(this);
             return;
         }
