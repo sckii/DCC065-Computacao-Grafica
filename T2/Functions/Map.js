@@ -15,16 +15,16 @@ import AABBCollider from '../Physics/AABBCollider.js';
 
 const blockSize = 2;
 
-export function buildLevel(nLvl, scene, updateList, physics, tankList){
+export function buildLevel(nLvl, scene){
     if(nLvl==1){
-        level1(scene, updateList, physics, tankList);
+        level1(scene);
     }
     if(nLvl==2){
-        level2(scene, updateList, physics, tankList);
+        level2(scene);
     }
 }
 
-function level1(scene, updateList, physics, tankList){
+function level1(scene){
 
     // Constoi o mapa e sua fisica
     let matrixLvl1 = [
@@ -47,7 +47,7 @@ function level1(scene, updateList, physics, tankList){
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
     let blocks = buildMap(scene, matrixLvl1);
-    physics.addToMap(blocks);
+    scene.physics.addToMap(blocks);
 
     // Iluminacao
     let ambientColor = "rgb(50,50,50)"
@@ -62,19 +62,19 @@ function level1(scene, updateList, physics, tankList){
     // Adiciona os tanques
     let redTank = new Tank(5, 5, "Red", 1);
     scene.add(redTank.geometry);
-    physics.add(redTank.colliderComponent); 
-    updateList.push(redTank);
-    tankList.push(redTank);
+    scene.physics.add(redTank.colliderComponent); 
+    scene.updateList.push(redTank);
+    scene.tankList.push(redTank);
     //KeyboardMovement(redTank, scene, scene.updateList, scene.physics);
 
     let blueTank = new Tank(5, 27, "Blue", 1);
     scene.add(blueTank.geometry);
-    physics.add(blueTank.colliderComponent); 
-    updateList.push(blueTank);
-    tankList.push(blueTank);
+    scene.physics.add(blueTank.colliderComponent); 
+    scene.updateList.push(blueTank);
+    scene.tankList.push(blueTank);
 }
 
-function level2(scene, updateList, physics, tankList){
+function level2(scene){
 
     // Fazer camera
     
@@ -100,7 +100,7 @@ function level2(scene, updateList, physics, tankList){
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
     let blocks = buildMap(scene, matrixLvl2);
-    physics.addToMap(blocks);
+    scene.physics.addToMap(blocks);
 
     // Iluminacao
     // Luz ambiente
@@ -190,24 +190,24 @@ function level2(scene, updateList, physics, tankList){
     // Adiciona os tanques
     let greenTank = new Tank(18, 4, "", 3);
     scene.add(greenTank.geometry);
-    physics.add(greenTank.colliderComponent); 
-    updateList.push(greenTank);
-    tankList.push(greenTank)
+    scene.physics.add(greenTank.colliderComponent); 
+    scene.updateList.push(greenTank);
+    scene.tankList.push(greenTank)
     
     let redTank = new Tank(4, 30, "Red", 1);
     scene.add(redTank.geometry);
-    physics.add(redTank.colliderComponent); 
-    updateList.push(redTank);
-    tankList.push(redTank)
+    scene.physics.add(redTank.colliderComponent); 
+    scene.updateList.push(redTank);
+    scene.tankList.push(redTank)
 
     let blueTank = new Tank(18, 30, "Blue", 2.5);
     scene.add(blueTank.geometry);
-    physics.add(blueTank.colliderComponent); 
-    updateList.push(blueTank);
-    tankList.push(blueTank)
+    scene.physics.add(blueTank.colliderComponent); 
+    scene.updateList.push(blueTank);
+    scene.tankList.push(blueTank)
 
     // Adiciona o canhao
-    let cannon = new Cannon(11, 17, tankList, scene, scene.updateList, scene.physics);
+    let cannon = new Cannon(11, 17, scene);
     scene.add(cannon.geometry);
     scene.physics.add(cannon.colliderComponent); 
     scene.updateList.push(cannon);

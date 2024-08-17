@@ -74,7 +74,7 @@ class Tank {
         return material;
     }
 
-    shoot(scene, updateList, physics){
+    shoot(scene){
         var shootDirection = new Vector3;
         this.geometry.getWorldDirection(shootDirection);
 
@@ -83,8 +83,8 @@ class Tank {
         const shoot = new Bullet(shootPosition, shootDirection, this);
 
         scene.add(shoot.geometry);
-        physics.add(shoot.colliderComponent);
-        updateList.push(shoot); 
+        scene.physics.add(shoot.colliderComponent);
+        scene.updateList.push(shoot); 
     }
 
     /**

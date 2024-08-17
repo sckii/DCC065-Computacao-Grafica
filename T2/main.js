@@ -13,7 +13,6 @@ import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
 import deleteScene from './Functions/DeleteScene.js';
 import { setScene } from './Functions/RemoveFromScene.js';
 
-
 let orbit, scene, renderer, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
 setScene(scene);
@@ -46,7 +45,7 @@ scene.updateList = [];
 scene.tankList = [];
 
 let actualLevel = 2; // variavel para definir o nivel atual
-buildLevel(actualLevel, scene, scene.updateList, scene.physics, scene.tankList);
+buildLevel(actualLevel, scene);
 
 let n = new THREE.Vector3(1, 0, 1).normalize();
 let d = new THREE.Vector3(-1, 0, 1);
@@ -73,7 +72,7 @@ function keyboardUpdate() {
    keyboard.update();
 
    // Adicionando controles aos tanque
-   KeyboardMovement(scene.tankList[0], scene, scene.updateList, scene.physics);
+   KeyboardMovement(scene.tankList[0], scene);
    // resolver como vai funcionar o movimento do tanque
 
    // Atalho para habilitar a camera secundaria (orbital)

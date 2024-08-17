@@ -3,9 +3,10 @@ import { CSG } from '../../libs/other/CSGMesh.js'
 import Bullet from './Bullet.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 import { Vector3 } from '../../build/three.module.js';
+import { scene } from '../Functions/RemoveFromScene.js';
 
 class Cannon{
-    constructor(x, z, tankList, scene, updateList, physics){
+    constructor(x, z, scene){
         this.geometry = this.buildGeometry();
         this.geometry.position.set(x, 1, z);
         
@@ -15,7 +16,7 @@ class Cannon{
         this.worldDir = new Vector3();
 
         this.shootInterval = null;  // Variável para armazenar o intervalo de tiro
-        this.startShooting(scene, updateList, physics);
+        this.startShooting(scene);
     }
 
     buildGeometry(){
@@ -102,10 +103,10 @@ class Cannon{
         return supportBox;
     }
 
-    getClosestTank(tankList){  // Função pra selecionar o tanque mais próximo
+    getClosestTank(scene){  // Função pra selecionar o tanque mais próximo
         let closestTank = null;
         let closestDistance = Infinity;
-        tankList.forEach((tank) => {
+        scene.tankList.forEach((tank) => {
             const distance = this.position.distanceTo(tank.position);
             if (distance < closestDistance) {
                 closestDistance = distance;
@@ -115,9 +116,9 @@ class Cannon{
         return closestTank;
     }
 
-    rotate(tankList){     // Função para rotacionar
+    rotate(scene){     // Função para rotacionar
         
-        let closestTank = this.getClosestTank(tankList);
+        let closestTank = this.getClosestTank(scene);
         if (!closestTank) return;       // garante de que tem um tanque para mirar
         let angleToClosestTank = 0;
 
@@ -156,13 +157,13 @@ class Cannon{
         }        
     }
 
-    startShooting(scene, updateList, physics){
+    startShooting(scene){
          // Função que será chamada a cada 3 segundos
          this.shootInterval = setInterval(() => {
-            this.shoot(scene, updateList, physics);
+            this.shoot(scene);
         }, 3000);
     }
-    shoot(scene, updateList, physics){
+    shoot(scene){
         var shootDirection = new Vector3;
         this.geometry.getWorldDirection(shootDirection);
         shootDirection.applyAxisAngle(new Vector3(0,1,0), THREE.MathUtils.degToRad(90));
@@ -172,8 +173,8 @@ class Cannon{
         const shoot = new Bullet(shootPosition, shootDirection, this);
 
         scene.add(shoot.geometry);
-        physics.add(shoot.colliderComponent);
-        updateList.push(shoot); 
+        scene.physics.add(shoot.colliderComponent);
+        scene.updateList.push(shoot); 
     }
 
     updateObject(mesh){
@@ -182,7 +183,7 @@ class Cannon{
     }
 
     update(scene) {
-        this.rotate(scene.tankList)
+        this.rotate(scene)
     }
     /**
      * Esse método é chamado quando esse objeto entra em colisão com outro.

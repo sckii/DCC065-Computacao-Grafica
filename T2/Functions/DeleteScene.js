@@ -5,7 +5,6 @@ export function deleteScene(scene, updateList, physics){
 
     // Percorre todos os filhos da cena
     while (scene.children.length > 0) {
-        console.log(scene.children)
         const obj = scene.children[0];
         
         // Remover o objeto da cena
