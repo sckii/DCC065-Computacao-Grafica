@@ -3,8 +3,8 @@ import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import Tank from '../Models/Tank.js';
 import Cannon from '../Models/Cannon.js';
 import { createGroundPlane } from '../../libs/util/util.js';
-import KeyboardMovement from './KeyboardMovement.js';
 import MainCamera from './MainCamera.js';
+import { setScene } from './RemoveFromScene.js';
 import { OrbitControls } from '../../build/jsm/controls/OrbitControls.js';
 import {
    initRenderer,
@@ -26,8 +26,6 @@ export function buildLevel(nLvl, scene, updateList, physics, tankList){
 
 function level1(scene, updateList, physics, tankList){
 
-    // Fazer camera
-    
     // Constoi o mapa e sua fisica
     let matrixLvl1 = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -106,12 +104,12 @@ function level2(scene, updateList, physics, tankList){
 
     // Iluminacao
     // Luz ambiente
-    let ambientColor = "rgb(20,20,20)";
+    let ambientColor = "rgb(30,30,30)";
     let ambientLight = new THREE.AmbientLight(ambientColor);
     scene.add(ambientLight);
 
     // Luz direcional
-    let dirColor = "rgb(50,50,50)";
+    let dirColor = "rgb(60,60,60)";
     let dirLight = new THREE.DirectionalLight(dirColor, 0.2);
     scene.add(dirLight);
 
@@ -209,7 +207,7 @@ function level2(scene, updateList, physics, tankList){
     tankList.push(blueTank)
 
     // Adiciona o canhao
-    let cannon = new Cannon(11, 17, tankList);
+    let cannon = new Cannon(11, 17, tankList, scene, scene.updateList, scene.physics);
     scene.add(cannon.geometry);
     scene.physics.add(cannon.colliderComponent); 
     scene.updateList.push(cannon);

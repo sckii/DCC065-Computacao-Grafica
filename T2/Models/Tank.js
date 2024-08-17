@@ -4,7 +4,6 @@ import Collision from '../Physics/Collision.js';
 import Bullet from './Bullet.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
-import KeyboardMovement from '../Functions/KeyboardMovement.js';
 import { removeFromScene } from '../Functions/RemoveFromScene.js';
 
 

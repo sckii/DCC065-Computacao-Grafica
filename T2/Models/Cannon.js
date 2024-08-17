@@ -5,7 +5,7 @@ import AABBCollider from '../Physics/AABBCollider.js';
 import { Vector3 } from '../../build/three.module.js';
 
 class Cannon{
-    constructor(x, z, tankList){
+    constructor(x, z, tankList, scene, updateList, physics){
         this.geometry = this.buildGeometry();
         this.geometry.position.set(x, 1, z);
         
@@ -13,6 +13,9 @@ class Cannon{
 
         this.colliderComponent = new AABBCollider(this, 2, 2); 
         this.worldDir = new Vector3();
+
+        this.shootInterval = null;  // Variável para armazenar o intervalo de tiro
+        this.startShooting(scene, updateList, physics);
     }
 
     buildGeometry(){
@@ -99,76 +102,66 @@ class Cannon{
         return supportBox;
     }
 
-    setTracking(tankList){  // Função pra selecionar o tanque mais próximo
+    getClosestTank(tankList){  // Função pra selecionar o tanque mais próximo
         let closestTank = null;
         let closestDistance = Infinity;
-        let angleToClosestTank = 0;
-
         tankList.forEach((tank) => {
             const distance = this.position.distanceTo(tank.position);
             if (distance < closestDistance) {
                 closestDistance = distance;
                 closestTank = tank;
-
-                // Calcular o vetor de direção do canhão ao tanque
-                const direction = new THREE.Vector3().subVectors(tank.position, this.position);
-
-                // Calcular o ângulo em relação ao eixo X
-                angleToClosestTank = Math.atan2(direction.z, direction.x);
             }
         }); 
-        // this.rotate(angleToClosestTank);
-        // console.log(closestDistance)
-        // console.log(angleToClosestTank)
-
+        return closestTank;
     }
 
     rotate(tankList){     // Função para rotacionar
-        let closestTank = null;
-        let closestDistance = Infinity;
+        
+        let closestTank = this.getClosestTank(tankList);
+        if (!closestTank) return;       // garante de que tem um tanque para mirar
         let angleToClosestTank = 0;
 
-        tankList.forEach((tank) => {
-            const distance = this.position.distanceTo(tank.position);
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestTank = tank;
+        // Calcular o vetor de direção (apenas no plano XZ)
+        const direction = new THREE.Vector3(
+            closestTank.position.x - this.position.x,
+            0,  // Ignorar o eixo Y
+            closestTank.position.z - this.position.z
+        );
 
-                // Calcular o vetor de direção do canhão ao tanque
-                const direction = new THREE.Vector3().subVectors(tank.position, this.position);
-
-                // Calcular o ângulo em relação ao eixo X
-                angleToClosestTank = Math.atan2(direction.z, direction.x);
-            }
-        });
         var cannonDirection = new Vector3;
         this.geometry.getWorldDirection(cannonDirection)
+
+        angleToClosestTank = Math.atan2(direction.x, direction.z);
+
         let way = 0;
-        if (angleToClosestTank < 0) {let way = -1}
-        if (angleToClosestTank > 0) {let way = 1}
-
-        while(angleToClosestTank != cannonDirection){
-            let angle = way * THREE.MathUtils.degToRad(0.5);
-            this.geometry.rotateY(angle);
-            this.updateObject(this.geometry)
-
-            //let angle = THREE.MathUtils.degToRad(0.5);
-            if(angle>0){
-                this.geometry.children[1].rotateY(angle);
-                this.updateObject(this.geometry.children[1]);
-                this.geometry.children[2].rotateY(-angle);
-                this.updateObject(this.geometry.children[2])
-            }
-            if(angle<0){
-                this.geometry.children[1].rotateY(angle);
-                this.updateObject(this.geometry.children[1]);
-                this.geometry.children[2].rotateY(-angle);
-                this.updateObject(this.geometry.children[2])
-            }
-        }
+        if (angleToClosestTank < 0) {way = -1}
+        else if (angleToClosestTank > 0) {way = 1}
+        else {way = 0}
+        console.log(way)
+        let angle = way * THREE.MathUtils.degToRad(0.5);
         
+        this.geometry.rotateY(angle);
+        this.updateObject(this.geometry)
+        if(angle>0){
+            this.geometry.children[1].rotateY(angle);
+            this.updateObject(this.geometry.children[1]);
+            this.geometry.children[2].rotateY(-angle);
+            this.updateObject(this.geometry.children[2])
+        }
+        if(angle<0){
+            this.geometry.children[1].rotateY(angle);
+            this.updateObject(this.geometry.children[1]);
+            this.geometry.children[2].rotateY(-angle);
+            this.updateObject(this.geometry.children[2])
+        }        
     }
 
+    startShooting(scene, updateList, physics){
+         // Função que será chamada a cada 3 segundos
+         this.shootInterval = setInterval(() => {
+            this.shoot(scene, updateList, physics);
+        }, 3000);
+    }
     shoot(scene, updateList, physics){
         var shootDirection = new Vector3;
         this.geometry.getWorldDirection(shootDirection);
@@ -190,7 +183,6 @@ class Cannon{
 
     update(scene) {
         this.rotate(scene.tankList)
-
     }
     /**
      * Esse método é chamado quando esse objeto entra em colisão com outro.
