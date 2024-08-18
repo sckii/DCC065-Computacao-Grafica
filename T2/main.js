@@ -48,6 +48,7 @@ function render() {
    // Botão de recomeçar a fase
     if (restart) {
       restart = false;
+      clearCssRenderer();
       setCurrentScene(buildLevel(currentlvlNumber));
    } 
 
@@ -103,6 +104,7 @@ function clearCssRenderer() {
          }
       }
    });
+   cssRenderer.domElement.remove();
    deleteScene(getCurrentScene());
    cssRenderer = initCssRenderer();
 }
