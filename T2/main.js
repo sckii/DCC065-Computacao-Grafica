@@ -3,20 +3,14 @@ import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildLevel } from './Functions/Map.js';
 import { getCurrentScene, setCurrentScene, setRenderer } from './Functions/SceneGlobals.js';
 import { initRenderer } from '../libs/util/util.js';
-import { CSS2DRenderer } from '../build/jsm/Addons.js';
+import { CSS2DRenderer, CSS2DObject } from '../build/jsm/Addons.js';
 import GUI from '../libs/util/dat.gui.module.js';
+import deleteScene from './Functions/DeleteScene.js';
 
 let keyboard = new KeyboardState();
 setRenderer(initRenderer());
 
-const labelRenderer = new CSS2DRenderer();
-labelRenderer.setSize( window.innerWidth, window.innerHeight );
-labelRenderer.domElement.style.position = 'absolute';
-labelRenderer.domElement.style.top = '0px';
-document.body.appendChild( labelRenderer.domElement );
-window.addEventListener( 'resize', () => {
-   labelRenderer.setSize( window.innerWidth, window.innerHeight );
-}, false );
+let cssRenderer = initCssRenderer();
 
 
 let currentlvlNumber = 1;
@@ -43,7 +37,7 @@ function render() {
    keyboardUpdate();
    requestAnimationFrame(render);   
 
-   labelRenderer.render( scene, scene.mainCamera.camera );   
+   cssRenderer.render( scene, scene.mainCamera.camera );   
 
    scene.physics.update();
 
@@ -86,20 +80,41 @@ function keyboardUpdate() {
    // Atalho para mudar o nível 
    if (keyboard.down("1")) {
       currentlvlNumber = 1;
+      clearCssRenderer();
       setCurrentScene(buildLevel(1));
-      while (labelRenderer.domElement.hasChildNodes()) {
-         labelRenderer.domElement.removeChild(labelRenderer.domElement.firstChild);
-      }
    }
    if (keyboard.down("2")) {
       currentlvlNumber = 2;
+      clearCssRenderer();
       setCurrentScene(buildLevel(2));
    }
-
+   
    if (keyboard.down("E")) {
-      console.log("e");
-      while (labelRenderer.domElement.hasChildNodes()) {
-         labelRenderer.domElement.removeChild(labelRenderer.domElement.firstChild);
-      }
+      clearCssRenderer();
    }
+}
+
+function clearCssRenderer() {  
+   getCurrentScene().traverse(child => {
+      if (child instanceof CSS2DObject) {
+         child.element.remove(); // Remove the DOM element
+         if (child.children && child.children.length > 0) {
+            child.parent.remove(child); // Remove the 3D object
+         }
+      }
+   });
+   deleteScene(getCurrentScene());
+   cssRenderer = initCssRenderer();
+}
+
+function initCssRenderer() {
+   const cssRenderer = new CSS2DRenderer();
+   cssRenderer.setSize( window.innerWidth, window.innerHeight );
+   cssRenderer.domElement.style.position = 'absolute';
+   cssRenderer.domElement.style.top = '0px';
+   document.body.appendChild( cssRenderer.domElement );
+   window.addEventListener( 'resize', () => {
+      cssRenderer.setSize( window.innerWidth, window.innerHeight );
+   }, false );
+   return cssRenderer;
 }

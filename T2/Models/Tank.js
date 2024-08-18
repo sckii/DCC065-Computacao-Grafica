@@ -135,15 +135,6 @@ class Tank {
     }
 
     update() {
-
-        if (this.lifePoints <=0 && !this.isDead){
-            this.isDead = true;
-        }
-
-        if(this.isDead){
-            removeFromScene(this);
-            // remover da lista de tanques
-        }
         //this.geometry.translateOnAxis(this.directionTank, 0.1);
         this.worldDir.multiplyScalar(0.1);
         this.geometry.position.add(this.worldDir);
@@ -153,17 +144,18 @@ class Tank {
     reciveDamage(damage) {
         this.lifePoints -= damage;
         if (this.lifePoints <=0 && !this.isDead){
-            this.isDead = true;
+            this.onDeath();
         }
         this.healthBar.setAmount( this.lifePoints );
     }
 
-    reciveDamage(damage) {
-        this.lifePoints -= damage;
-        if (this.lifePoints <=0 && !this.isDead){
-            this.isDead = true;
-        }
-        this.healthBar.setAmount( this.lifePoints );
+    /**
+     * É chamado quando o tanque morre
+     */
+    onDeath() {
+        this.isDead = true;
+        this.healthBar.element.remove();
+        removeFromScene(this);
     }
 
     setDir(directionTank) {
