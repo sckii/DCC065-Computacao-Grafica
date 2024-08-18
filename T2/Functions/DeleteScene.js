@@ -1,4 +1,4 @@
-import {removeFromScene } from './RemoveFromScene.js';
+import {removeFromScene } from './SceneGlobals.js';
 
 
 export function deleteScene(scene){

@@ -1,7 +1,7 @@
 import * as THREE from  'three';
 import SphereCollider from '../Physics/SphereCollider.js';
 import Collision from '../Physics/Collision.js';
-import { removeFromScene } from '../Functions/RemoveFromScene.js';
+import { removeFromScene } from '../Functions/SceneGlobals.js';
 import Cannon from './Cannon.js';
 import Tank from './Tank.js';
 

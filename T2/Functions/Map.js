@@ -3,30 +3,26 @@ import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import Tank from '../Models/Tank.js';
 import Cannon from '../Models/Cannon.js';
 import { createGroundPlane } from '../../libs/util/util.js';
-import MainCamera from './MainCamera.js';
-import { setScene } from './RemoveFromScene.js';
-import { OrbitControls } from '../../build/jsm/controls/OrbitControls.js';
-import {
-   initRenderer,
-   initCamera,
-   onWindowResize, } from "../../libs/util/util.js";
 import { Vector2, Vector3 } from '../../build/three.module.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 import TankAI from './TankIA.js';
+import GameScene from '../Models/GameScene.js';
+import { getRenderer } from './SceneGlobals.js';
 
 const blockSize = 2;
 
-export function buildLevel(nLvl, scene){
+export function buildLevel(nLvl){
     if(nLvl==1){
-        return level1(scene);
+        return level1();
     }
     if(nLvl==2){
-        return level2(scene);
+        return level2();
     }
 }
 
-function level1(scene){
-    scene.tankList = [];
+function level1(){
+    let scene = new GameScene( getRenderer() );
+
     // Constoi o mapa e sua fisica
     let matrixLvl1 = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -78,16 +74,16 @@ function level1(scene){
     scene.tankList.push(blueTank);
     
     // AI
-    const bots = scene.tankList.map(tank => {
+    scene.bots = scene.tankList.map(tank => {
         if (tank.geometry.id !== scene.tankList[0].geometry.id)
             return new TankAI(tank, scene.tankList[0], 10, blocks, scene);
     })
 
-    return bots;
+    return scene;
 }
 
-function level2(scene){
-    scene.tankList = [];
+function level2(){
+    let scene = new GameScene( getRenderer() );
     
     // Constoi o mapa e sua fisica
     let matrixLvl2 = [
@@ -228,15 +224,15 @@ function level2(scene){
 
         
     // AI
-    const bots = scene.tankList.map(tank => {
+    scene.bots = scene.tankList.map(tank => {
         if (tank && tank.geometry.id !== scene.tankList[0].geometry.id)
             return new TankAI(tank, scene.tankList[0], 10, blocks, scene);
     })
 
-    return bots;
+    return scene;
 }
 
-function buildMap(scene, matrix, blockMaterial) {
+export function buildMap(scene, matrix, blockMaterial) {
     let plane = createGroundPlane(matrix[0].length*blockSize, matrix.length*blockSize);
     let blocks = new Set();
     plane.position.set((matrix[0].length*blockSize)/2-blockSize/2,0,(matrix.length*blockSize)/2-blockSize/2);

@@ -5,7 +5,7 @@ import Bullet from './Bullet.js';
 import HealthBar from './HealthBar.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
-import { removeFromScene } from '../Functions/RemoveFromScene.js';
+import { removeFromScene } from '../Functions/SceneGlobals.js';
 
 
 
