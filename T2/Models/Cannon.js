@@ -9,6 +9,7 @@ import { rotateObjectToVector } from '../Functions/Utils.js';
 class Cannon{
     constructor(x, z, scene){
         this.geometry = this.buildGeometry();
+        
         this.geometry.position.set(x, 1, z);
         
         this.position = this.geometry.position;
@@ -120,25 +121,28 @@ class Cannon{
     rotate(scene){     // Função para rotacionar
         // nao estou conseguindo fazer ele rodar pra direcao do tanque mais proximo
     
-        let cannonPosition =  this.position;        //Posicao do canhao
-        let closestTank = this.getClosestTank(scene);   // tanque mais proximo
+        let closestTank = this.getClosestTank(scene)
+        var cannonDirection = new Vector3;
+        this.geometry.getWorldDirection(cannonDirection)
 
-        if (!closestTank) return;       // garante de que tem um tanque para mirar
+        if (closestTank == null) return;
+        let direction = new THREE.Vector3().subVectors(closestTank.position, this.position).normalize();
         
-        let direction = new THREE.Vector3();
+        let targetAngle = Math.atan2(direction.x, direction.z);
+
+        let courrentAngle = this.geometry.rotation.y;
+
+        let angleDifference = targetAngle-courrentAngle;
+
+        if(angleDifference > Math.PI) angleDifference -= 2*Math.PI;
+        if(angleDifference < Math.PI) angleDifference += 2*Math.PI;
+
+        let rotationSpeed = 0.02;
+        this.geometry.rotation.y += angleDifference * rotationSpeed
         
-        direction.subVectors(cannonPosition, closestTank.position).normalize();
-        rotateObjectToVector(this.geometry, direction);
-
-        // var cannonDirection = new Vector3;
-        // this.geometry.getWorldDirection(cannonDirection)
-        
-
-        // angleToClosestTank = Math.atan2(direction.x, direction.z);
-
         // let way = 0;
-        // if (angleToClosestTank < 0) {way = -1}
-        // else if (angleToClosestTank > 0) {way = 1}
+        // if (angleToClosestTank < 0) {console.log("neg");way = -1}
+        // else if (angleToClosestTank > 0) {console.log("neg");way = 1}
         // else {way = 0}
         // let angle = way * THREE.MathUtils.degToRad(0.5);
         
@@ -155,7 +159,7 @@ class Cannon{
         //     this.updateObject(this.geometry.children[1]);
         //     this.geometry.children[2].rotateY(-angle);
         //     this.updateObject(this.geometry.children[2])
-        // }        
+        // }    
     }
 
     startShooting(scene){

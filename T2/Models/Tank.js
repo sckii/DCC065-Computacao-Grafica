@@ -34,9 +34,6 @@ class Tank {
 
         
     }
-    getIsDead(){
-        return this.isDead;
-    }
 
     buildGeometry(material, rotate){
         var loader = new GLTFLoader( );

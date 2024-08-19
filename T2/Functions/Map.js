@@ -65,6 +65,7 @@ function level1(){
     scene.physics.add(redTank.colliderComponent); 
     scene.updateList.push(redTank);
     scene.tankList.push(redTank);
+    scene.playerTank = redTank;
 
     let blueTank = new Tank(5, 27, "Blue", 1);
     scene.add(blueTank.geometry);
@@ -204,6 +205,7 @@ function level2(){
     scene.physics.add(greenTank.colliderComponent); 
     scene.updateList.push(greenTank);
     scene.tankList.push(greenTank)
+    scene.playerTank = greenTank;
     
     let redTank = new Tank(4, 30, "Red", 1);
     scene.add(redTank.geometry);

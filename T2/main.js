@@ -12,7 +12,6 @@ setRenderer(initRenderer());
 
 let cssRenderer = initCssRenderer();
 
-
 let currentlvlNumber = 1;
 setCurrentScene(buildLevel(currentlvlNumber));
 
@@ -46,18 +45,25 @@ function render() {
    });
 
    // Botão de recomeçar a fase
-    if (restart) {
+   if (restart) {
       restart = false;
       clearCssRenderer();
       setCurrentScene(buildLevel(currentlvlNumber));
    } 
 
+   // caso o player morra
+   if(scene.playerTank.isDead){
+      clearCssRenderer();
+      setCurrentScene(buildLevel(currentlvlNumber));
+   }
+
    // Passar de fase
-   if(currentlvlNumber == 1 && getCurrentScene().tankList[1] == null){
+   if(currentlvlNumber == 1 && getCurrentScene().bots.length == 0){
       currentlvlNumber = 2;
       clearCssRenderer();
       setCurrentScene(buildLevel(2));
    }
+
 
    // Verificando qual camera será utilizada
    if (camChangeOrbit) {
@@ -76,7 +82,7 @@ function keyboardUpdate() {
    keyboard.update();
 
    // Adicionando controles aos tanque
-   KeyboardMovement(scene.tankList[0], scene);
+   KeyboardMovement(scene.playerTank, scene);
 
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
