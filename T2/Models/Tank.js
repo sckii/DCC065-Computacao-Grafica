@@ -156,7 +156,7 @@ class Tank {
         this.isDead = true;
         this.healthBar.element.remove();
         removeFromScene(this);
-        getCurrentScene().tankList.remove(this);
+        getCurrentScene().tankList.splice(this);
     }
 
     setDir(directionTank) {
