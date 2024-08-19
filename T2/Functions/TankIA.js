@@ -72,7 +72,7 @@ class TankAI {
       }
     }
 
-    this.tank.setDir(1)
+    this.tank.setDir(1);
   }
 
   isPlayerVisible() {

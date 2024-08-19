@@ -24,27 +24,14 @@ class MainCamera {
         this.cameraHolder.add(this.camera)
         
         // Criando um pivot para pegar o ponto central
-        const pivot = new THREE.Vector3();
-
-        let sorted = this.objList.sort((box1, box2) => 
-            box1.position.x - box2.position.x && 
-            box1.position.z - box2.position.z);
-
-        this.obj_1 = sorted[0];
-        this.obj_2 = sorted[sorted.length - 1];
+        const pivot = this.calculateCentroid();
 
         // Calculando a distancia entre dois objetos no espaço
         const distance = this.calculateDistance();
 
-        // Atribuindo x, y e z do pivot como cendo o ponto central
-        pivot.x = (this.obj_1.position.x + this.obj_2.position.x) / 2;
-        pivot.y = (this.obj_1.position.y + this.obj_2.position.y) / 2;
-        pivot.z = (this.obj_1.position.z + this.obj_2.position.z) / 2;
-
         // movimentação camera holder
-        this.cameraHolder.position.x = ((this.obj_1.position.x + this.obj_2.position.x) / 2) - 8;
-        // this.cameraHolder.position.y = 10
-        this.cameraHolder.position.z = ((this.obj_1.position.z + this.obj_2.position.z) / 2);
+        this.cameraHolder.position.x = pivot.x - 8;
+        this.cameraHolder.position.z = pivot.z;
 
         // Camera e o camera holder "olhem" para o pivot
         this.cameraHolder.lookAt(pivot);
@@ -54,8 +41,8 @@ class MainCamera {
         let w = window.innerWidth;
         let realDistance = -100 + w/10;
 
-        if (realDistance > -10) {
-            realDistance = -10;
+        if (realDistance > -5) {
+            realDistance = -5;
         }
         if (realDistance < -100) {
             realDistance = -100;
@@ -72,12 +59,31 @@ class MainCamera {
         this.objList = objList;
     }
     // Calcula distancia entre dois objetos
-    calculateDistance() {
-        let dx = this.obj_1.position.x - this.obj_2.position.x;
-        let dz = this.obj_1.position.z - this.obj_2.position.z;
+    calculateCentroid() {
+        const centroid = new THREE.Vector3(0, 0, 0);
+        this.objList.forEach(obj => {
+            centroid.add(obj.position);
+        });
 
-        return Math.sqrt( dx * dx + dz * dz );
+        centroid.divideScalar(this.objList.length);
+        centroid.setY(0);
+        return centroid;
     }
+
+    calculateDistance() {
+        let maxDistance = 0;
+        const n = this.objList.length;
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                const d = this.objList[i].position.distanceTo(this.objList[j].position);
+                if (d > maxDistance) {
+                    maxDistance = d;
+                }
+            }
+        }
+        return maxDistance;
+    }
+
 }
 
 export default MainCamera;
