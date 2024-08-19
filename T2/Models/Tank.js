@@ -34,6 +34,9 @@ class Tank {
 
         
     }
+    getIsDead(){
+        return this.isDead;
+    }
 
     buildGeometry(material, rotate){
         var loader = new GLTFLoader( );
@@ -157,6 +160,7 @@ class Tank {
         this.healthBar.element.remove();
         removeFromScene(this);
         getCurrentScene().tankList.splice(this);
+        getCurrentScene().bots.splice(this);
     }
 
     setDir(directionTank) {

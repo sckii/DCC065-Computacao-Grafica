@@ -3,6 +3,8 @@ import { CSG } from '../../libs/other/CSGMesh.js'
 import Bullet from './Bullet.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 import { Vector3 } from '../../build/three.module.js';
+import { rotateObjectToVector } from '../Functions/Utils.js';
+
 
 class Cannon{
     constructor(x, z, scene){
@@ -117,43 +119,43 @@ class Cannon{
 
     rotate(scene){     // Função para rotacionar
         // nao estou conseguindo fazer ele rodar pra direcao do tanque mais proximo
-        
-        let closestTank = this.getClosestTank(scene);
+    
+        let cannonPosition =  this.position;        //Posicao do canhao
+        let closestTank = this.getClosestTank(scene);   // tanque mais proximo
+
         if (!closestTank) return;       // garante de que tem um tanque para mirar
-        let angleToClosestTank = 0;
-
-        // Calcular o vetor de direção (apenas no plano XZ)
-        const direction = new THREE.Vector3(
-            closestTank.position.x - this.position.x,
-            0,  // Ignorar o eixo Y
-            closestTank.position.z - this.position.z
-        );
-
-        var cannonDirection = new Vector3;
-        this.geometry.getWorldDirection(cannonDirection)
-
-        angleToClosestTank = Math.atan2(direction.x, direction.z);
-
-        let way = 0;
-        if (angleToClosestTank < 0) {way = -1}
-        else if (angleToClosestTank > 0) {way = 1}
-        else {way = 0}
-        let angle = way * THREE.MathUtils.degToRad(0.5);
         
-        this.geometry.rotateY(angle);
-        this.updateObject(this.geometry)
-        if(angle>0){
-            this.geometry.children[1].rotateY(angle);
-            this.updateObject(this.geometry.children[1]);
-            this.geometry.children[2].rotateY(-angle);
-            this.updateObject(this.geometry.children[2])
-        }
-        if(angle<0){
-            this.geometry.children[1].rotateY(angle);
-            this.updateObject(this.geometry.children[1]);
-            this.geometry.children[2].rotateY(-angle);
-            this.updateObject(this.geometry.children[2])
-        }        
+        let direction = new THREE.Vector3();
+        
+        direction.subVectors(cannonPosition, closestTank.position).normalize();
+        rotateObjectToVector(this.geometry, direction);
+
+        // var cannonDirection = new Vector3;
+        // this.geometry.getWorldDirection(cannonDirection)
+        
+
+        // angleToClosestTank = Math.atan2(direction.x, direction.z);
+
+        // let way = 0;
+        // if (angleToClosestTank < 0) {way = -1}
+        // else if (angleToClosestTank > 0) {way = 1}
+        // else {way = 0}
+        // let angle = way * THREE.MathUtils.degToRad(0.5);
+        
+        // this.geometry.rotateY(angle);
+        // this.updateObject(this.geometry)
+        // if(angle>0){
+        //     this.geometry.children[1].rotateY(angle);
+        //     this.updateObject(this.geometry.children[1]);
+        //     this.geometry.children[2].rotateY(-angle);
+        //     this.updateObject(this.geometry.children[2])
+        // }
+        // if(angle<0){
+        //     this.geometry.children[1].rotateY(angle);
+        //     this.updateObject(this.geometry.children[1]);
+        //     this.geometry.children[2].rotateY(-angle);
+        //     this.updateObject(this.geometry.children[2])
+        // }        
     }
 
     startShooting(scene){

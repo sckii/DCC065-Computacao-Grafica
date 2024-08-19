@@ -65,7 +65,6 @@ function level1(){
     scene.physics.add(redTank.colliderComponent); 
     scene.updateList.push(redTank);
     scene.tankList.push(redTank);
-    //KeyboardMovement(redTank, scene, scene.updateList, scene.physics);
 
     let blueTank = new Tank(5, 27, "Blue", 1);
     scene.add(blueTank.geometry);

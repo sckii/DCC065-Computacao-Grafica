@@ -13,7 +13,7 @@ setRenderer(initRenderer());
 let cssRenderer = initCssRenderer();
 
 
-let currentlvlNumber = 2;
+let currentlvlNumber = 1;
 setCurrentScene(buildLevel(currentlvlNumber));
 
 
@@ -52,7 +52,12 @@ function render() {
       setCurrentScene(buildLevel(currentlvlNumber));
    } 
 
-   // Fazer verificao do nivel 1 
+   // Passar de fase
+   if(currentlvlNumber == 1 && getCurrentScene().tankList[1] == null){
+      currentlvlNumber = 2;
+      clearCssRenderer();
+      setCurrentScene(buildLevel(2));
+   }
 
    // Verificando qual camera será utilizada
    if (camChangeOrbit) {
