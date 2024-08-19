@@ -5,6 +5,7 @@ import { getChancesOf, rotateObjectToVector } from './Utils.js';
 const raycaster = new THREE.Raycaster();
 
 class TankAI {
+
   constructor(tank, playerTank, range, sceneBlocks, scene) {
     this.tank = tank;
     this.playerTank = playerTank.geometry;
@@ -65,10 +66,10 @@ class TankAI {
     const distanceBetweenPlayer = playerPosition.distanceTo(botPosition);
     if (distanceBetweenPlayer > this.range && !this.tank.normal) {
       if (getChancesOf(10)) {
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-10));
+        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-30));
       }
       if (getChancesOf(10)) {
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(10));
+        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(30));
       }
     }
 
@@ -181,7 +182,7 @@ class TankAI {
 
   update() {
     
-    // this.movement();
+    this.movement();
 
     setInterval(() => {
       this.shoot();
