@@ -10,8 +10,6 @@ export function deleteScene(scene){
         // Remover o objeto da cena
         scene.remove(obj);
 
-        scene.physics.remove(obj.colliderComponent);
-
         // Confere se o objto tem uma geometria e libera ela
         if (obj.geometry) {
             obj.geometry.dispose();
@@ -28,10 +26,12 @@ export function deleteScene(scene){
         }
     }
 
-    // remove da lista de update
-    scene.updateList.forEach(element => {
-        removeFromScene(element)
-    });
+    scene.updateList = [];
+    scene.tankList = [];
+    scene.cameraList = [];
+    scene.physics.colliders = [];
+    scene.physics.map = [];
+    scene.bots = [];
 
 }
 export default deleteScene;
