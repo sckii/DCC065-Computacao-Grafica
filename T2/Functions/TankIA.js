@@ -103,7 +103,7 @@ class TankAI {
 
     setTimeout(() => {
       this.canCatch = true;
-    }, 7000);
+    }, 6000);
   }
 
   isPlayerVisible() {
