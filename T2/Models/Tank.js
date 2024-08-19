@@ -5,7 +5,7 @@ import Bullet from './Bullet.js';
 import HealthBar from './HealthBar.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
-import { removeFromScene } from '../Functions/SceneGlobals.js';
+import { getCurrentScene, removeFromScene } from '../Functions/SceneGlobals.js';
 
 
 
@@ -99,7 +99,7 @@ class Tank {
         this.geometry.getWorldDirection(shootDirection);
 
         let shootPosition = new Vector3()
-        shootPosition.copy(this.geometry.position);
+        shootPosition.copy(this.geometry.position).add( new Vector3( 0,1.3,0));
         const shoot = new Bullet(shootPosition, shootDirection, this);
 
         scene.add(shoot.geometry);
@@ -128,7 +128,7 @@ class Tank {
      * @param {Collision} collision 
      */   
     onCollision(collision){
-        if (collision.other.isBlock || collision.other instanceof Tank) {
+        if (!(collision.other instanceof Bullet)) {
             this.position.add(collision.getNormal().multiplyScalar(.15));
             this.normal = collision.getNormal();
         }
@@ -156,6 +156,7 @@ class Tank {
         this.isDead = true;
         this.healthBar.element.remove();
         removeFromScene(this);
+        getCurrentScene().tankList.remove(this);
     }
 
     setDir(directionTank) {

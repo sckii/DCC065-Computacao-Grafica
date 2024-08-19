@@ -13,7 +13,7 @@ class Bullet {
 
         // Visual
         this.radius = 0.25;
-        this.geometry = this.buildMesh(position.x, position.z);
+        this.geometry = this.buildMesh(position);
         this.position = this.geometry.position;
 
         // Movimento
@@ -27,11 +27,11 @@ class Bullet {
         this.numColision = 0;
     }
 
-    buildMesh(x, z) {
+    buildMesh(position) {
         const geometry = new THREE.SphereGeometry(this.radius,15,15);
         const material = this.setMaterial();
         const bullet = new THREE.Mesh(geometry, material);
-        bullet.position.set(x, 1, z);
+        bullet.position.set(position.x, position.y, position.z);
 
         return bullet;
     }
@@ -75,6 +75,10 @@ class Bullet {
         
         if(collision.other instanceof Cannon){     
             removeFromScene(this);
+            return;
+        }
+
+        if (collision.other.wallType === 2) {
             return;
         }
         

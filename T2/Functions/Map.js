@@ -95,8 +95,8 @@ function level2(){
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -119,8 +119,10 @@ function level2(){
     scene.add(ambientLight);
 
     // Luz direcional
-    let dirColor = "rgb(60,60,60)";
-    let dirLight = new THREE.DirectionalLight(dirColor, 0.2);
+    let dirColor = "rgb(255, 255, 255)";
+    //let dirLight = new THREE.DirectionalLight(dirColor, .01);
+    let dirLight = new THREE.DirectionalLight(dirColor, 1);
+    dirLight.castShadow = true;
     scene.add(dirLight);
 
     // Luz spot
@@ -242,7 +244,17 @@ export function buildMap(scene, matrix, blockMaterial) {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length; j++) {
             if (matrix[i][j] == 1) {
-                let block = getBlock(matrixToWorld(i, j), blockMaterial);
+                let block = getBlock(matrixToWorld(i, j), blockMaterial, 1);
+                block.castShadow = true;
+                block.reciveShadow = true;
+                scene.add(block);
+                matrix[i][j] = block;
+                blocks.add(block);
+                block.colliderComponent = new AABBCollider(block, blockSize, blockSize);
+                block.isBlock = true;
+            }
+            if (matrix[i][j] == 2) {
+                let block = getBlock(matrixToWorld(i, j), blockMaterial, 2);
                 block.castShadow = true;
                 block.reciveShadow = true;
                 scene.add(block);
@@ -252,16 +264,32 @@ export function buildMap(scene, matrix, blockMaterial) {
                 block.isBlock = true;
             }
         }
+
+        for (let i = 0; i < matrix.length; i++) {
+            for (let j = 0; j < matrix[i].length; j++) {
+                if (matrix[i][j].wallType == 2) {
+                    matrix[i][j].material
+                }
+            }
+        }
     }
     return blocks;
 }
 
-function getBlock(pos, blockMaterial) {
-    const blockGeometry = new THREE.BoxGeometry(blockSize,blockSize,blockSize);
+function getBlock(pos, blockMaterial, type) {
+    let blockGeometry;
+    
+    if (type == 1) {
+        blockGeometry = new THREE.BoxGeometry(blockSize,blockSize,blockSize);
+    }
+    else if (type == 2) {
+        blockGeometry = new THREE.BoxGeometry(blockSize,blockSize*0.3,blockSize);
+    }
     
     const mesh = new THREE.Mesh(blockGeometry, blockMaterial);
-        mesh.position.set(pos.x, pos.y, pos.z);
-    
+    mesh.position.set(pos.x, pos.y, pos.z);
+    mesh.wallType = type;
+
     return mesh;
 }
 

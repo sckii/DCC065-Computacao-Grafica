@@ -29,6 +29,7 @@ class PhysicsEnvironment {
         // iterar por todos os objetos testando a colisão
         for (let i = 0; i < this.colliders.length; i++) {
             let colidiuComMapa = false;
+            let lastBlock;
 
             let normal = new THREE.Vector3(0,0,0);
             let point;
@@ -37,6 +38,7 @@ class PhysicsEnvironment {
                 if (this.map[j].colliderComponent.intersctsPoint(point)) {
                     normal.add(this.map[j].colliderComponent.getCollisionNormal(point));
                     colidiuComMapa = true;
+                    lastBlock = this.map[j];
                 }
                 else
                     this.colliders[i].onNoCollision(this.map[j].colliderComponent);
@@ -46,25 +48,24 @@ class PhysicsEnvironment {
                 // Arendonda a normal para cima, baixo ou lados
                 normal.normalize();
                 normal.x = Math.round(normal.x);
+                normal.y = 0;
                 normal.z = Math.round(normal.z);
                 normal.normalize();
-                this.colliders[i].onCollision( new Collision(this.map[0], point, normal) );
+                this.colliders[i].onCollision( new Collision(lastBlock, point, normal) );
             }
             
-         
-            if (!colidiuComMapa) { // Da priorida á colião com o mapa
-                for (let j = i+1; j < this.colliders.length; j++) {
-                    let point = this.colliders[i].getClosestPointTo(this.colliders[j].object.position)
-                    if (this.colliders[j].intersctsPoint(point)) {
-                        this.colliders[i].onCollision( new Collision(this.colliders[j].object, point));
-                        this.colliders[j].onCollision( new Collision(this.colliders[i].object, point));
-                    }
-                    else {
-                        this.colliders[i].onNoCollision(this.colliders[j]);
-                        this.colliders[j].onNoCollision(this.colliders[i]);
-                    }
-                }		
-            }
+            // Checa colisão com outros obketos
+            for (let j = i+1; j < this.colliders.length; j++) {
+                let point = this.colliders[i].getClosestPointTo(this.colliders[j].object.position)
+                if (this.colliders[j].intersctsPoint(point)) {
+                    this.colliders[i].onCollision( new Collision(this.colliders[j].object, point));
+                    this.colliders[j].onCollision( new Collision(this.colliders[i].object, point));
+                }
+                else {
+                    this.colliders[i].onNoCollision(this.colliders[j]);
+                    this.colliders[j].onNoCollision(this.colliders[i]);
+                }
+            }		
         }
     }
 
