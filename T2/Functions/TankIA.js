@@ -10,7 +10,7 @@ class TankAI {
     this.tank = tank;
     this.playerTank = playerTank.geometry;
     this.playerTankMesh = playerTank.mesh;
-    this.range = 16;
+    this.range = 12;
 
     // Tank Movement
     this.canPatrulate = true;
@@ -56,7 +56,7 @@ class TankAI {
 
     setTimeout(() => {
       this.canRun = true;
-    }, 600);
+    }, 1000);
   }
 
   getOutOfWall() {
@@ -76,9 +76,9 @@ class TankAI {
     // this.scene.add(new THREE.ArrowHelper(direction, botPosition, 200, 0xffff00));
     
     // Detectar obstáculos dentro de um alcance de 6 unidade
-    if (obstacles.length > 0 && obstacles[0].distance < 6.5) {
+    if (obstacles.length > 0 && obstacles[0].distance < 5.5) {
         // Mudar a direção (exemplo: virar para a direita ou esquerda)
-        this.tank.geometry.rotateY(getChancesOf())
+        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(30))
         this.tank.setDir(1);
     } else {
         // Não há obstáculos, continue na direção atual
@@ -96,12 +96,10 @@ class TankAI {
     const botPosition = this.tank.position; // Posição do bot
     const direction = new THREE.Vector3();
 
-    if (this.isPlayerVisible()) {
-      direction.subVectors(playerPosition, botPosition).normalize();
-      // Rotacionar o objeto para "olhar" na direção do vetor        
-      rotateObjectToVector(this.tank.geometry, direction);
-      this.tank.setDir(1);
-    }
+    direction.subVectors(playerPosition, botPosition).normalize();
+    // Rotacionar o objeto para "olhar" na direção do vetor        
+    rotateObjectToVector(this.tank.geometry, direction);
+    this.tank.setDir(1);
 
     setTimeout(() => {
       this.canCatch = true;
