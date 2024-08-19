@@ -10,7 +10,7 @@ class TankAI {
     this.tank = tank;
     this.playerTank = playerTank.geometry;
     this.playerTankMesh = playerTank.mesh;
-    this.range = range;
+    this.range = 16;
 
     // Tank Movement
     this.canPatrulate = true;
@@ -23,7 +23,7 @@ class TankAI {
     
     // Tank Shoot
     this.canShoot = true;
-    this.shootInterval = 1200;
+    this.shootInterval = 3000;
 
     this.scene = scene;
     this.updateList = scene.updateList;
@@ -35,8 +35,8 @@ class TankAI {
   }
 
   getOutPlayer() {
-    if (!this.canRun) return; // Se o bot não pode atirar, saia da função
-    this.canRun = false; // Impedir novos tiros até que o timeout acabe
+    if (!this.canRun) return;
+    this.canRun = false;
 
     const playerPosition =  this.playerTank.position; // Posição do jogador
     const botPosition = this.tank.position; // Posição do bot
@@ -56,7 +56,7 @@ class TankAI {
 
     setTimeout(() => {
       this.canRun = true;
-    }, 500);
+    }, 600);
   }
 
   getOutOfWall() {
@@ -105,7 +105,7 @@ class TankAI {
 
     setTimeout(() => {
       this.canCatch = true;
-    }, 4000);
+    }, 7000);
   }
 
   isPlayerVisible() {

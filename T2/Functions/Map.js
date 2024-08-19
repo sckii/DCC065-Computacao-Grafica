@@ -75,7 +75,7 @@ function level1(){
     // AI
     scene.bots = scene.tankList.map(tank => {
         if (tank.geometry.id !== scene.tankList[0].geometry.id)
-            return new TankAI(tank, scene.tankList[0], 10, blocks, scene);
+            return new TankAI(tank, scene.tankList[0], 14, blocks, scene);
     })
 
     return scene;
@@ -227,7 +227,7 @@ function level2(){
     // AI
     scene.bots = scene.tankList.map(tank => {
         if (tank && tank.geometry.id !== scene.tankList[0].geometry.id)
-            return new TankAI(tank, scene.tankList[0], 10, blocks, scene);
+            return new TankAI(tank, scene.tankList[0], 14, blocks, scene);
     })
 
     return scene;
