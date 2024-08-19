@@ -78,7 +78,7 @@ class TankAI {
     // Detectar obstáculos dentro de um alcance de 6 unidade
     if (obstacles.length > 0 && obstacles[0].distance < 6.5) {
         // Mudar a direção (exemplo: virar para a direita ou esquerda)
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(30))
+        this.tank.geometry.rotateY(getChancesOf())
         this.tank.setDir(1);
     } else {
         // Não há obstáculos, continue na direção atual

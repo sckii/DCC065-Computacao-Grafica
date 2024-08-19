@@ -16,9 +16,13 @@ export const convertVector3ToEuler = (direction) => {
   return euler; // Ângulos de Euler em radianos
 }
 
-export const getChancesOf = (chance) => {
-  let randomInt = Math.floor(Math.random() * 1000);
-  return randomInt <= chance;
+export const getChancesOf = () => {
+  const randomValue = Math.random();
+  // Converte o valor aleatório para o intervalo -30 a 30 graus
+  const angleInDegrees = randomValue * 10 - 30;
+  // Converte o ângulo de graus para radianos
+  const angleInRadians = THREE.MathUtils.degToRad(angleInDegrees);
+  return angleInRadians;
 }
 
 export function rotateObjectToVector(object, targetVector) {
