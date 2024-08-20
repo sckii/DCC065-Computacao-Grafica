@@ -14,10 +14,7 @@ import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildMap } from './Functions/Map.js'
 import { setScene } from './Functions/RemoveFromScene.js';
 import PhysicsEnvironment from './Physics/PhysicsEnvironment.js';
-<<<<<<< HEAD
-=======
 import GameOver from './Functions/GameOver.js';
->>>>>>> main
 
 let orbit, scene, renderer, light, camChangeOrbit, mainCamera, secondCamera, keyboard;
 scene = new THREE.Scene();
@@ -37,13 +34,10 @@ window.addEventListener( 'resize', function(){onWindowResize(mainCamera.update()
 // Cria a camera secundario que terá os contres de orbita
 secondCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
 orbit = new OrbitControls( secondCamera, renderer.domElement ); // Habilitando mouse rotation, pan, zoom etc.
-<<<<<<< HEAD
 secondCamera.lookAt(11, 0, 16); // Alterando onde 
-=======
 
 // Alterando para onde aponta a camera orbital e a secundaria
 secondCamera.lookAt(11, 0, 16);  
->>>>>>> main
 orbit.target = new THREE.Vector3(11, 0, 16);
 window.addEventListener( 'resize', function(){onWindowResize(secondCamera, renderer)}, false );
 
