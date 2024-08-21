@@ -73,9 +73,10 @@ function level1(){
     scene.tankList.push(blueTank);
     
     // AI
+    scene.player = redTank;
     scene.bots = scene.tankList.map(tank => {
-        if (tank.geometry.id !== scene.tankList[0].geometry.id)
-            return new TankAI(tank, scene.tankList[0], 14, blocks, scene);
+        if (tank.geometry.id !== redTank.geometry.id)
+            return new TankAI(tank, redTank, 14, blocks, scene);
     })
 
     return scene;
@@ -222,12 +223,13 @@ function level2(){
     scene.add(cannon.geometry);
     scene.physics.add(cannon.colliderComponent); 
     scene.updateList.push(cannon);
-
-        
+    
+    blocks.add(cannon.geometry);
+    scene.player = greenTank;
     // AI
     scene.bots = scene.tankList.map(tank => {
-        if (tank && tank.geometry.id !== scene.tankList[0].geometry.id)
-            return new TankAI(tank, scene.tankList[0], 14, blocks, scene);
+        if (tank.geometry.id !== greenTank.geometry.id)
+            return new TankAI(tank, greenTank, 14, blocks, scene);
     })
 
     return scene;

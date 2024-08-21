@@ -60,6 +60,7 @@ class MainCamera {
     }
     // Calcula distancia entre dois objetos
     calculateCentroid() {
+        this.objList = this.objList.filter(e => e);
         const centroid = new THREE.Vector3(0, 0, 0);
         this.objList.forEach(obj => {
             centroid.add(obj.position);
@@ -72,7 +73,9 @@ class MainCamera {
 
     calculateDistance() {
         let maxDistance = 0;
+        this.objList = this.objList.filter(e => e);
         const n = this.objList.length;
+
         for (let i = 0; i < n; i++) {
             for (let j = i + 1; j < n; j++) {
                 const d = this.objList[i].position.distanceTo(this.objList[j].position);

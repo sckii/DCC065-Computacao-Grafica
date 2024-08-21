@@ -60,7 +60,7 @@ class TankAI {
   }
 
   getOutOfWall() {
-    const botPosition = this.tank.position; // Posição do bot
+    const botPosition = this.tank.position.clone(); // Posição do bot
 
     const nearWall = {
       direction: null,
@@ -71,13 +71,14 @@ class TankAI {
 
     const raycaster = new THREE.Raycaster();
 
+    botPosition.setY(0.4);
     raycaster.set(botPosition, direction);
     const obstacles = raycaster.intersectObjects(this.sceneBlocks, true);
     // this.scene.add(new THREE.ArrowHelper(direction, botPosition, 200, 0xffff00));
     
     // Detectar obstáculos dentro de um alcance de 6 unidade
     if (obstacles.length > 0 && obstacles[0].distance < 5.5) {
-        // Mudar a direção (exemplo: virar para a direita ou esquerda)
+        // Mudar a direção
         this.tank.geometry.rotateY(THREE.MathUtils.degToRad(30))
         this.tank.setDir(1);
     } else {

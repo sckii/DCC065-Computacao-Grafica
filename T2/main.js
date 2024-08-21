@@ -12,10 +12,8 @@ setRenderer(initRenderer());
 
 let cssRenderer = initCssRenderer();
 
-
 let currentlvlNumber = 1;
 setCurrentScene(buildLevel(currentlvlNumber));
-
 
 // Criar botão de reiniciar a fase
 var restart = false;
@@ -76,7 +74,7 @@ function keyboardUpdate() {
    keyboard.update();
 
    // Adicionando controles aos tanque
-   KeyboardMovement(scene.tankList[0], scene);
+   KeyboardMovement(scene.player, scene);
 
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
