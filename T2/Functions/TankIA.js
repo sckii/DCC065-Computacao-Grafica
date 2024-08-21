@@ -10,10 +10,16 @@ class TankAI {
     this.tank = tank;
     this.playerTank = playerTank.geometry;
     this.playerTankMesh = playerTank.mesh;
-    this.range = range;
+    this.range = 12;
 
     // Tank Movement
-    this.canMoveForward = true;
+    this.canPatrulate = true;
+    
+    this.canRun = true;
+    this.canRunInterval = 0;
+    
+    this.canCatch = true;
+    this.canCatchInterval = 2000;
     
     // Tank Aim
     this.sceneBlocks = [];
@@ -21,7 +27,7 @@ class TankAI {
     
     // Tank Shoot
     this.canShoot = true;
-    this.shootInterval = 1200;
+    this.shootInterval = 4000;
 
     this.scene = scene;
     this.updateList = scene.updateList;
@@ -33,6 +39,9 @@ class TankAI {
   }
 
   getOutPlayer() {
+    if (!this.canRun) return;
+    this.canRun = false;
+
     const playerPosition =  this.playerTank.position; // Posição do jogador
     const botPosition = this.tank.position; // Posição do bot
 
@@ -40,6 +49,7 @@ class TankAI {
     const distanceBetweenPlayer = playerPosition.distanceTo(botPosition);
 
     if (distanceBetweenPlayer < this.range) {
+      this.canCatch = false;
       // Calcular a direção do player ao bot
       const direction = botPosition.clone().sub(playerPosition).normalize();
 
@@ -47,37 +57,59 @@ class TankAI {
       rotateObjectToVector(this.tank.geometry, direction)
       this.tank.setDir(1);
     }
+
+    setTimeout(() => {
+      this.canRun = true;
+    }, this.canRunInterval);
+  }
+
+  getOutOfWall() {
+    const botPosition = this.tank.position; // Posição do bot
+
+    const nearWall = {
+      direction: null,
+    }
+
+    const direction = this.tank.geometry.getWorldDirection(new THREE.Vector3(1, 0 ,0));
+    direction.normalize(); // Normalizar o vetor de direção
+
+    const raycaster = new THREE.Raycaster();
+    raycaster.set(botPosition, direction);
+    const obstacles = raycaster.intersectObjects(this.sceneBlocks, true);
+    // this.scene.add(new THREE.ArrowHelper(direction, botPosition, 200, 0xffff00));
+    // Detectar obstáculos dentro de um alcance de 6 unidade
+    if (obstacles.length > 0 && obstacles[0].distance < 7) {
+
+        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-32));
+        this.tank.setDir(1);
+
+    } else {
+        // Não há obstáculos, continue na direção atual
+        nearWall.direction = null; // Posição do bot
+    }
+
+    return nearWall;
   }
 
   movement() {
+    if (!this.canCatch) return;
+    this.canCatch = false;
+
     const playerPosition =  this.playerTank.position; // Posição do jogador
     const botPosition = this.tank.position; // Posição do bot
+    const direction = new THREE.Vector3();
 
-    // Mantem afastado do jogador 
-    this.getOutPlayer();
-
-    // Ao encontar uma parede virar o tank para o lado oposto
-    if (this.tank.normal) {
-      // Rotacionar o objeto para "olhar" na direção do vetor normal  
-      rotateObjectToVector(this.tank.geometry, this.tank.normal);
-      this.tank.normal = null;
-    }
-
-    const distanceBetweenPlayer = playerPosition.distanceTo(botPosition);
-    if (distanceBetweenPlayer > this.range && !this.tank.normal) {
-      if (getChancesOf(10)) {
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-30));
-      }
-      if (getChancesOf(10)) {
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(30));
-      }
-    }
-
+    direction.subVectors(playerPosition, botPosition).normalize();
+    // Rotacionar o objeto para "olhar" na direção do vetor        
+    rotateObjectToVector(this.tank.geometry, direction);
     this.tank.setDir(1);
+
+    setTimeout(() => {
+      this.canCatch = true;
+    }, this.canCatchInterval);
   }
 
   isPlayerVisible() {
-
     const playerPosition =  this.playerTank.position; // Posição do jogador
     const botPosition = this.tank.position; // Posição do bot
 
@@ -181,13 +213,20 @@ class TankAI {
   }
 
   update() {
-    
-    this.movement();
+    if (!this.canShoot) {
+      // PATRULHAR
+      this.getOutPlayer();
+      this.movement();
+      this.tank.setDir(1);
+    }
+    // MOVIMENTAR
+    this.getOutOfWall();
 
-    setInterval(() => {
+    // ATIRAR
+    setTimeout(() => {
       this.shoot();
-    }, 500);
-    
+    }, 1000)
+
   }
 };
 
