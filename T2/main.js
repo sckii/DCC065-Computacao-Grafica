@@ -74,6 +74,7 @@ function render() {
    }
 
    // Bots update 
+   // console.log(scene.bots);
    scene.bots.forEach(bot => {if(bot) bot.update()});
 }
 

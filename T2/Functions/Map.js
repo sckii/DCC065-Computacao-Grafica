@@ -227,6 +227,8 @@ function level2(){
 
         
     // AI
+    blocks.add(blueTank.mesh);
+    blocks.add(redTank.mesh);
     scene.bots = scene.tankList.map(tank => {
         if (tank && tank.geometry.id !== scene.tankList[0].geometry.id)
             return new TankAI(tank, scene.tankList[0], 10, blocks, scene);

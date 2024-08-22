@@ -13,13 +13,11 @@ class TankAI {
     this.range = 12;
 
     // Tank Movement
-    this.canPatrulate = true;
-    
     this.canRun = true;
-    this.canRunInterval = 0;
+    this.canRunInterval = 500;
     
     this.canCatch = true;
-    this.canCatchInterval = 2000;
+    this.canCatchInterval = 8000;
     
     // Tank Aim
     this.sceneBlocks = [];
@@ -64,25 +62,27 @@ class TankAI {
   }
 
   getOutOfWall() {
-    const botPosition = this.tank.position; // Posição do bot
+    const botPosition = this.tank.position.clone(); // Posição do bot
 
     const nearWall = {
       direction: null,
     }
 
-    const direction = this.tank.geometry.getWorldDirection(new THREE.Vector3(1, 0 ,0));
+    botPosition.setY(0.1)
+    const direction = this.tank.geometry.getWorldDirection(new THREE.Vector3(1, 0.1, 0));
     direction.normalize(); // Normalizar o vetor de direção
 
     const raycaster = new THREE.Raycaster();
     raycaster.set(botPosition, direction);
     const obstacles = raycaster.intersectObjects(this.sceneBlocks, true);
-    // this.scene.add(new THREE.ArrowHelper(direction, botPosition, 200, 0xffff00));
+
+    
     // Detectar obstáculos dentro de um alcance de 6 unidade
-    if (obstacles.length > 0 && obstacles[0].distance < 7) {
-
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-32));
+    if (obstacles.length > 0 && obstacles[0].distance < 4.5) {
+      console.log(obstacles[0].distance)
+      this.scene.add(new THREE.ArrowHelper(direction, botPosition, obstacles[0].distance, 0xffff00));
+        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-30));
         this.tank.setDir(1);
-
     } else {
         // Não há obstáculos, continue na direção atual
         nearWall.direction = null; // Posição do bot
