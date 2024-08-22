@@ -79,8 +79,7 @@ class TankAI {
     
     // Detectar obstáculos dentro de um alcance de 6 unidade
     if (obstacles.length > 0 && obstacles[0].distance < 4.5) {
-      console.log(obstacles[0].distance)
-      this.scene.add(new THREE.ArrowHelper(direction, botPosition, obstacles[0].distance, 0xffff00));
+        // this.scene.add(new THREE.ArrowHelper(direction, botPosition, obstacles[0].distance, 0xffff00));
         this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-30));
         this.tank.setDir(1);
     } else {
