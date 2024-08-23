@@ -35,10 +35,6 @@ class TankAI {
     this.physics = scene.physics;
   }
 
-  setPlayerTank(playerTank) {
-    this.playerTank = playerTank;
-  }
-
   getOutPlayer() {
     if (!this.canRun) return;
     this.canRun = false;
