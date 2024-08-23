@@ -127,6 +127,7 @@ function initCssRenderer() {
    cssRenderer.domElement.style.position = 'absolute';
    cssRenderer.domElement.style.top = '0px';
    document.body.appendChild( cssRenderer.domElement );
+   cssRenderer.domElement.style.pointerEvents = 'none'
    window.addEventListener( 'resize', () => {
       cssRenderer.setSize( window.innerWidth, window.innerHeight );
    }, false );
