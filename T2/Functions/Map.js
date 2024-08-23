@@ -8,6 +8,7 @@ import AABBCollider from '../Physics/AABBCollider.js';
 import TankAI from './TankIA.js';
 import GameScene from '../Models/GameScene.js';
 import { getRenderer } from './SceneGlobals.js';
+import { CSG } from '../../libs/other/CSGMesh.js'        
 
 const blockSize = 2;
 
@@ -117,22 +118,35 @@ function level2(){
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
     let blockMaterial = new THREE.MeshLambertMaterial({
-        color:"rgb(50,50,50)"    
+        color:"rgb(255,182,193)"    
     });
     let blocks = buildMap(scene, matrixLvl2, blockMaterial);
+
+    // cria a caixa central
+    let supportBox = new THREE.Mesh(new THREE.BoxGeometry(2*blockSize, blockSize*0.3, 2*blockSize));
+    let subtractCylinder = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, blockSize*0.3, 32));
+    
+    let csgMiddleBox = CSG.fromMesh(supportBox).subtract(CSG.fromMesh(subtractCylinder));
+    let middleBox = CSG.toMesh(csgMiddleBox, new THREE.Matrix4(), blockMaterial);
+    middleBox.position.set(11,0.2,17)
+    scene.add(middleBox)
     scene.physics.addToMap(blocks);
 
     // Iluminacao
     // Luz ambiente
-    let ambientColor = "rgb(25,25,112)";
+    let ambientColor = "rgb(25,25,75)";
     let ambientLight = new THREE.AmbientLight(ambientColor, .2);
     scene.add(ambientLight);
 
     // Luz direcional
-    let dirColor = "rgb(255, 255, 255)";
-    //let dirLight = new THREE.DirectionalLight(dirColor, .01);
-    let dirLight = new THREE.DirectionalLight(dirColor, 0);
-    dirLight.castShadow = true;
+    const dirLightTarget = new THREE.Object3D(); 
+    dirLightTarget.position.set(10,0,20)
+    scene.add(dirLightTarget);
+
+    const dirPosition = new THREE.Vector3(30, 35, 30);
+    const dirLight = new THREE.DirectionalLight("rgb(83,87,88)", .2); //0.2
+        dirLight.target = dirLightTarget;
+        dirLight.position.copy(dirPosition);
     scene.add(dirLight);
 
     // Luz spot
@@ -271,7 +285,7 @@ export function buildMap(scene, matrix, blockMaterial) {
                 halfBlock.position.setY(.5);
                 halfBlock.castShadow = true;
                 halfBlock.reciveShadow = true;
-                scene.add(halfBlock);
+                //scene.add(halfBlock);
                 matrix[i][j] = halfBlock;
                 blocks.add(halfBlock);
                 halfBlock.colliderComponent = new AABBCollider(halfBlock, blockSize, blockSize);
@@ -332,4 +346,9 @@ export function worldToMatrix(pos) {
         j: Math.floor(pos.z/blockSize)
     }
     return mPos;
+}
+
+function updateObject(mesh){
+    mesh.matrixAutoUpdate = false;
+    mesh.updateMatrix();
 }
