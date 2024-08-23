@@ -154,10 +154,24 @@ class Tank {
      */
     onDeath() {
         this.isDead = true;
+
+        let tankList = [];
+        let bots = [];
+
+        getCurrentScene().tankList.forEach(tank => {
+            if (tank && tank.geometry && tank.geometry.id !== this.geometry.id)
+                tankList.push(tank);
+        });
+        getCurrentScene().bots.forEach(tankAi => {
+            if (tankAi && tankAi.tank.geometry && tankAi.tank.geometry.id !== this.geometry.id)
+                bots.push(tankAi);
+        });
+
         this.healthBar.element.remove();
         removeFromScene(this);
-        getCurrentScene().tankList.splice(this);
-        getCurrentScene().bots.splice(this);
+        getCurrentScene().tankList = tankList;
+        getCurrentScene().bots = bots;
+
     }
 
     setDir(directionTank) {

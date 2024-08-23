@@ -10,7 +10,7 @@ class TankAI {
     this.tank = tank;
     this.playerTank = playerTank.geometry;
     this.playerTankMesh = playerTank.mesh;
-    this.range = 12;
+    this.range = 7;
 
     // Tank Movement
     this.canRun = true;
@@ -24,7 +24,7 @@ class TankAI {
     sceneBlocks.forEach(e => this.sceneBlocks.push(e));
     
     // Tank Shoot
-    this.canShoot = true;
+    this.canShoot = false;
     this.shootInterval = 4000;
 
     this.scene = scene;
