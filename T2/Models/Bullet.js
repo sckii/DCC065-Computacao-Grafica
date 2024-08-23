@@ -40,26 +40,31 @@ class Bullet {
         let material;
         if(this.shooter instanceof Cannon){
             material = new THREE.MeshLambertMaterial({
-                color:"rgb(46,46,46)"
+                color:"rgb(46,46,46)",
+                emissive: "rgb(100,100,100)"
             });
         }
         if(this.shooter instanceof Tank){
             if(this.shooter.color == "Red"){
                 material = new THREE.MeshLambertMaterial({
-                    color: "rgb(220,60,60)"
+                    color: "rgb(220,60,60)",
+                    emissive: "rgb(220,60,60)"
                 });
             }
             else if(this.shooter.color == "Blue"){
                 material = new THREE.MeshLambertMaterial({
-                    color: "rgb(60,60,220)"
+                    color: "rgb(60,60,220)",
+                    emissive: "rgb(60,60,220)"
                 });
             }
             else {
                 material = new THREE.MeshLambertMaterial({
-                    color: "rgb(60,220,60)"
+                    color: "rgb(60,220,60)",
+                    emissive: "rgb(60,220,60)"
                 });
             }
         }
+
         return material;
     }
     
