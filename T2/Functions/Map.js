@@ -255,14 +255,15 @@ export function buildMap(scene, matrix, blockMaterial) {
                 block.isBlock = true;
             }
             if (matrix[i][j] == 2) {
-                let block = getBlock(matrixToWorld(i, j), blockMaterial, 2);
-                block.castShadow = true;
-                block.reciveShadow = true;
-                scene.add(block);
-                matrix[i][j] = block;
-                blocks.add(block);
-                block.colliderComponent = new AABBCollider(block, blockSize, blockSize);
-                block.isBlock = true;
+                let halfBlock = getBlock(matrixToWorld(i, j), blockMaterial, 2);
+                halfBlock.position.setY(.5);
+                halfBlock.castShadow = true;
+                halfBlock.reciveShadow = true;
+                scene.add(halfBlock);
+                matrix[i][j] = halfBlock;
+                blocks.add(halfBlock);
+                halfBlock.colliderComponent = new AABBCollider(halfBlock, blockSize, blockSize);
+                halfBlock.isBlock = true;
             }
         }
 
@@ -284,7 +285,7 @@ function getBlock(pos, blockMaterial, type) {
         blockGeometry = new THREE.BoxGeometry(blockSize,blockSize,blockSize);
     }
     else if (type == 2) {
-        blockGeometry = new THREE.BoxGeometry(blockSize,blockSize*0.3,blockSize);
+        blockGeometry = new THREE.BoxGeometry(blockSize,blockSize*0.5,blockSize);
     }
     
     const mesh = new THREE.Mesh(blockGeometry, blockMaterial);
