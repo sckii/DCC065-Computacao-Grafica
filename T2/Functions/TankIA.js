@@ -231,7 +231,8 @@ class TankAI {
 
     // ATIRAR
     setTimeout(() => {
-      this.shoot();
+      if(!this.tank.isDead)
+        this.shoot();
     }, 1000)
 
   }

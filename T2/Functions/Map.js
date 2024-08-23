@@ -68,16 +68,14 @@ function level1(){
     scene.playerTank = redTank;
 
     let blueTank = new Tank(5, 27, "Blue", 1);
+    blueTank.ai = new TankAI(blueTank, scene.playerTank, 10, blocks, scene);
     scene.add(blueTank.geometry);
     scene.physics.add(blueTank.colliderComponent); 
     scene.updateList.push(blueTank);
     scene.tankList.push(blueTank);
     
     // AI
-    scene.bots = scene.tankList.map(tank => {
-        if (tank.geometry.id !== scene.tankList[0].geometry.id)
-            return new TankAI(tank, scene.tankList[0], 10, blocks, scene);
-    })
+    scene.bots = [blueTank];
 
     return scene;
 }
@@ -208,17 +206,19 @@ function level2(){
     scene.playerTank = greenTank;
     
     let redTank = new Tank(4, 30, "Red", 1);
+    redTank.ai = new TankAI(redTank, scene.playerTank, 10, blocks, scene);
     scene.add(redTank.geometry);
     scene.physics.add(redTank.colliderComponent); 
     scene.updateList.push(redTank);
-    scene.tankList.push(redTank)
+    scene.tankList.push(redTank);
 
     let blueTank = new Tank(18, 30, "Blue", 2.5);
+    blueTank.ai = new TankAI(blueTank, scene.playerTank, 10, blocks, scene);
     scene.add(blueTank.geometry);
     scene.physics.add(blueTank.colliderComponent); 
     scene.updateList.push(blueTank);
-    scene.tankList.push(blueTank)
-
+    scene.tankList.push(blueTank);
+    
     // Adiciona o canhao
     let cannon = new Cannon(11, 17, scene);
     scene.add(cannon.geometry);
@@ -229,10 +229,8 @@ function level2(){
     // AI
     blocks.add(blueTank.mesh);
     blocks.add(redTank.mesh);
-    scene.bots = scene.tankList.map(tank => {
-        if (tank && tank.geometry.id !== scene.tankList[0].geometry.id)
-            return new TankAI(tank, scene.tankList[0], 10, blocks, scene);
-    })
+
+    scene.bots = [blueTank, redTank];
 
     return scene;
 }
