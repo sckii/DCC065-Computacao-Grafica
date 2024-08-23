@@ -3,7 +3,7 @@ import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import Tank from '../Models/Tank.js';
 import Cannon from '../Models/Cannon.js';
 import { createGroundPlane } from '../../libs/util/util.js';
-import { Vector2, Vector3 } from '../../build/three.module.js';
+import { DirectionalLightHelper, Vector2, Vector3 } from '../../build/three.module.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 import TankAI from './TankIA.js';
 import GameScene from '../Models/GameScene.js';
@@ -50,13 +50,25 @@ function level1(){
     scene.physics.addToMap(blocks);
 
     // Iluminacao
-    let ambientColor = "rgb(50,50,50)"
-    let ambientLight = new THREE.AmbientLight(ambientColor);
+    let ambientColor = "rgb(135, 206, 250)";
+    let ambientLight = new THREE.AmbientLight(ambientColor, .2);
 
-    let dirColor = "rgb(255,255,255)";
-    let dirLight = new THREE.DirectionalLight(dirColor, 0.2)
+    const dirLightTarget = new THREE.Object3D(); 
+    dirLightTarget.position.set(10,0,20)
+    scene.add(dirLightTarget);
 
-    scene.add(dirLight);
+    const dirPosition = new THREE.Vector3(30, 35, 30);
+    const dirLight = new THREE.DirectionalLight("rgb(255,250,224)", 1);
+        dirLight.target = dirLightTarget;
+        dirLight.position.copy(dirPosition);
+        dirLight.castShadow = true;
+        dirLight.shadow.camera.left = -30;
+        dirLight.shadow.camera.right = 30;
+        dirLight.shadow.camera.bottom = -30;
+        dirLight.shadow.camera.top = 30;
+    scene.add(dirLight);  
+    scene.add( new DirectionalLightHelper(dirLight, 1, 'red'));
+
     scene.add(ambientLight);
 
     // Adiciona os tanques
@@ -112,14 +124,14 @@ function level2(){
 
     // Iluminacao
     // Luz ambiente
-    let ambientColor = "rgb(30,30,30)";
-    let ambientLight = new THREE.AmbientLight(ambientColor);
+    let ambientColor = "rgb(25,25,112)";
+    let ambientLight = new THREE.AmbientLight(ambientColor, .2);
     scene.add(ambientLight);
 
     // Luz direcional
     let dirColor = "rgb(255, 255, 255)";
     //let dirLight = new THREE.DirectionalLight(dirColor, .01);
-    let dirLight = new THREE.DirectionalLight(dirColor, 1);
+    let dirLight = new THREE.DirectionalLight(dirColor, 0);
     dirLight.castShadow = true;
     scene.add(dirLight);
 
