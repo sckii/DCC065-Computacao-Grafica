@@ -18,13 +18,16 @@ class TankAI {
     
     this.canCatch = true;
     this.canCatchInterval = 8000;
+
+    this.turnTimes = 0;
+    this.getOutWallAngle = 30;
     
     // Tank Aim
     this.sceneBlocks = [];
     sceneBlocks.forEach(e => this.sceneBlocks.push(e));
     
     // Tank Shoot
-    this.canShoot = false;
+    this.canShoot = true;
     this.shootInterval = 4000;
 
     this.scene = scene;
@@ -60,6 +63,13 @@ class TankAI {
       this.canRun = true;
     }, this.canRunInterval);
   }
+  
+  turn() {
+    if (this.turnTimes % 10 === 0) {
+      this.getOutWallAngle = -1 * this.getOutWallAngle;
+    }
+    this.turnTimes++;
+  }
 
   getOutOfWall() {
     const botPosition = this.tank.position.clone(); // Posição do bot
@@ -78,9 +88,10 @@ class TankAI {
 
     
     // Detectar obstáculos dentro de um alcance de 6 unidade
-    if (obstacles.length > 0 && obstacles[0].distance < 4.5) {
+    if (obstacles.length > 0 && obstacles[0].distance < 6) {
         // this.scene.add(new THREE.ArrowHelper(direction, botPosition, obstacles[0].distance, 0xffff00));
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-30));
+        this.turn();
+        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(this.getOutWallAngle));
         this.tank.setDir(1);
     } else {
         // Não há obstáculos, continue na direção atual
@@ -211,6 +222,7 @@ class TankAI {
     }, this.shootInterval)
   }
 
+ 
   update() {
     if (!this.canShoot) {
       // PATRULHAR
