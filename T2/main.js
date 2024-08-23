@@ -36,8 +36,6 @@ function render() {
    keyboardUpdate();
    requestAnimationFrame(render);   
 
-   cssRenderer.render( scene, scene.mainCamera.camera );   
-
    scene.physics.update();
 
    scene.updateList.forEach(element => {
@@ -68,9 +66,13 @@ function render() {
    // Verificando qual camera será utilizada
    if (camChangeOrbit) {
       scene.renderer.render(scene, scene.orbitCamera) // Render scene
+      cssRenderer.render( scene, scene.orbitCamera );   
+
    }
    if (!camChangeOrbit) {
       scene.renderer.render(scene, scene.mainCamera.update()) // Render scene
+      cssRenderer.render( scene, scene.mainCamera.camera );   
+
    }
 
    // Bots update 
