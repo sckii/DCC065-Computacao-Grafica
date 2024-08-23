@@ -156,9 +156,11 @@ class Tank {
         this.isDead = true;
         this.healthBar.element.remove();
         removeFromScene(this);
-        getCurrentScene().tankList.splice(this);
-        getCurrentScene().bots.splice(this);
+        let scene = getCurrentScene();
+        scene.bots = scene.bots.filter( bot => bot !== this);
+        scene.tankList = scene.tankList.filter( bot => bot !== this);
     }
+    
 
     setDir(directionTank) {
         this.worldDir = new Vector3(0,0,directionTank);

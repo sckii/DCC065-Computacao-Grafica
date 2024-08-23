@@ -10,10 +10,17 @@ class TankAI {
     this.tank = tank;
     this.playerTank = playerTank.geometry;
     this.playerTankMesh = playerTank.mesh;
-    this.range = range;
+    this.range = 7;
 
     // Tank Movement
-    this.canMoveForward = true;
+    this.canRun = true;
+    this.canRunInterval = 500;
+    
+    this.canCatch = true;
+    this.canCatchInterval = 8000;
+
+    this.turnTimes = 0;
+    this.getOutWallAngle = 30;
     
     // Tank Aim
     this.sceneBlocks = [];
@@ -21,18 +28,17 @@ class TankAI {
     
     // Tank Shoot
     this.canShoot = true;
-    this.shootInterval = 1200;
+    this.shootInterval = 4000;
 
     this.scene = scene;
     this.updateList = scene.updateList;
     this.physics = scene.physics;
   }
 
-  setPlayerTank(playerTank) {
-    this.playerTank = playerTank;
-  }
-
   getOutPlayer() {
+    if (!this.canRun) return;
+    this.canRun = false;
+
     const playerPosition =  this.playerTank.position; // Posição do jogador
     const botPosition = this.tank.position; // Posição do bot
 
@@ -40,6 +46,7 @@ class TankAI {
     const distanceBetweenPlayer = playerPosition.distanceTo(botPosition);
 
     if (distanceBetweenPlayer < this.range) {
+      this.canCatch = false;
       // Calcular a direção do player ao bot
       const direction = botPosition.clone().sub(playerPosition).normalize();
 
@@ -47,37 +54,68 @@ class TankAI {
       rotateObjectToVector(this.tank.geometry, direction)
       this.tank.setDir(1);
     }
+
+    setTimeout(() => {
+      this.canRun = true;
+    }, this.canRunInterval);
+  }
+  
+  turn() {
+    if (this.turnTimes % 10 === 0) {
+      this.getOutWallAngle = -1 * this.getOutWallAngle;
+    }
+    this.turnTimes++;
+  }
+
+  getOutOfWall() {
+    const botPosition = this.tank.position.clone(); // Posição do bot
+
+    const nearWall = {
+      direction: null,
+    }
+
+    botPosition.setY(0.1)
+    const direction = this.tank.geometry.getWorldDirection(new THREE.Vector3(1, 0.1, 0));
+    direction.normalize(); // Normalizar o vetor de direção
+
+    const raycaster = new THREE.Raycaster();
+    raycaster.set(botPosition, direction);
+    const obstacles = raycaster.intersectObjects(this.sceneBlocks, true);
+
+    
+    // Detectar obstáculos dentro de um alcance de 6 unidade
+    if (obstacles.length > 0 && obstacles[0].distance < 6) {
+        // this.scene.add(new THREE.ArrowHelper(direction, botPosition, obstacles[0].distance, 0xffff00));
+        this.turn();
+        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(this.getOutWallAngle));
+        this.tank.setDir(1);
+    } else {
+        // Não há obstáculos, continue na direção atual
+        nearWall.direction = null; // Posição do bot
+    }
+
+    return nearWall;
   }
 
   movement() {
+    if (!this.canCatch) return;
+    this.canCatch = false;
+
     const playerPosition =  this.playerTank.position; // Posição do jogador
     const botPosition = this.tank.position; // Posição do bot
+    const direction = new THREE.Vector3();
 
-    // Mantem afastado do jogador 
-    this.getOutPlayer();
-
-    // Ao encontar uma parede virar o tank para o lado oposto
-    if (this.tank.normal) {
-      // Rotacionar o objeto para "olhar" na direção do vetor normal  
-      rotateObjectToVector(this.tank.geometry, this.tank.normal);
-      this.tank.normal = null;
-    }
-
-    const distanceBetweenPlayer = playerPosition.distanceTo(botPosition);
-    if (distanceBetweenPlayer > this.range && !this.tank.normal) {
-      if (getChancesOf(10)) {
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(-30));
-      }
-      if (getChancesOf(10)) {
-        this.tank.geometry.rotateY(THREE.MathUtils.degToRad(30));
-      }
-    }
-
+    direction.subVectors(playerPosition, botPosition).normalize();
+    // Rotacionar o objeto para "olhar" na direção do vetor        
+    rotateObjectToVector(this.tank.geometry, direction);
     this.tank.setDir(1);
+
+    setTimeout(() => {
+      this.canCatch = true;
+    }, this.canCatchInterval);
   }
 
   isPlayerVisible() {
-
     const playerPosition =  this.playerTank.position; // Posição do jogador
     const botPosition = this.tank.position; // Posição do bot
 
@@ -180,14 +218,23 @@ class TankAI {
     }, this.shootInterval)
   }
 
+ 
   update() {
-    
-    this.movement();
+    if (!this.canShoot) {
+      // PATRULHAR
+      this.getOutPlayer();
+      this.movement();
+      this.tank.setDir(1);
+    }
+    // MOVIMENTAR
+    this.getOutOfWall();
 
-    setInterval(() => {
-      this.shoot();
-    }, 500);
-    
+    // ATIRAR
+    setTimeout(() => {
+      if(!this.tank.isDead)
+        this.shoot();
+    }, 1000)
+
   }
 };
 

@@ -68,16 +68,14 @@ function level1(){
     scene.playerTank = redTank;
 
     let blueTank = new Tank(5, 27, "Blue", 1);
+    blueTank.ai = new TankAI(blueTank, scene.playerTank, 10, blocks, scene);
     scene.add(blueTank.geometry);
     scene.physics.add(blueTank.colliderComponent); 
     scene.updateList.push(blueTank);
     scene.tankList.push(blueTank);
     
     // AI
-    scene.bots = scene.tankList.map(tank => {
-        if (tank.geometry.id !== scene.tankList[0].geometry.id)
-            return new TankAI(tank, scene.tankList[0], 10, blocks, scene);
-    })
+    scene.bots = [blueTank];
 
     return scene;
 }
@@ -208,17 +206,19 @@ function level2(){
     scene.playerTank = greenTank;
     
     let redTank = new Tank(4, 30, "Red", 1);
+    redTank.ai = new TankAI(redTank, scene.playerTank, 10, blocks, scene);
     scene.add(redTank.geometry);
     scene.physics.add(redTank.colliderComponent); 
     scene.updateList.push(redTank);
-    scene.tankList.push(redTank)
+    scene.tankList.push(redTank);
 
     let blueTank = new Tank(18, 30, "Blue", 2.5);
+    blueTank.ai = new TankAI(blueTank, scene.playerTank, 10, blocks, scene);
     scene.add(blueTank.geometry);
     scene.physics.add(blueTank.colliderComponent); 
     scene.updateList.push(blueTank);
-    scene.tankList.push(blueTank)
-
+    scene.tankList.push(blueTank);
+    
     // Adiciona o canhao
     let cannon = new Cannon(11, 17, scene);
     scene.add(cannon.geometry);
@@ -227,10 +227,10 @@ function level2(){
 
         
     // AI
-    scene.bots = scene.tankList.map(tank => {
-        if (tank && tank.geometry.id !== scene.tankList[0].geometry.id)
-            return new TankAI(tank, scene.tankList[0], 10, blocks, scene);
-    })
+    blocks.add(blueTank.mesh);
+    blocks.add(redTank.mesh);
+
+    scene.bots = [blueTank, redTank];
 
     return scene;
 }
@@ -255,14 +255,15 @@ export function buildMap(scene, matrix, blockMaterial) {
                 block.isBlock = true;
             }
             if (matrix[i][j] == 2) {
-                let block = getBlock(matrixToWorld(i, j), blockMaterial, 2);
-                block.castShadow = true;
-                block.reciveShadow = true;
-                scene.add(block);
-                matrix[i][j] = block;
-                blocks.add(block);
-                block.colliderComponent = new AABBCollider(block, blockSize, blockSize);
-                block.isBlock = true;
+                let halfBlock = getBlock(matrixToWorld(i, j), blockMaterial, 2);
+                halfBlock.position.setY(.5);
+                halfBlock.castShadow = true;
+                halfBlock.reciveShadow = true;
+                scene.add(halfBlock);
+                matrix[i][j] = halfBlock;
+                blocks.add(halfBlock);
+                halfBlock.colliderComponent = new AABBCollider(halfBlock, blockSize, blockSize);
+                halfBlock.isBlock = true;
             }
         }
 
@@ -284,7 +285,7 @@ function getBlock(pos, blockMaterial, type) {
         blockGeometry = new THREE.BoxGeometry(blockSize,blockSize,blockSize);
     }
     else if (type == 2) {
-        blockGeometry = new THREE.BoxGeometry(blockSize,blockSize*0.3,blockSize);
+        blockGeometry = new THREE.BoxGeometry(blockSize,blockSize*0.5,blockSize);
     }
     
     const mesh = new THREE.Mesh(blockGeometry, blockMaterial);

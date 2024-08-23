@@ -12,7 +12,7 @@ setRenderer(initRenderer());
 
 let cssRenderer = initCssRenderer();
 
-let currentlvlNumber = 1;
+let currentlvlNumber = 2;
 setCurrentScene(buildLevel(currentlvlNumber));
 
 
@@ -35,8 +35,6 @@ function render() {
    const scene = getCurrentScene();
    keyboardUpdate();
    requestAnimationFrame(render);   
-
-   cssRenderer.render( scene, scene.mainCamera.camera );   
 
    scene.physics.update();
 
@@ -68,13 +66,17 @@ function render() {
    // Verificando qual camera será utilizada
    if (camChangeOrbit) {
       scene.renderer.render(scene, scene.orbitCamera) // Render scene
+      cssRenderer.render( scene, scene.orbitCamera );   
+
    }
    if (!camChangeOrbit) {
       scene.renderer.render(scene, scene.mainCamera.update()) // Render scene
+      cssRenderer.render( scene, scene.mainCamera.camera );   
+
    }
 
    // Bots update 
-   scene.bots.forEach(bot => {if(bot) bot.update()});
+   scene.bots.forEach(bot => {if(bot) bot.ai.update()});
 }
 
 function keyboardUpdate() {
@@ -126,6 +128,7 @@ function initCssRenderer() {
    cssRenderer.domElement.style.position = 'absolute';
    cssRenderer.domElement.style.top = '0px';
    document.body.appendChild( cssRenderer.domElement );
+   cssRenderer.domElement.style.pointerEvents = 'none'
    window.addEventListener( 'resize', () => {
       cssRenderer.setSize( window.innerWidth, window.innerHeight );
    }, false );

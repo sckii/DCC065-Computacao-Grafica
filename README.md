@@ -1,4 +1,2 @@
-# DCC065 - Computacao-Grafica
-Trabalho para a disciplina DCC065 - Computação Gráfica 
-# Bibliotecas
-- TreeJS
+# CG
+Files for the Computer Graphics course in Three.js
