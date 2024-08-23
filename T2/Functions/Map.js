@@ -67,7 +67,6 @@ function level1(){
         dirLight.shadow.camera.bottom = -30;
         dirLight.shadow.camera.top = 30;
     scene.add(dirLight);  
-    scene.add( new DirectionalLightHelper(dirLight, 1, 'red'));
 
     scene.add(ambientLight);
 
