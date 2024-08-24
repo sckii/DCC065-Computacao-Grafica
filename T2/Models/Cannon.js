@@ -119,47 +119,39 @@ class Cannon{
     }
 
     rotate(scene){     // Função para rotacionar
-        // nao estou conseguindo fazer ele rodar pra direcao do tanque mais proximo
     
         let closestTank = this.getClosestTank(scene)
-        var cannonDirection = new Vector3;
-        this.geometry.getWorldDirection(cannonDirection)
-
         if (closestTank == null) return;
-        let direction = new THREE.Vector3().subVectors(closestTank.position, this.position).normalize();
-        
+
+        // Calcular o vetor de direção para o tanque no plano XZ
+        const direction = new THREE.Vector3(
+            closestTank.position.x - this.position.x,
+            0,
+            closestTank.position.z - this.position.z
+        ).normalize();
+
+        // Calcular o ângulo alvo
         let targetAngle = Math.atan2(direction.x, direction.z);
+        targetAngle -= THREE.MathUtils.degToRad(90);
 
-        let courrentAngle = this.geometry.rotation.y;
+        // Obter o ângulo atual no eixo Y
+        const currentAngle = this.geometry.rotation.y;
 
-        let angleDifference = targetAngle-courrentAngle;
+        // Calcular a diferença de ângulo
+        let angleDifference = targetAngle - currentAngle;
+        angleDifference = ((angleDifference + Math.PI) % (2 * Math.PI)) - Math.PI;
 
-        if(angleDifference > Math.PI) angleDifference -= 2*Math.PI;
-        if(angleDifference < Math.PI) angleDifference += 2*Math.PI;
-
-        let rotationSpeed = 0.02;
-        this.geometry.rotation.y += angleDifference * rotationSpeed
-        
-        // let way = 0;
-        // if (angleToClosestTank < 0) {console.log("neg");way = -1}
-        // else if (angleToClosestTank > 0) {console.log("neg");way = 1}
-        // else {way = 0}
-        // let angle = way * THREE.MathUtils.degToRad(0.5);
-        
-        // this.geometry.rotateY(angle);
-        // this.updateObject(this.geometry)
-        // if(angle>0){
-        //     this.geometry.children[1].rotateY(angle);
-        //     this.updateObject(this.geometry.children[1]);
-        //     this.geometry.children[2].rotateY(-angle);
-        //     this.updateObject(this.geometry.children[2])
-        // }
-        // if(angle<0){
-        //     this.geometry.children[1].rotateY(angle);
-        //     this.updateObject(this.geometry.children[1]);
-        //     this.geometry.children[2].rotateY(-angle);
-        //     this.updateObject(this.geometry.children[2])
-        // }    
+        // Decidir a direção de rotação
+        const rotationSpeed = 0.01;  // Velocidade de rotação
+        let angle =  THREE.MathUtils.degToRad(1);
+        if (angleDifference > 0.01) {
+            this.geometry.rotation.y += Math.min(rotationSpeed, angleDifference);  // Rotacionar para a direita
+        } else if (angleDifference < -0.01) {
+            this.geometry.rotation.y += Math.max(-rotationSpeed, angleDifference);  // Rotacionar para a esquerda
+        } else {
+            this.geometry.rotation.y = targetAngle;  
+        }
+         
     }
 
     startShooting(scene){
