@@ -24,7 +24,8 @@ class Bullet {
 
         // Colisão
         this.colliderComponent = new SphereCollider(this, this.radius);
-        this.numColision = 0;
+        if(this.shooter instanceof Cannon) {this.numColision = 2}
+        else {this.numColision = 0}
     }
 
     buildMesh(position) {
