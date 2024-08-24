@@ -12,7 +12,7 @@ setRenderer(initRenderer());
 
 let cssRenderer = initCssRenderer();
 
-let currentlvlNumber = 2;
+let currentlvlNumber = 1;
 setCurrentScene(buildLevel(currentlvlNumber));
 
 
@@ -61,18 +61,21 @@ function render() {
       clearCssRenderer();
       setCurrentScene(buildLevel(2));
    }
+   if(currentlvlNumber == 2 && getCurrentScene().bots.length == 0){
+      currentlvlNumber = 2;
+      clearCssRenderer();
+      setCurrentScene(buildLevel(2));
+   }
 
 
    // Verificando qual camera será utilizada
    if (camChangeOrbit) {
       scene.renderer.render(scene, scene.orbitCamera) // Render scene
       cssRenderer.render( scene, scene.orbitCamera );   
-
    }
    if (!camChangeOrbit) {
       scene.renderer.render(scene, scene.mainCamera.update()) // Render scene
       cssRenderer.render( scene, scene.mainCamera.camera );   
-
    }
 
    // Bots update 
@@ -102,10 +105,7 @@ function keyboardUpdate() {
       clearCssRenderer();
       setCurrentScene(buildLevel(2));
    }
-   
-   if (keyboard.down("E")) {
-      clearCssRenderer();
-   }
+
 }
 
 function clearCssRenderer() {  
