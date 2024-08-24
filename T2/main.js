@@ -37,7 +37,7 @@ function render() {
    requestAnimationFrame(render);   
 
    scene.physics.update();
-
+   scene.mainCamera.update(scene.tankList)
    scene.updateList.forEach(element => {
       element.update(scene);
    });

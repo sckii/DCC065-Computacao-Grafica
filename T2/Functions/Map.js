@@ -346,8 +346,3 @@ export function worldToMatrix(pos) {
     }
     return mPos;
 }
-
-function updateObject(mesh){
-    mesh.matrixAutoUpdate = false;
-    mesh.updateMatrix();
-}
