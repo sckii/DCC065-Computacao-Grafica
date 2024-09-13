@@ -1,0 +1,17 @@
+progress.healthBar {
+    background-color: rgb(70, 0, 0);
+    border: 0;
+    border-radius: 1em;
+    width: 8vw;
+    height: .6vh;
+}
+
+progress.healthBar::-webkit-progress-bar {
+    background-color: rgb(70, 0, 0);
+}
+progress.healthBar::-webkit-progress-value {
+    background-color: green;
+}
+progress.healthBar::-moz-progress-bar {
+    background-color: green;
+}
