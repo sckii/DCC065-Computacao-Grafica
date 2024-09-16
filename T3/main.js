@@ -2,7 +2,7 @@ import KeyboardState from '../libs/util/KeyboardState.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildLevel } from './Functions/Map.js';
 import { getCurrentScene, setCurrentScene, setRenderer } from './Functions/SceneGlobals.js';
-import { initRenderer } from '../libs/util/util.js';
+import { initRenderer, SecondaryBox } from '../libs/util/util.js';
 import { CSS2DRenderer, CSS2DObject } from '../build/jsm/Addons.js';
 import GUI from '../libs/util/dat.gui.module.js';
 import deleteScene from './Functions/DeleteScene.js';
@@ -31,6 +31,10 @@ let camChangeOrbit = false; // variavel para armazenar se a camera orbital foi c
 
 // Controle god mode
 let isGodModeOn = false;
+let godModeMsg;
+
+let isFatModeOn = false;
+let fatModeMsg;
 
 render();
 function render() {
@@ -98,6 +102,30 @@ function keyboardUpdate() {
 
    if (keyboard.down("G")) {
       scene.playerTank.godMode = !scene.playerTank.godMode;
+   }
+
+   if (keyboard.down("G")) {
+      isGodModeOn = !isGodModeOn;
+      if(isGodModeOn){
+         godModeMsg = new SecondaryBox("God Mode on")
+      }
+      else{
+         godModeMsg.hide()
+      }
+      scene.playerTank.godMode = !scene.playerTank.godMode;
+   }
+
+   if (keyboard.down("F")) {
+      isFatModeOn = !isFatModeOn;
+      if(isFatModeOn){
+         fatModeMsg = new SecondaryBox("Fat Mode on")
+      }
+      else{
+         fatModeMsg.hide()
+      }
+      scene.tankList.forEach(tank => {
+         tank.fatMode(isFatModeOn)
+      });
    }
 
    // Atalho para mudar o nível 

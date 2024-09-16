@@ -171,6 +171,15 @@ class Tank {
         this.worldDir.transformDirection(this.geometry.matrixWorld);
     }
 
+    fatMode(isOn){
+        if(isOn){
+            this.geometry.scale.set(1.5, 1, 1);  
+         }
+         else{
+            this.geometry.scale.set(0.65, 0.65, 0.65);  
+         }
+    }
+
 }
 
 export default Tank;
