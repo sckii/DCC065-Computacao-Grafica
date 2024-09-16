@@ -29,6 +29,8 @@ gui.add(controls, 'restart', true).name("Recomeçar");
 // Manipulação de camera
 let camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
 
+// Controle god mode
+let isGodModeOn = false;
 
 render();
 function render() {
@@ -92,6 +94,16 @@ function keyboardUpdate() {
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
       camChangeOrbit = !camChangeOrbit;
+   }
+
+   if (keyboard.down("G")) {
+      isGodModeOn = !isGodModeOn;
+      if (isGodModeOn){
+         scene.playerTank.godMode(isGodModeOn);
+      }
+      else{
+         scene.playerTank.godMode(isGodModeOn);
+      }
    }
 
    // Atalho para mudar o nível 

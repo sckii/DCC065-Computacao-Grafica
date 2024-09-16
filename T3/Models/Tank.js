@@ -27,6 +27,7 @@ class Tank {
         this.worldDir = new Vector3();
 
         this.lifePoints = 10;
+        this.tempLifePoints = 0;
         this.isDead = false;
 
         this.healthBar = new HealthBar( this.lifePoints );
@@ -160,11 +161,20 @@ class Tank {
         scene.bots = scene.bots.filter( bot => bot !== this);
         scene.tankList = scene.tankList.filter( bot => bot !== this);
     }
-    
 
     setDir(directionTank) {
         this.worldDir = new Vector3(0,0,directionTank);
         this.worldDir.transformDirection(this.geometry.matrixWorld);
+    }
+
+    godMode(isOn){
+        if(isOn){
+            this.tempLifePoints = this.lifePoints;
+            this.lifePoints = 9999999999;
+        }
+        else{
+            this.lifePoints = this.tempLifePoints;
+        }
     }
 
 }
