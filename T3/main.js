@@ -97,13 +97,7 @@ function keyboardUpdate() {
    }
 
    if (keyboard.down("G")) {
-      isGodModeOn = !isGodModeOn;
-      if (isGodModeOn){
-         scene.playerTank.godMode(isGodModeOn);
-      }
-      else{
-         scene.playerTank.godMode(isGodModeOn);
-      }
+      scene.playerTank.godMode = !scene.playerTank.godMode;
    }
 
    // Atalho para mudar o nível 

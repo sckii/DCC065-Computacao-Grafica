@@ -29,6 +29,7 @@ class Tank {
         this.lifePoints = 10;
         this.tempLifePoints = 0;
         this.isDead = false;
+        this.godMode = false
 
         this.healthBar = new HealthBar( this.lifePoints );
         this.geometry.add( this.healthBar );
@@ -143,6 +144,9 @@ class Tank {
     }
 
     reciveDamage(damage) {
+        if(this.godMode){
+            return;
+        }
         this.lifePoints -= damage;
         if (this.lifePoints <=0 && !this.isDead){
             this.onDeath();
@@ -165,16 +169,6 @@ class Tank {
     setDir(directionTank) {
         this.worldDir = new Vector3(0,0,directionTank);
         this.worldDir.transformDirection(this.geometry.matrixWorld);
-    }
-
-    godMode(isOn){
-        if(isOn){
-            this.tempLifePoints = this.lifePoints;
-            this.lifePoints = 9999999999;
-        }
-        else{
-            this.lifePoints = this.tempLifePoints;
-        }
     }
 
 }
