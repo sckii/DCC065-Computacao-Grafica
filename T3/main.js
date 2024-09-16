@@ -12,7 +12,7 @@ setRenderer(initRenderer());
 
 let cssRenderer = initCssRenderer();
 
-let currentlvlNumber = 1;
+let currentlvlNumber = 3;
 setCurrentScene(buildLevel(currentlvlNumber));
 
 
@@ -138,6 +138,12 @@ function keyboardUpdate() {
       currentlvlNumber = 2;
       clearCssRenderer();
       setCurrentScene(buildLevel(2));
+   }
+   if (keyboard.down("3")) {
+      console.log("oi");
+      currentlvlNumber = 3;
+      clearCssRenderer();
+      setCurrentScene(buildLevel(3));
    }
 
 }
