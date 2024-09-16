@@ -27,7 +27,9 @@ class Tank {
         this.worldDir = new Vector3();
 
         this.lifePoints = 10;
+        this.tempLifePoints = 0;
         this.isDead = false;
+        this.godMode = false
 
         this.healthBar = new HealthBar( this.lifePoints );
         this.geometry.add( this.healthBar );
@@ -142,6 +144,9 @@ class Tank {
     }
 
     reciveDamage(damage) {
+        if(this.godMode){
+            return;
+        }
         this.lifePoints -= damage;
         if (this.lifePoints <=0 && !this.isDead){
             this.onDeath();
@@ -160,11 +165,19 @@ class Tank {
         scene.bots = scene.bots.filter( bot => bot !== this);
         scene.tankList = scene.tankList.filter( bot => bot !== this);
     }
-    
 
     setDir(directionTank) {
         this.worldDir = new Vector3(0,0,directionTank);
         this.worldDir.transformDirection(this.geometry.matrixWorld);
+    }
+
+    fatMode(isOn){
+        if(isOn){
+            this.geometry.scale.set(1.5, 1, 1);  
+         }
+         else{
+            this.geometry.scale.set(0.65, 0.65, 0.65);  
+         }
     }
 
 }
