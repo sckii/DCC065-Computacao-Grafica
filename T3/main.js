@@ -29,12 +29,12 @@ gui.add(controls, 'restart', true).name("Recomeçar");
 // Manipulação de camera
 let camChangeOrbit = false; // variavel para armazenar se a camera orbital foi chamada
 
-// Controle god mode
-let isGodModeOn = false;
-let godModeMsg;
+// Controle god mod
+let isGodModOn = false;
+let godModMsg;
 
-let isFatModeOn = false;
-let fatModeMsg;
+let isFatModOn = false;
+let fatModMsg;
 
 render();
 function render() {
@@ -55,7 +55,7 @@ function render() {
       setCurrentScene(buildLevel(currentlvlNumber));
    } 
 
-   // caso o player morra
+   // Caso o player morra
    if(scene.playerTank.isDead){
       clearCssRenderer();
       setCurrentScene(buildLevel(currentlvlNumber));
@@ -101,30 +101,27 @@ function keyboardUpdate() {
    }
 
    if (keyboard.down("G")) {
-      scene.playerTank.godMode = !scene.playerTank.godMode;
-   }
-
-   if (keyboard.down("G")) {
-      isGodModeOn = !isGodModeOn;
-      if(isGodModeOn){
-         godModeMsg = new SecondaryBox("God Mode on")
+      isGodModOn = !isGodModOn;
+      if(isGodModOn){
+         scene.playerTank.godMod = true
+         godModMsg = new SecondaryBox("God Mod on")
       }
       else{
-         godModeMsg.hide()
+         scene.playerTank.godMod = false
+         godModMsg.hide()
       }
-      scene.playerTank.godMode = !scene.playerTank.godMode;
    }
 
    if (keyboard.down("F")) {
-      isFatModeOn = !isFatModeOn;
-      if(isFatModeOn){
-         fatModeMsg = new SecondaryBox("Fat Mode on")
+      isFatModOn = !isFatModOn;
+      if(isFatModOn){
+         fatModMsg = new SecondaryBox("Fat Mod on")
       }
       else{
-         fatModeMsg.hide()
+         fatModMsg.hide()
       }
       scene.tankList.forEach(tank => {
-         tank.fatMode(isFatModeOn)
+         tank.fatMod(isFatModOn)
       });
    }
 

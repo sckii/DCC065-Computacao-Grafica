@@ -29,7 +29,7 @@ class Tank {
         this.lifePoints = 10;
         this.tempLifePoints = 0;
         this.isDead = false;
-        this.godMode = false
+        this.godMod = false
 
         this.healthBar = new HealthBar( this.lifePoints );
         this.geometry.add( this.healthBar );
@@ -144,7 +144,7 @@ class Tank {
     }
 
     reciveDamage(damage) {
-        if(this.godMode){
+        if(this.godMod){
             return;
         }
         this.lifePoints -= damage;
@@ -171,7 +171,7 @@ class Tank {
         this.worldDir.transformDirection(this.geometry.matrixWorld);
     }
 
-    fatMode(isOn){
+    fatMod(isOn){
         if(isOn){
             this.geometry.scale.set(1.5, 1, 1);  
          }
