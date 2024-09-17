@@ -9,6 +9,7 @@ import TankAI from './TankIA.js';
 import GameScene from '../Models/GameScene.js';
 import { getRenderer } from './SceneGlobals.js';
 import { CSG } from '../../libs/other/CSGMesh.js'        
+import ParedeMovel from '../Models/ParedeMovel.js';
 
 const blockSize = 2;
 
@@ -18,6 +19,9 @@ export function buildLevel(nLvl){
     }
     if(nLvl==2){
         return level2();
+    }
+    if(nLvl==3){
+        return level3();
     }
 }
 
@@ -256,6 +260,89 @@ function level2(){
     blocks.add(redTank.mesh);
 
     scene.bots = [blueTank, redTank];
+
+    return scene;
+}
+
+function level3(){
+    let scene = new GameScene( getRenderer() );
+
+    // Constoi o mapa e sua fisica
+    let matrixLvl1 = [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    ]
+    let blockMaterial = new THREE.MeshLambertMaterial({
+        color:"rgb(178,34,34)"    
+    });
+    let blocks = buildMap(scene, matrixLvl1, blockMaterial);
+    scene.physics.addToMap(blocks);
+
+    // Iluminacao
+    let ambientColor = "rgb(135, 206, 250)";
+    let ambientLight = new THREE.AmbientLight(ambientColor, .2);
+
+    const dirLightTarget = new THREE.Object3D(); 
+    dirLightTarget.position.set(10,0,20)
+    scene.add(dirLightTarget);
+
+    const dirPosition = new THREE.Vector3(30, 35, 30);
+    const dirLight = new THREE.DirectionalLight("rgb(255,250,224)", 1);
+        dirLight.target = dirLightTarget;
+        dirLight.position.copy(dirPosition);
+        dirLight.castShadow = true;
+        dirLight.shadow.camera.left = -30;
+        dirLight.shadow.camera.right = 30;
+        dirLight.shadow.camera.bottom = -30;
+        dirLight.shadow.camera.top = 30;
+    scene.add(dirLight);  
+
+    scene.add(ambientLight);
+
+    // Adiciona os tanques
+    let redTank = new Tank(5, 5, "Red", 1);
+    scene.add(redTank.geometry);
+    scene.physics.add(redTank.colliderComponent); 
+    scene.updateList.push(redTank);
+    scene.tankList.push(redTank);
+    scene.playerTank = redTank;
+
+    let blueTank = new Tank(5, 27, "Blue", 1);
+    blueTank.ai = new TankAI(blueTank, scene.playerTank, 10, blocks, scene);
+    scene.add(blueTank.geometry);
+    scene.physics.add(blueTank.colliderComponent); 
+    scene.updateList.push(blueTank);
+    scene.tankList.push(blueTank);
+
+    // Paredes Moveis
+    let paredePos = matrixToWorld(6,5);
+    let paredeMovel = new ParedeMovel(paredePos.x, paredePos.y, paredePos.z);
+    scene.add(paredeMovel.geometry);
+    scene.physics.add(paredeMovel.colliderComponent);
+    scene.updateList.push(paredeMovel);
+    
+    // AI
+    scene.bots = [blueTank];
 
     return scene;
 }
