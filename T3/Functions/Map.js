@@ -410,7 +410,7 @@ function getBlock(pos, blockMaterial, type) {
 function getSpotLightMesh(){
     var loader = new GLTFLoader( );
     let mesh = new THREE.Object3D();    
-    loader.load( './Models/lightPost.glb', function ( gltf ) {
+    loader.load( './Assets/Objects/lightPost.glb', function ( gltf ) {
         mesh.add(gltf.scene);
         mesh.castShadow = true;
     }); 
