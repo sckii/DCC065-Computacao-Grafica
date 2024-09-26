@@ -68,9 +68,14 @@ function render() {
       setCurrentScene(buildLevel(2));
    }
    if(currentlvlNumber == 2 && getCurrentScene().bots.length == 0){
-      currentlvlNumber = 2;
+      currentlvlNumber = 3;
       clearCssRenderer();
-      setCurrentScene(buildLevel(2));
+      setCurrentScene(buildLevel(currentlvlNumber));
+   }
+   if(currentlvlNumber == 3 && getCurrentScene().bots.length == 0){
+      currentlvlNumber = 3;
+      clearCssRenderer();
+      setCurrentScene(buildLevel(currentlvlNumber));
    }
 
 

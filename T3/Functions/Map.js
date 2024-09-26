@@ -10,6 +10,7 @@ import GameScene from '../Models/GameScene.js';
 import { getRenderer } from './SceneGlobals.js';
 import { CSG } from '../../libs/other/CSGMesh.js'        
 import ParedeMovel from '../Models/ParedeMovel.js';
+import { CubeTextureLoaderSingleFile } from '../../libs/util/cubeTextureLoaderSingleFile.js';
 
 const blockSize = 2;
 
@@ -75,6 +76,14 @@ function level1(){
 
     scene.add(ambientLight);
 
+    // SkyBox
+    const textureLoader = new THREE.TextureLoader();
+    let textureEquirec = textureLoader.load( './Assets/deb67pt-ae5c2d3b-76a3-46f2-a470-9cf9c3f0ff8c.jpg' );
+        textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
+        textureEquirec.colorSpace = THREE.SRGBColorSpace;
+    
+    scene.background = textureEquirec;
+    
     // Adiciona os tanques
     let redTank = new Tank(5, 5, "Red", 1);
     scene.add(redTank.geometry);
@@ -225,7 +234,15 @@ function level2(){
     spotLight4.shadow.camera.far = 15.0; 
     scene.add(spotLight4);
     const spotHelper4 = new THREE.SpotLightHelper(spotLight4, 0xFF8C00);
-        
+    
+    // SkyBox
+    const textureLoader = new THREE.TextureLoader();
+    let textureEquirec = textureLoader.load( './Assets/deb67pt-ae5c2d3b-76a3-46f2-a470-9cf9c3f0ff8c.jpg' );
+        textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
+        textureEquirec.colorSpace = THREE.SRGBColorSpace;
+    
+    scene.background = textureEquirec;
+
     // Adiciona os tanques
     let greenTank = new Tank(18, 4, "", 3);
     scene.add(greenTank.geometry);
@@ -319,6 +336,18 @@ function level3(){
 
     scene.add(ambientLight);
 
+    // SkyBox
+    let cubeMapTexture = new CubeTextureLoaderSingleFile().loadSingle( 
+        './Assets/360_F_506725391_wiAb388Lezu7Q7qgl2RTsxx0euDjBFsX.jpg', 1);
+         cubeMapTexture.colorSpace = THREE.SRGBColorSpace;
+
+    const textureLoader = new THREE.TextureLoader();
+    let textureEquirec = textureLoader.load( './Assets/deb67pt-ae5c2d3b-76a3-46f2-a470-9cf9c3f0ff8c.jpg' );
+        textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
+        textureEquirec.colorSpace = THREE.SRGBColorSpace;
+    
+    scene.background = textureEquirec;
+
     // Adiciona os tanques
     let redTank = new Tank(5, 5, "Red", 1);
     scene.add(redTank.geometry);
@@ -335,11 +364,23 @@ function level3(){
     scene.tankList.push(blueTank);
 
     // Paredes Moveis
-    let paredePos = matrixToWorld(6,5);
-    let paredeMovel = new ParedeMovel(paredePos.x, paredePos.y, paredePos.z);
-    scene.add(paredeMovel.geometry);
-    scene.physics.add(paredeMovel.colliderComponent);
-    scene.updateList.push(paredeMovel);
+    let paredePos1 = matrixToWorld(6,5);
+    let paredeMovel1 = new ParedeMovel(paredePos1.x, paredePos1.y, paredePos1.z);
+    scene.add(paredeMovel1.geometry);
+    scene.physics.add(paredeMovel1.colliderComponent);
+    scene.updateList.push(paredeMovel1);
+
+    let paredePos2 = matrixToWorld(11,8);
+    let paredeMovel2 = new ParedeMovel(paredePos2.x, paredePos2.y, paredePos2.z, -1);
+    scene.add(paredeMovel2.geometry);
+    scene.physics.add(paredeMovel2.colliderComponent);
+    scene.updateList.push(paredeMovel2);
+
+    let paredePos3 = matrixToWorld(16,5);
+    let paredeMovel3 = new ParedeMovel(paredePos3.x, paredePos3.y, paredePos3.z);
+    scene.add(paredeMovel3.geometry);
+    scene.physics.add(paredeMovel3.colliderComponent);
+    scene.updateList.push(paredeMovel3);
     
     // AI
     scene.bots = [blueTank];

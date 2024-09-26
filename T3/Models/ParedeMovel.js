@@ -1,14 +1,25 @@
 import * as THREE from  'three';
 import AABBCollider from '../Physics/AABBCollider.js';
+import { Vector3 } from '../../build/three.module.js';
 
 
 class ParedeMovel {
-    constructor(x,y,z) {
+    constructor(x,y,z, dir=1) {
         this.geometry = this.buildObject(x,y,z);
         this.position = this.geometry.position;
         this.colliderComponent = new AABBCollider(this, 6, 2);
         this.initialPos = new THREE.Vector3().copy(this.position);
-        this.dir = 1;
+        this.dir = dir;
+        this.speed = .1;
+        this.endPos = new Vector3().copy(this.initialPos);
+        this.endPos.x += 6 * dir;
+        console.log(this.endPos);
+
+        if(this.initialPos.x > this.endPos.x) {
+            let aux = this.initialPos;
+            this.initialPos = this.endPos;
+            this.endPos = aux;
+        }
     }
 
     buildObject(x,y,z) {
@@ -26,9 +37,9 @@ class ParedeMovel {
     }
 
     update() {
-        this.position.setX(this.position.x + .1 * this.dir)
-        if (this.position.x > this.initialPos.x + 6 || this.position.x < this.initialPos.x)
+        if (this.position.x > this.endPos.x || this.position.x < this.initialPos.x)
             this.dir *= -1;
+        this.position.setX(this.position.x + this.speed * this.dir)
     }
 
     onCollision(){}
