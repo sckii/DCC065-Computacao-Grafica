@@ -13,7 +13,7 @@ class Sound {
   constructor(path, volume) {
     this.path = path;
     this.volume = volume;
-    
+    this.sound2 = new THREE.Audio( listener )
   }
 
   setFatMode() {
@@ -35,12 +35,26 @@ class Sound {
     this.music();
   }
 
+  setSoundOff() {
+    this.pause = true;
+    this.sound2.stop();
+  }
+
+  setSoundOn() {
+    this.sound2.play();
+    this.pause = false;
+  }
+
   hit() {
-    this.sound();
+    if (!this.pause)
+      this.sound();
+    setTimeout(() => {
+      this.sound2.stop();
+    }, 10) 
   }
 
   sound() {
-    const sound = new THREE.Audio( listener );
+    const sound = this.sound2;
     const scene = getCurrentScene();
 
     const volume = this.volume;
@@ -49,15 +63,15 @@ class Sound {
       sound.setVolume( volume );
       sound.play();
     });
-    
     scene.mainCamera.camera.add( listener );
+
+    return sound;
   }
 
   music() {
-    const sound = new THREE.Audio( listener );
+    const sound = this.sound2;
+    
     const scene = getCurrentScene();
-
-    this.sound2 = sound;
     const volume = this.volume;
     audioLoader.load(this.path, function( buffer ) {
       sound.setBuffer( buffer );

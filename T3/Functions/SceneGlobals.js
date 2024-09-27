@@ -1,11 +1,3 @@
-import * as THREE from 'three';
-import MainCamera from "./MainCamera.js";
-import { CSS2DRenderer } from "../../build/jsm/Addons.js";
-import { initCamera, initRenderer } from "../../libs/util/util.js";
-import { OrbitControls } from '../../build/jsm/Addons.js';
-import PhysicsEnvironment from '../Physics/PhysicsEnvironment.js';
-import { onWindowResize } from '../../libs/util/util.js';
-
 let scene;
 let renderer;
 
@@ -33,4 +25,13 @@ export function removeFromScene(obj){
 
 export function getCurrentScene() {
     return scene;
+}
+
+export function addSound(soundName, sound) {
+    if (scene)
+        scene.sounds[soundName] = sound;
+}
+
+export function getSounds() {
+    return scene.sounds
 }

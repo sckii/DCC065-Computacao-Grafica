@@ -1,7 +1,7 @@
 import KeyboardState from '../libs/util/KeyboardState.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildLevel } from './Functions/Map.js';
-import { getCurrentScene, setCurrentScene, setRenderer } from './Functions/SceneGlobals.js';
+import { addSound, getCurrentScene, setCurrentScene, setRenderer } from './Functions/SceneGlobals.js';
 import { initRenderer, SecondaryBox } from '../libs/util/util.js';
 import { CSS2DRenderer, CSS2DObject } from '../build/jsm/Addons.js';
 import GUI from '../libs/util/dat.gui.module.js';
@@ -37,8 +37,15 @@ let godModMsg;
 let isFatModOn = false;
 let fatModMsg;
 
+let soundOn = true;
+
 let playing = false;
+
+// Sons 
 const musica = new Sound("./Assets/sounds/music.wav", 0.1);
+const enemy = new Sound("./Assets/sounds/enemyHit.wav", 0.07);
+const player = new Sound("./Assets/sounds/playerHit.wav", 0.4);
+const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.01);
 
 render();
 function render() {
@@ -58,11 +65,6 @@ function render() {
       clearCssRenderer();
       setCurrentScene(buildLevel(currentlvlNumber));
    } 
-
-   if (!playing) {
-      musica.music();
-   }
-   playing = true;
 
    // Caso o player morra
    if(scene.playerTank.isDead){
@@ -87,6 +89,15 @@ function render() {
       setCurrentScene(buildLevel(currentlvlNumber));
    }
 
+   if (!playing) {
+      addSound("musica", musica);
+      addSound("enemy", enemy);
+      addSound("player", player);
+      addSound("shootSound", shootSound);
+      
+      musica.music();
+   }
+   playing = true;
 
    // Verificando qual camera será utilizada
    if (camChangeOrbit) {
@@ -112,6 +123,19 @@ function keyboardUpdate() {
    // Atalho para habilitar a camera secundaria (orbital)
    if (keyboard.down("O")) {
       camChangeOrbit = !camChangeOrbit;
+   }
+
+   if (keyboard.down("P")) {
+      console.log(soundOn)
+      if (soundOn) {
+         console.log(scene.sounds);
+         
+         Object.keys(scene.sounds).forEach(key => scene.sounds[key].setSoundOff())
+      }
+      else 
+         Object.keys(scene.sounds).forEach(key => scene.sounds[key].setSoundOn())
+
+      soundOn = !soundOn;
    }
 
    if (keyboard.down("G")) {

@@ -5,6 +5,7 @@ import AABBCollider from '../Physics/AABBCollider.js';
 import { Vector3 } from '../../build/three.module.js';
 import { rotateObjectToVector } from '../Functions/Utils.js';
 import Sound from '../Functions/Sound.js';
+import { addSound } from '../Functions/SceneGlobals.js';
 
 
 class Cannon{
@@ -20,6 +21,9 @@ class Cannon{
 
         this.shootInterval = null;  // Variável para armazenar o intervalo de tiro
         this.startShooting(scene);
+
+        this.shootSound = new Sound("./Assets/sounds/shoot.wav", 0.01);
+        addSound(this.shootSound);
     }
 
     buildGeometry(){
@@ -173,9 +177,8 @@ class Cannon{
         scene.add(shoot.geometry);
         scene.physics.add(shoot.colliderComponent);
         scene.updateList.push(shoot); 
-
-        const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.01);
-        shootSound.hit();
+        
+        this.shootSound.hit();
     }
 
     updateObject(mesh){

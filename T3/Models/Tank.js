@@ -5,10 +5,7 @@ import Bullet from './Bullet.js';
 import HealthBar from './HealthBar.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
-import { getCurrentScene, removeFromScene } from '../Functions/SceneGlobals.js';
-import Sound from '../Functions/Sound.js';
-
-
+import { getSounds, getCurrentScene, removeFromScene } from '../Functions/SceneGlobals.js';
 
 class Tank {
     constructor(x, z, color, rotate) {
@@ -34,8 +31,6 @@ class Tank {
 
         this.healthBar = new HealthBar( this.lifePoints );
         this.geometry.add( this.healthBar );
-
-        
     }
 
     buildGeometry(material, rotate){
@@ -109,7 +104,7 @@ class Tank {
         scene.physics.add(shoot.colliderComponent);
         scene.updateList.push(shoot); 
 
-        const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.01);
+        const {shootSound}  = getSounds();
         shootSound.hit();
     }
 
@@ -156,11 +151,10 @@ class Tank {
             this.onDeath();
         }
         this.healthBar.setAmount( this.lifePoints );
-
-        const enemy = new Sound("./Assets/sounds/enemyHit.wav", 0.07);
-        const player = new Sound("./Assets/sounds/playerHit.wav", 0.4);
-        const scene = getCurrentScene();
         
+        const {enemy, player}  = getSounds();
+
+        const scene = getCurrentScene();
         if (this == scene.playerTank)
             player.hit();
         else {

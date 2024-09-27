@@ -29,6 +29,7 @@ class GameScene extends Scene{
         this.updateList = [];
         this.tankList = [];
         this.cameraList = [];
+        this.sounds = {};
         this.mainCamera.setTracking(this.tankList);  
         
     }

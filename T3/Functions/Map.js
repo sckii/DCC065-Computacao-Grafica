@@ -7,10 +7,11 @@ import { DirectionalLightHelper, Vector2, Vector3 } from '../../build/three.modu
 import AABBCollider from '../Physics/AABBCollider.js';
 import TankAI from './TankIA.js';
 import GameScene from '../Models/GameScene.js';
-import { getRenderer } from './SceneGlobals.js';
+import { addSound, getRenderer } from './SceneGlobals.js';
 import { CSG } from '../../libs/other/CSGMesh.js'        
 import ParedeMovel from '../Models/ParedeMovel.js';
 import { CubeTextureLoaderSingleFile } from '../../libs/util/cubeTextureLoaderSingleFile.js';
+import Sound from './Sound.js';
 
 const blockSize = 2;
 
@@ -83,7 +84,7 @@ function level1(){
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
     
     scene.background = textureEquirec;
-    
+
     // Adiciona os tanques
     let redTank = new Tank(5, 5, "Red", 1);
     scene.add(redTank.geometry);
@@ -245,7 +246,8 @@ function level2(){
         textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
     
-    scene.background = textureEquirec;
+    scene.background = textureEquirec
+
 
     // Adiciona os tanques
     let greenTank = new Tank(18, 4, "", 3);
@@ -355,6 +357,14 @@ function level3(){
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
     
     scene.background = textureEquirec;
+    // Sons 
+    const enemy = new Sound("./Assets/sounds/enemyHit.wav", 0.07);
+    const player = new Sound("./Assets/sounds/playerHit.wav", 0.4);
+    const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.01);
+
+    addSound(enemy);
+    addSound(player);
+    addSound(shootSound);
 
     // Adiciona os tanques
     let redTank = new Tank(5, 5, "Red", 1);
