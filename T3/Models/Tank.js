@@ -6,6 +6,7 @@ import HealthBar from './HealthBar.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
 import { getCurrentScene, removeFromScene } from '../Functions/SceneGlobals.js';
+import Sound from '../Functions/Sound.js';
 
 
 
@@ -152,6 +153,15 @@ class Tank {
             this.onDeath();
         }
         this.healthBar.setAmount( this.lifePoints );
+
+        const enemy = new Sound("./Assets/sounds/enemyHit.wav", 0.1);
+        const player = new Sound("./Assets/sounds/playerHit.wav", 0.4);
+        
+        if (this.color !== "Red")
+            enemy.hit();
+        else {
+            player.hit();
+        }
     }
 
     /**

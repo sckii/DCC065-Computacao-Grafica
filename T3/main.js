@@ -6,6 +6,7 @@ import { initRenderer, SecondaryBox } from '../libs/util/util.js';
 import { CSS2DRenderer, CSS2DObject } from '../build/jsm/Addons.js';
 import GUI from '../libs/util/dat.gui.module.js';
 import deleteScene from './Functions/DeleteScene.js';
+import Sound from './Functions/Sound.js';
 
 let keyboard = new KeyboardState();
 setRenderer(initRenderer());
@@ -36,6 +37,9 @@ let godModMsg;
 let isFatModOn = false;
 let fatModMsg;
 
+let playing = false;
+const musica = new Sound("./Assets/sounds/music.wav", 0.1);
+
 render();
 function render() {
    const scene = getCurrentScene();
@@ -54,6 +58,11 @@ function render() {
       clearCssRenderer();
       setCurrentScene(buildLevel(currentlvlNumber));
    } 
+
+   if (!playing) {
+      musica.music();
+   }
+   playing = true;
 
    // Caso o player morra
    if(scene.playerTank.isDead){
@@ -121,8 +130,10 @@ function keyboardUpdate() {
       isFatModOn = !isFatModOn;
       if(isFatModOn){
          fatModMsg = new SecondaryBox("Fat Mod on")
+         musica.setFatMode()
       }
       else{
+         musica.setFatModeOff();
          fatModMsg.hide()
       }
       scene.tankList.forEach(tank => {

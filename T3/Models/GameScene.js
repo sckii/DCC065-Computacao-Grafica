@@ -6,6 +6,7 @@ import { OrbitControls } from '../../build/jsm/Addons.js';
 import PhysicsEnvironment from '../Physics/PhysicsEnvironment.js';
 import { onWindowResize } from '../../libs/util/util.js';
 import SimplifiedCamera from '../Functions/SimplifiedCamera.js';
+import Sound from '../Functions/Sound.js';
 
 class GameScene extends Scene{
     constructor(renderer) {
@@ -16,7 +17,6 @@ class GameScene extends Scene{
         this.mainCamera = new SimplifiedCamera(0, 8, 0);
         this.add(this.mainCamera.cameraHolder)
         window.addEventListener('resize', () => { onWindowResize(this.mainCamera.update(), this.renderer) }, false);
-
 
         // Camera secundaria (orbital)
         this.orbitCamera = initCamera(new THREE.Vector3(-16, 20, 16)); // Init second camera nesssa posição
@@ -29,7 +29,8 @@ class GameScene extends Scene{
         this.updateList = [];
         this.tankList = [];
         this.cameraList = [];
-        this.mainCamera.setTracking(this.tankList);        
+        this.mainCamera.setTracking(this.tankList);  
+        
     }
 }
 
