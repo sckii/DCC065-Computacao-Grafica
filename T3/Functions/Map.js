@@ -102,6 +102,10 @@ function level1(){
     // AI
     scene.bots = [blueTank];
 
+    // Camera
+    scene.mainCamera.setTracking(redTank)
+
+
     return scene;
 }
 
@@ -278,6 +282,10 @@ function level2(){
 
     scene.bots = [blueTank, redTank];
 
+    
+    // Camera
+    scene.mainCamera.setTracking(redTank)
+
     return scene;
 }
 
@@ -384,6 +392,9 @@ function level3(){
     
     // AI
     scene.bots = [blueTank];
+    
+    // Camera
+    scene.mainCamera.setTracking(redTank)
 
     return scene;
 }
