@@ -4,6 +4,7 @@ import Bullet from './Bullet.js';
 import AABBCollider from '../Physics/AABBCollider.js';
 import { Vector3 } from '../../build/three.module.js';
 import { rotateObjectToVector } from '../Functions/Utils.js';
+import Sound from '../Functions/Sound.js';
 
 
 class Cannon{
@@ -172,6 +173,9 @@ class Cannon{
         scene.add(shoot.geometry);
         scene.physics.add(shoot.colliderComponent);
         scene.updateList.push(shoot); 
+
+        const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.01);
+        shootSound.hit();
     }
 
     updateObject(mesh){

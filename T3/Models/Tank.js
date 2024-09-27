@@ -109,7 +109,7 @@ class Tank {
         scene.physics.add(shoot.colliderComponent);
         scene.updateList.push(shoot); 
 
-        const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.1);
+        const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.01);
         shootSound.hit();
     }
 
@@ -157,13 +157,14 @@ class Tank {
         }
         this.healthBar.setAmount( this.lifePoints );
 
-        const enemy = new Sound("./Assets/sounds/enemyHit.wav", 0.1);
+        const enemy = new Sound("./Assets/sounds/enemyHit.wav", 0.07);
         const player = new Sound("./Assets/sounds/playerHit.wav", 0.4);
+        const scene = getCurrentScene();
         
-        if (this.color !== "Red")
-            enemy.hit();
-        else {
+        if (this == scene.playerTank)
             player.hit();
+        else {
+            enemy.hit();    
         }
     }
 

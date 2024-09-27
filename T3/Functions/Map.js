@@ -284,7 +284,7 @@ function level2(){
 
     
     // Camera
-    scene.mainCamera.setTracking(redTank)
+    scene.mainCamera.setTracking(greenTank)
 
     return scene;
 }
