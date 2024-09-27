@@ -108,6 +108,9 @@ class Tank {
         scene.add(shoot.geometry);
         scene.physics.add(shoot.colliderComponent);
         scene.updateList.push(shoot); 
+
+        const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.1);
+        shootSound.hit();
     }
 
     /**
