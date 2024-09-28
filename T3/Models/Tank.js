@@ -171,7 +171,6 @@ class Tank {
         const scene = getCurrentScene();
 
         if (this.mesh.id == scene.playerTank.mesh.id){
-            console.log("hited")
             player.hit();
         }
         else {
