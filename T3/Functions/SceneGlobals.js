@@ -1,6 +1,5 @@
 let scene;
 let renderer;
-let soundOn = true;
 
 export function setRenderer(newRenderer) {
     renderer = newRenderer;
@@ -35,12 +34,4 @@ export function addSound(soundName, sound) {
 
 export function getSounds() {
     return scene.sounds
-}
-
-export function enableSound(bool) {
-    soundOn = bool;
-}
-
-export function isSoundEnabled() {
-    return soundOn;
 }

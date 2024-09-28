@@ -1,7 +1,7 @@
 import KeyboardState from '../libs/util/KeyboardState.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildLevel } from './Functions/Map.js';
-import { addSound, enableSound, getCurrentScene, isSoundEnabled, setCurrentScene, setRenderer } from './Functions/SceneGlobals.js';
+import { getCurrentScene, setCurrentScene, setRenderer } from './Functions/SceneGlobals.js';
 import { initRenderer, SecondaryBox } from '../libs/util/util.js';
 import { CSS2DRenderer, CSS2DObject } from '../build/jsm/Addons.js';
 import GUI from '../libs/util/dat.gui.module.js';
@@ -39,7 +39,6 @@ let fatModMsg;
 
 let soundOn = true;
 
-let playing = false;
 
 // Sons 
 const musica = new Sound("./Assets/sounds/music.wav", 0.1);
@@ -115,17 +114,15 @@ function keyboardUpdate() {
    }
 
    if (keyboard.down("P")) {
-      console.log(soundOn)
-      if (isSoundEnabled()) {
-         enableSound(false);
+      if (soundOn) {
          Object.keys(scene.sounds).forEach(key => scene.sounds[key].setSoundOff())
          musica.setSoundOff();
       }
       else {
-         enableSound(true)
          Object.keys(scene.sounds).forEach(key => scene.sounds[key].setSoundOn())
          musica.setSoundOn();
       }
+      soundOn = !soundOn;
    }
 
    if (keyboard.down("G")) {
@@ -138,21 +135,6 @@ function keyboardUpdate() {
          scene.playerTank.godMod = false
          godModMsg.hide()
       }
-   }
-
-   if (keyboard.down("F")) {
-      isFatModOn = !isFatModOn;
-      if(isFatModOn){
-         fatModMsg = new SecondaryBox("Fat Mod on")
-         musica.setFatMode()
-      }
-      else{
-         musica.setFatModeOff();
-         fatModMsg.hide()
-      }
-      scene.tankList.forEach(tank => {
-         tank.fatMod(isFatModOn)
-      });
    }
 
    // Atalho para mudar o nível 

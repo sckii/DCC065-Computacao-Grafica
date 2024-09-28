@@ -4,7 +4,7 @@
 // Som de movimentação dos portões ao passar de nível (baixo);
 // Música do jogo, que tocará durante toda a execução do sistema (volume médio).
 import * as THREE from  'three';
-import { getCurrentScene, isSoundEnabled } from './SceneGlobals.js';
+import { getCurrentScene } from './SceneGlobals.js';
 
 const listener = new THREE.AudioListener();
 const audioLoader = new THREE.AudioLoader();
@@ -14,47 +14,24 @@ class Sound {
     this.path = path;
     this.volume = volume;
     this.sound2 = new THREE.Audio( listener )
-
-    if (!isSoundEnabled()) {
-      this.setSoundOff();
-    }
-  }
-
-  setFatMode() {
-    let newPath = this.path.replace("sounds", "fatModeSounds")
-    newPath = newPath.replace("wav", "mp3")
-
-    this.oldPath = this.path;
-    this.path = newPath;
-
-    this.sound2.stop();
-    this.volume = 4
-    this.music();
-  }
-
-  setFatModeOff() {
-    this.path = this.oldPath;
-    this.sound2.stop();
-    this.volume = 0.1;
-    this.music();
   }
 
   setSoundOff() {
-    this.pause = true;
-    this.sound2.stop();
+    this.oldVolume = this.volume;
+    this.volume = 0;
+
+    this.sound();
   }
 
   setSoundOn() {
-    this.sound2.play();
-    this.pause = false;
+    this.volume = this.oldVolume;
+    this.oldVolume = 0;
+
+    this.sound(); 
   }
 
   hit() {
-    if (!this.pause)
-      this.sound();
-    setTimeout(() => {
-      this.sound2.stop();
-    }, 10) 
+    this.sound();
   }
 
   sound() {
@@ -68,6 +45,7 @@ class Sound {
       sound.play();
     });
     scene.mainCamera.camera.add( listener );
+    sound.stop();
 
     return sound;
   }

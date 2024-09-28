@@ -169,8 +169,11 @@ class Tank {
         const {enemy, player}  = getSounds();
 
         const scene = getCurrentScene();
-        if (this == scene.playerTank)
+
+        if (this.mesh.id == scene.playerTank.mesh.id){
+            console.log("hited")
             player.hit();
+        }
         else {
             enemy.hit();    
         }
