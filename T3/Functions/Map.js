@@ -48,10 +48,18 @@ function level1(){
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
-    let blockMaterial = new THREE.MeshLambertMaterial({
-        color:"rgb(178,34,34)"    
-    });
-    let blocks = buildMap(scene, matrixLvl1, blockMaterial);
+    let planeMaterial = [
+        setMaterial('./Assets/Textures/Level1/floor.jpg', 1, 1, 'rgb(255,182,193)'),  // x+
+    ];
+    let blockMaterial = [
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // x+
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // x-
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // y+
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // y-
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // z+
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // z-
+    ]
+    let blocks = buildMap(scene, matrixLvl1, blockMaterial, planeMaterial);
     scene.physics.addToMap(blocks);
 
     // Iluminacao
@@ -121,14 +129,16 @@ function level2(){
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
 
-    let planeMaterial = [];
+    let planeMaterial = [
+        setMaterial('./Assets/Textures/Level2/Florr.jpg', 1, 1, 'rgb(255,255,255)'),  
+    ];
     let blockMaterial = [
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // x+
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // x-
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // y+
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // y-
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // z+
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // z-
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x+
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x-
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y+
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y-
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z+
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z-
     ]
     let blocks = buildMap(scene, matrixLvl2, blockMaterial, planeMaterial);
 
@@ -299,10 +309,18 @@ function level3(){
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
-    let blockMaterial = new THREE.MeshLambertMaterial({
-        color:"rgb(178,34,34)"    
-    });
-    let blocks = buildMap(scene, matrixLvl1, blockMaterial);
+    let planeMaterial = [
+
+    ];
+    let blockMaterial = [
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x+
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x-
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y+
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y-
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z+
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z-
+    ]
+    let blocks = buildMap(scene, matrixLvl1, blockMaterial, planeMaterial);
     scene.physics.addToMap(blocks);
 
     // Iluminacao
@@ -356,6 +374,7 @@ function level3(){
 
 export function buildMap(scene, matrix, blockMaterial, planeMaterial) {
     let plane = createGroundPlane(matrix[0].length*blockSize, matrix.length*blockSize);
+    //plane.material.map = planeMaterial;
     let blocks = new Set();
     plane.position.set((matrix[0].length*blockSize)/2-blockSize/2,0,(matrix.length*blockSize)/2-blockSize/2);
     plane.rotateX(Math.PI/2);
@@ -449,4 +468,4 @@ function setMaterial(file, repeatU = 1, repeatV = 1, color = 'rgb(255,255,255)')
     mat.map.minFilter = mat.map.magFilter = THREE.LinearFilter;
     mat.map.repeat.set(repeatU,repeatV); 
     return mat;
- }
+}

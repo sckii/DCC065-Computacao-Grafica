@@ -12,7 +12,7 @@ setRenderer(initRenderer());
 
 let cssRenderer = initCssRenderer();
 
-let currentlvlNumber = 3;
+let currentlvlNumber = 1;
 setCurrentScene(buildLevel(currentlvlNumber));
 
 
