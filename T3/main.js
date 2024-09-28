@@ -1,4 +1,3 @@
-import * as THREE from 'three'
 import KeyboardState from '../libs/util/KeyboardState.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildLevel } from './Functions/Map.js';
@@ -84,9 +83,9 @@ function render() {
       setCurrentScene(buildLevel(currentlvlNumber));
    }
    if(currentlvlNumber == 3 && getCurrentScene().bots.length == 0){
-      currentlvlNumber = 3;
+      currentlvlNumber = 0;
       clearCssRenderer();
-      setCurrentScene(buildLevel(currentlvlNumber));
+      showEndScreen();
    }
 
    // Verificando qual camera será utilizada
@@ -168,7 +167,6 @@ function keyboardUpdate() {
       setCurrentScene(buildLevel(2));
    }
    if (keyboard.down("3")) {
-      console.log("oi");
       currentlvlNumber = 3;
       clearCssRenderer();
       setCurrentScene(buildLevel(3));
@@ -229,11 +227,11 @@ function setupLoadingScreen() {
          progressWidth += 10;  // Aumenta a barra de progresso gradualmente
          progressBar.style.width = progressWidth + '%';
       }
-   }, 1);  // A cada 5ms, a barra aumenta de largura
+   }, 1);  // A cada 1ms, a barra aumenta de largura
  
    // Configura o botão de começar
    button.addEventListener("click", onButtonPressed);
- }
+}
  // Função para ocultar a tela de carregamento e iniciar o jogo
 function onButtonPressed() {
    const loadingScreen = document.getElementById('loading-screen');
@@ -244,9 +242,40 @@ function onButtonPressed() {
      const element = e.target;
      element.remove();  // Remove a tela de carregamento da DOM
    });
- 
-   // Aqui você pode iniciar o jogo ou adicionar funcionalidades extras
-   console.log('Jogo iniciado!');
+
    musica.music();
    cssRenderer = initCssRenderer();
  }
+
+// Função para mostrar a tela de fim de jogo
+function showEndScreen() {
+   const endScreen = document.getElementById('end-screen');
+   endScreen.classList.remove('hidden');  // Remove a classe que oculta a tela
+   endScreen.classList.add('visible');    // Adiciona a classe para o fade-in e tornar visível
+ 
+   const restartButton = document.getElementById('restartBtn');
+   restartButton.addEventListener('click', restartGame);  // Configura o botão para reiniciar o jogo
+}
+
+// Função para reiniciar o jogo (sem recarregar a página)
+function restartGame() {
+const endScreen = document.getElementById('end-screen');
+
+// Remove a classe "visible" e adiciona "fade-out"
+endScreen.classList.remove('visible');
+endScreen.classList.add('fade-out');
+
+// Remove a tela de fim de jogo após a transição de fade-out
+endScreen.addEventListener('transitionend', (e) => {
+   if (e.target === endScreen) {  // Verifica se a transição é na tela de fim
+      endScreen.classList.add('hidden');  // Oculta a tela novamente
+      endScreen.classList.remove('fade-out');  // Remove o fade-out para que possa ser reutilizado depois
+      resetGame();  // Chama a função para reiniciar o estado do jogo
+   }
+}, { once: true });  // Garante que o evento transitionend seja chamado apenas uma vez
+}
+
+function resetGame(){
+   currentlvlNumber = 1;
+   restart = true;
+}

@@ -1,0 +1,49 @@
+.end-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    transition: opacity 1s ease-out;
+    opacity: 0;
+    pointer-events: none;  /* Inicialmente, desativa os cliques */
+  }
+  
+  .end-screen.visible {
+    opacity: 1;
+    pointer-events: all;  /* Habilita os cliques quando a tela for visível */
+  }
+  
+  .end-screen.fade-out {
+    opacity: 0;  /* Inicia o fade-out */
+  }
+  
+  .end-content {
+    text-align: center;
+    color: white;
+  }
+  
+  .restart-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 5px;
+  }
+  
+  .restart-button:hover {
+    background-color: #45a049;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  

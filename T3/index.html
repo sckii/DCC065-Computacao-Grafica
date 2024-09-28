@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./Assets/loadingScreen.css">
+    <link rel="stylesheet" href="./Assets/endScreen.css">
 </head>
 
 <body>
@@ -23,6 +24,12 @@
       <button id="startBtn" class="start-button">Começar o Jogo</button>
     </div>
   </div>  
+  <div id="end-screen" class="end-screen hidden">
+    <div class="end-content">
+      <h1>Parabéns, você venceu!</h1>
+      <button id="restartBtn" class="restart-button">Recomeçar</button>
+    </div>
+  </div>
   <div id="webgl-output">            
     <script type="module" src="main.js"></script>
   </div>
