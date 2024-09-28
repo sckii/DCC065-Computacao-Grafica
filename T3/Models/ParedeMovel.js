@@ -4,16 +4,15 @@ import { Vector3 } from '../../build/three.module.js';
 
 
 class ParedeMovel {
-    constructor(x,y,z, dir=1) {
+    constructor(x,y,z, speed, dir=1) {
         this.geometry = this.buildObject(x,y,z);
         this.position = this.geometry.position;
         this.colliderComponent = new AABBCollider(this, 6, 2);
         this.initialPos = new THREE.Vector3().copy(this.position);
         this.dir = dir;
-        this.speed = .1;
+        this.speed = speed;
         this.endPos = new Vector3().copy(this.initialPos);
         this.endPos.x += 6 * dir;
-        console.log(this.endPos);
 
         if(this.initialPos.x > this.endPos.x) {
             let aux = this.initialPos;
@@ -26,6 +25,8 @@ class ParedeMovel {
         const geometry = new THREE.BoxGeometry(6,2,2);
         const mesh = new THREE.Mesh(geometry, this.getMaterial());
         mesh.position.set(x, y, z);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
         return mesh;
     }
 
@@ -34,6 +35,7 @@ class ParedeMovel {
         material = new THREE.MeshPhongMaterial({
             color: "rgb(220,255,255)",
         });
+        return material;
     }
 
     update() {

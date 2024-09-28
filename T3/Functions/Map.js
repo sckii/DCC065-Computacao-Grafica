@@ -333,7 +333,7 @@ function level3(){
     dirLightTarget.position.set(10,0,20)
     scene.add(dirLightTarget);
 
-    const dirPosition = new THREE.Vector3(30, 35, 30);
+    const dirPosition = new THREE.Vector3(30, 35, -20);
     const dirLight = new THREE.DirectionalLight("rgb(255,250,224)", 1);
         dirLight.target = dirLightTarget;
         dirLight.position.copy(dirPosition);
@@ -375,19 +375,19 @@ function level3(){
 
     // Paredes Moveis
     let paredePos1 = matrixToWorld(6,5);
-    let paredeMovel1 = new ParedeMovel(paredePos1.x, paredePos1.y, paredePos1.z);
+    let paredeMovel1 = new ParedeMovel(paredePos1.x, paredePos1.y, paredePos1.z, 0.05);
     scene.add(paredeMovel1.geometry);
     scene.physics.add(paredeMovel1.colliderComponent);
     scene.updateList.push(paredeMovel1);
 
     let paredePos2 = matrixToWorld(11,8);
-    let paredeMovel2 = new ParedeMovel(paredePos2.x, paredePos2.y, paredePos2.z, -1);
+    let paredeMovel2 = new ParedeMovel(paredePos2.x, paredePos2.y, paredePos2.z, 0.08, -1);
     scene.add(paredeMovel2.geometry);
     scene.physics.add(paredeMovel2.colliderComponent);
     scene.updateList.push(paredeMovel2);
 
     let paredePos3 = matrixToWorld(16,5);
-    let paredeMovel3 = new ParedeMovel(paredePos3.x, paredePos3.y, paredePos3.z);
+    let paredeMovel3 = new ParedeMovel(paredePos3.x, paredePos3.y, paredePos3.z, 0.10);
     scene.add(paredeMovel3.geometry);
     scene.physics.add(paredeMovel3.colliderComponent);
     scene.updateList.push(paredeMovel3);
@@ -413,7 +413,6 @@ export function buildMap(scene, matrix, blockMaterial) {
             if (matrix[i][j] == 1) {
                 let block = getBlock(matrixToWorld(i, j), blockMaterial, 1);
                 block.castShadow = true;
-                block.reciveShadow = true;
                 scene.add(block);
                 matrix[i][j] = block;
                 blocks.add(block);
@@ -424,7 +423,6 @@ export function buildMap(scene, matrix, blockMaterial) {
                 let halfBlock = getBlock(matrixToWorld(i, j), blockMaterial, 2);
                 halfBlock.position.setY(.5);
                 halfBlock.castShadow = true;
-                halfBlock.reciveShadow = true;
                 //scene.add(halfBlock);
                 matrix[i][j] = halfBlock;
                 blocks.add(halfBlock);
