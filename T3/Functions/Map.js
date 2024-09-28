@@ -357,14 +357,6 @@ function level3(){
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
     
     scene.background = textureEquirec;
-    // Sons 
-    const enemy = new Sound("./Assets/sounds/enemyHit.wav", 0.07);
-    const player = new Sound("./Assets/sounds/playerHit.wav", 0.4);
-    const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.01);
-
-    addSound(enemy);
-    addSound(player);
-    addSound(shootSound);
 
     // Adiciona os tanques
     let redTank = new Tank(5, 5, "Red", 1);

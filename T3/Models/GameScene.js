@@ -29,7 +29,13 @@ class GameScene extends Scene{
         this.updateList = [];
         this.tankList = [];
         this.cameraList = [];
-        this.sounds = {};
+
+        this.sounds = {
+            enemy : new Sound("./Assets/sounds/enemyHit.wav", 0.07),
+            player : new Sound("./Assets/sounds/playerHit.wav", 0.4),
+            shootSound : new Sound("./Assets/sounds/shoot.wav", 0.01)
+        };
+        
         this.mainCamera.setTracking(this.tankList);  
         
     }
