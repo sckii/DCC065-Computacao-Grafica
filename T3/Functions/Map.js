@@ -86,7 +86,6 @@ function level1(){
     scene.add(ambientLight);
 
     // SkyBox
-    const textureLoader = new THREE.TextureLoader();
     let textureEquirec = textureLoader.load( './Assets/SkyBox.jpg' );
         textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
@@ -257,7 +256,6 @@ function level2(){
     const spotHelper4 = new THREE.SpotLightHelper(spotLight4, 0xFF8C00);
     
     // SkyBox
-    const textureLoader = new THREE.TextureLoader();
     let textureEquirec = textureLoader.load( './Assets/SkyBox.jpg' );
         textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
@@ -375,7 +373,6 @@ function level3(){
         './Assets/SkyBox.jpg', 1);
          cubeMapTexture.colorSpace = THREE.SRGBColorSpace;
 
-    const textureLoader = new THREE.TextureLoader();
     let textureEquirec = textureLoader.load( './Assets/SkyBox.jpg' );
         textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
