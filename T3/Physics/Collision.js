@@ -20,7 +20,10 @@ class Collision {
         if (this.normal)
             return this.normal.normalize();
         
-        return this.other.colliderComponent.getCollisionNormal(this.point);
+        this.normal = this.other.colliderComponent.getCollisionNormal(this.point);
+        this.normal.y = 0;
+        this.normal = this.normal.normalize();
+        return this.normal;
     }    
 }
 
