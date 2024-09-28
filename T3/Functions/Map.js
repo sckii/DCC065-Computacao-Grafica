@@ -359,19 +359,33 @@ function level3(){
     scene.background = textureEquirec;
 
     // Adiciona os tanques
-    let redTank = new Tank(5, 5, "Red", 1);
+    let redTank = new Tank(13, 5, "Red", 0);
     scene.add(redTank.geometry);
     scene.physics.add(redTank.colliderComponent); 
     scene.updateList.push(redTank);
     scene.tankList.push(redTank);
     scene.playerTank = redTank;
 
-    let blueTank = new Tank(5, 27, "Blue", 1);
+    let darkRedTank = new Tank(22, 17, "DarkRed", -1);
+    darkRedTank.ai = new TankAI(darkRedTank, scene.playerTank, 10, blocks, scene);
+    scene.add(darkRedTank.geometry);
+    scene.physics.add(darkRedTank.colliderComponent); 
+    scene.updateList.push(darkRedTank);
+    scene.tankList.push(darkRedTank);
+
+    let blueTank = new Tank(22, 37, "Blue", -1);
     blueTank.ai = new TankAI(blueTank, scene.playerTank, 10, blocks, scene);
     scene.add(blueTank.geometry);
     scene.physics.add(blueTank.colliderComponent); 
     scene.updateList.push(blueTank);
     scene.tankList.push(blueTank);
+
+    let lightBlueTank = new Tank(4, 27, "LightBlue", 1);
+    lightBlueTank.ai = new TankAI(lightBlueTank, scene.playerTank, 10, blocks, scene);
+    scene.add(lightBlueTank.geometry);
+    scene.physics.add(lightBlueTank.colliderComponent); 
+    scene.updateList.push(lightBlueTank);
+    scene.tankList.push(lightBlueTank);
 
     // Paredes Moveis
     let paredePos1 = matrixToWorld(6,5);
@@ -393,7 +407,7 @@ function level3(){
     scene.updateList.push(paredeMovel3);
     
     // AI
-    scene.bots = [blueTank];
+    scene.bots = [blueTank, darkRedTank, lightBlueTank];
     
     // Camera
     scene.mainCamera.setTracking(redTank)

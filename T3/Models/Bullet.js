@@ -58,6 +58,18 @@ class Bullet {
                     emissive: "rgb(60,60,220)"
                 });
             }
+            else if(this.shooter.color == "DarkRed"){
+                material = new THREE.MeshLambertMaterial({
+                    color: "rgb(140,0,0)",
+                    emissive: "rgb(140,0,0)"
+                });
+            }
+            else if(this.shooter.color == "LightBlue"){
+                material = new THREE.MeshLambertMaterial({
+                    color: "rgb(140,170,255)",
+                    emissive: "rgb(140,170,255)"
+                });
+            }
             else {
                 material = new THREE.MeshLambertMaterial({
                     color: "rgb(60,220,60)",

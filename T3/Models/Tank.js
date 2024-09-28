@@ -82,6 +82,20 @@ class Tank {
                     specular: "rgb(255,255,255)"
             });
         }
+        else if(color == "DarkRed"){
+            material = new THREE.MeshPhongMaterial({
+                    color: "rgb(139,0,0)",
+                    shininess: "200",
+                    specular: "rgb(255,255,255)"
+            });
+        }
+        else if(color == "LightBlue"){
+            material = new THREE.MeshPhongMaterial({
+                    color: "rgb(133,168,255)",
+                    shininess: "200",
+                    specular: "rgb(255,255,255)"
+            });
+        }
         else {
             material = new THREE.MeshPhongMaterial({
                     color: "rgb(60,220,60)",
