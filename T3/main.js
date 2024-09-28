@@ -1,7 +1,7 @@
 import KeyboardState from '../libs/util/KeyboardState.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildLevel } from './Functions/Map.js';
-import { addSound, getCurrentScene, setCurrentScene, setRenderer } from './Functions/SceneGlobals.js';
+import { addSound, enableSound, getCurrentScene, isSoundEnabled, setCurrentScene, setRenderer } from './Functions/SceneGlobals.js';
 import { initRenderer, SecondaryBox } from '../libs/util/util.js';
 import { CSS2DRenderer, CSS2DObject } from '../build/jsm/Addons.js';
 import GUI from '../libs/util/dat.gui.module.js';
@@ -43,9 +43,8 @@ let playing = false;
 
 // Sons 
 const musica = new Sound("./Assets/sounds/music.wav", 0.1);
-const enemy = new Sound("./Assets/sounds/enemyHit.wav", 0.07);
-const player = new Sound("./Assets/sounds/playerHit.wav", 0.4);
-const shootSound = new Sound("./Assets/sounds/shoot.wav", 0.01);
+
+musica.music();
 
 render();
 function render() {
@@ -89,16 +88,6 @@ function render() {
       setCurrentScene(buildLevel(currentlvlNumber));
    }
 
-   if (!playing) {
-      addSound("musica", musica);
-      addSound("enemy", enemy);
-      addSound("player", player);
-      addSound("shootSound", shootSound);
-      
-      musica.music();
-   }
-   playing = true;
-
    // Verificando qual camera será utilizada
    if (camChangeOrbit) {
       scene.renderer.render(scene, scene.orbitCamera) // Render scene
@@ -127,15 +116,16 @@ function keyboardUpdate() {
 
    if (keyboard.down("P")) {
       console.log(soundOn)
-      if (soundOn) {
-         console.log(scene.sounds);
-         
+      if (isSoundEnabled()) {
+         enableSound(false);
          Object.keys(scene.sounds).forEach(key => scene.sounds[key].setSoundOff())
+         musica.setSoundOff();
       }
-      else 
+      else {
+         enableSound(true)
          Object.keys(scene.sounds).forEach(key => scene.sounds[key].setSoundOn())
-
-      soundOn = !soundOn;
+         musica.setSoundOn();
+      }
    }
 
    if (keyboard.down("G")) {

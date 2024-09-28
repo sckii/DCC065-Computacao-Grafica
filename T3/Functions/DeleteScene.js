@@ -33,5 +33,7 @@ export function deleteScene(scene){
     scene.physics.map = [];
     scene.bots = [];
 
+    Object.keys(scene.sounds).forEach(key => scene.sounds[key].setSoundOff())
+
 }
 export default deleteScene;

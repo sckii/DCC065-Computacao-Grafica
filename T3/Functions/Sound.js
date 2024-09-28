@@ -4,7 +4,7 @@
 // Som de movimentação dos portões ao passar de nível (baixo);
 // Música do jogo, que tocará durante toda a execução do sistema (volume médio).
 import * as THREE from  'three';
-import { getCurrentScene } from './SceneGlobals.js';
+import { getCurrentScene, isSoundEnabled } from './SceneGlobals.js';
 
 const listener = new THREE.AudioListener();
 const audioLoader = new THREE.AudioLoader();
@@ -14,6 +14,10 @@ class Sound {
     this.path = path;
     this.volume = volume;
     this.sound2 = new THREE.Audio( listener )
+
+    if (!isSoundEnabled()) {
+      this.setSoundOff();
+    }
   }
 
   setFatMode() {
