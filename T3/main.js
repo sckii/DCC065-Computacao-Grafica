@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import KeyboardState from '../libs/util/KeyboardState.js';
 import KeyboardMovement from './Functions/KeyboardMovement.js';
 import { buildLevel } from './Functions/Map.js';
@@ -11,7 +12,9 @@ import Sound from './Functions/Sound.js';
 let keyboard = new KeyboardState();
 setRenderer(initRenderer());
 
-let cssRenderer = initCssRenderer();
+setupLoadingScreen()
+
+let cssRenderer;
 
 let currentlvlNumber = 3;
 setCurrentScene(buildLevel(currentlvlNumber));
@@ -43,8 +46,6 @@ let playing = false;
 
 // Sons 
 const musica = new Sound("./Assets/sounds/music.wav", 0.1);
-
-musica.music();
 
 render();
 function render() {
@@ -201,3 +202,51 @@ function initCssRenderer() {
    }, false );
    return cssRenderer;
 }
+// Configura a tela de carregamento
+function setupLoadingScreen() {
+   let progressBar = document.getElementById('progress');
+   let button = document.getElementById("startBtn");
+   // Inicialmente, o botão é desabilitado e exibe "Carregando..."
+   button.disabled = true;
+   button.style.backgroundColor = 'red';
+   button.innerHTML = 'Carregando...';
+   let progressWidth = 0;
+ 
+   // Simula o preenchimento da barra de progresso ao longo de 3 segundos
+   let progressInterval = setInterval(() => {
+     if (progressWidth >= 100) {
+      clearInterval(progressInterval);
+       // Adiciona um pequeno delay para garantir que a barra esteja visualmente completa
+      setTimeout(() => {
+            // Quando o "carregamento" termina, o botão se torna clicável
+            button.disabled = false;
+            button.style.backgroundColor = '#4caf50';  // Torna o botão verde
+            button.innerHTML = 'Começar o Jogo';  // Muda o texto
+   
+            button.addEventListener("click", onButtonPressed);
+         }, 2300);  // Delay após a barra encher
+      } else {
+         progressWidth += 10;  // Aumenta a barra de progresso gradualmente
+         progressBar.style.width = progressWidth + '%';
+      }
+   }, 1);  // A cada 5ms, a barra aumenta de largura
+ 
+   // Configura o botão de começar
+   button.addEventListener("click", onButtonPressed);
+ }
+ // Função para ocultar a tela de carregamento e iniciar o jogo
+function onButtonPressed() {
+   const loadingScreen = document.getElementById('loading-screen');
+   loadingScreen.classList.add('fade-out');  // Inicia o fade-out da tela de carregamento
+ 
+   // Remove a tela de carregamento após a transição
+   loadingScreen.addEventListener('transitionend', (e) => {
+     const element = e.target;
+     element.remove();  // Remove a tela de carregamento da DOM
+   });
+ 
+   // Aqui você pode iniciar o jogo ou adicionar funcionalidades extras
+   console.log('Jogo iniciado!');
+   musica.music();
+   cssRenderer = initCssRenderer();
+ }
