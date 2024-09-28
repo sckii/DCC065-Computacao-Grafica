@@ -79,7 +79,7 @@ function level1(){
 
     // SkyBox
     const textureLoader = new THREE.TextureLoader();
-    let textureEquirec = textureLoader.load( './Assets/deb67pt-ae5c2d3b-76a3-46f2-a470-9cf9c3f0ff8c.jpg' );
+    let textureEquirec = textureLoader.load( './Assets/SkyBox.jpg' );
         textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
     
@@ -242,7 +242,7 @@ function level2(){
     
     // SkyBox
     const textureLoader = new THREE.TextureLoader();
-    let textureEquirec = textureLoader.load( './Assets/deb67pt-ae5c2d3b-76a3-46f2-a470-9cf9c3f0ff8c.jpg' );
+    let textureEquirec = textureLoader.load( './Assets/SkyBox.jpg' );
         textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
     
@@ -348,11 +348,11 @@ function level3(){
 
     // SkyBox
     let cubeMapTexture = new CubeTextureLoaderSingleFile().loadSingle( 
-        './Assets/360_F_506725391_wiAb388Lezu7Q7qgl2RTsxx0euDjBFsX.jpg', 1);
+        './Assets/SkyBox.jpg', 1);
          cubeMapTexture.colorSpace = THREE.SRGBColorSpace;
 
     const textureLoader = new THREE.TextureLoader();
-    let textureEquirec = textureLoader.load( './Assets/deb67pt-ae5c2d3b-76a3-46f2-a470-9cf9c3f0ff8c.jpg' );
+    let textureEquirec = textureLoader.load( './Assets/SkyBox.jpg' );
         textureEquirec.mapping = THREE.EquirectangularReflectionMapping; // Reflection as default
         textureEquirec.colorSpace = THREE.SRGBColorSpace;
     
