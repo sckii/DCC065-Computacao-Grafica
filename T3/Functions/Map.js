@@ -120,10 +120,17 @@ function level2(){
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
-    let blockMaterial = new THREE.MeshLambertMaterial({
-        color:"rgb(255,182,193)"    
-    });
-    let blocks = buildMap(scene, matrixLvl2, blockMaterial);
+
+    let planeMaterial = [];
+    let blockMaterial = [
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // x+
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // x-
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // y+
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // y-
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // z+
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(255,182,193)'),  // z-
+    ]
+    let blocks = buildMap(scene, matrixLvl2, blockMaterial, planeMaterial);
 
     // cria a caixa central
     let supportBox = new THREE.Mesh(new THREE.BoxGeometry(2*blockSize, blockSize*0.3, 2*blockSize));
@@ -347,7 +354,7 @@ function level3(){
     return scene;
 }
 
-export function buildMap(scene, matrix, blockMaterial) {
+export function buildMap(scene, matrix, blockMaterial, planeMaterial) {
     let plane = createGroundPlane(matrix[0].length*blockSize, matrix.length*blockSize);
     let blocks = new Set();
     plane.position.set((matrix[0].length*blockSize)/2-blockSize/2,0,(matrix.length*blockSize)/2-blockSize/2);
@@ -433,3 +440,13 @@ export function worldToMatrix(pos) {
     }
     return mPos;
 }
+
+function setMaterial(file, repeatU = 1, repeatV = 1, color = 'rgb(255,255,255)'){
+    let loader = new THREE.TextureLoader();
+    let mat = new THREE.MeshBasicMaterial({ map: loader.load(file), color:color});
+       mat.map.colorSpace = THREE.SRGBColorSpace;
+    mat.map.wrapS = mat.map.wrapT = THREE.RepeatWrapping;
+    mat.map.minFilter = mat.map.magFilter = THREE.LinearFilter;
+    mat.map.repeat.set(repeatU,repeatV); 
+    return mat;
+ }
