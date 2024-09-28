@@ -50,10 +50,18 @@ function level1(){
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
-    let blockMaterial = new THREE.MeshLambertMaterial({
-        color:"rgb(178,34,34)"    
-    });
-    let blocks = buildMap(scene, matrixLvl1, blockMaterial);
+    var textureLoader = new THREE.TextureLoader();
+    var floor = textureLoader.load('./Assets/Textures/Level1/floor.jpg');
+    floor.colorSpace = THREE.SRGBColorSpace;
+    let blockMaterial = [
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // x+
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // x-
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // y+
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // y-
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // z+
+        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // z-
+    ]
+    let blocks = buildMap(scene, matrixLvl1, blockMaterial, floor);
     scene.physics.addToMap(blocks);
 
     // Iluminacao
@@ -134,10 +142,18 @@ function level2(){
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
-    let blockMaterial = new THREE.MeshLambertMaterial({
-        color:"rgb(255,182,193)"    
-    });
-    let blocks = buildMap(scene, matrixLvl2, blockMaterial);
+    var textureLoader = new THREE.TextureLoader();
+    var floor = textureLoader.load('./Assets/Textures/Level2/Florr.jpg');
+    floor.colorSpace = THREE.SRGBColorSpace;
+    let blockMaterial = [
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x+
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x-
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y+
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y-
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z+
+        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z-
+    ]
+    let blocks = buildMap(scene, matrixLvl2, blockMaterial, floor);
 
     // cria a caixa central
     let supportBox = new THREE.Mesh(new THREE.BoxGeometry(2*blockSize, blockSize*0.3, 2*blockSize));
@@ -295,7 +311,7 @@ function level3(){
     let scene = new GameScene( getRenderer() );
 
     // Constoi o mapa e sua fisica
-    let matrixLvl1 = [
+    let matrixLvl3 = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -319,10 +335,18 @@ function level3(){
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     ]
-    let blockMaterial = new THREE.MeshLambertMaterial({
-        color:"rgb(178,34,34)"    
-    });
-    let blocks = buildMap(scene, matrixLvl1, blockMaterial);
+    var textureLoader = new THREE.TextureLoader();
+    var floor = textureLoader.load('./Assets/Textures/Level3/floor.jpg');
+    floor.colorSpace = THREE.SRGBColorSpace;
+    let blockMaterial = [
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x+
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x-
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y+
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y-
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z+
+        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z-
+    ]
+    let blocks = buildMap(scene, matrixLvl3, blockMaterial, floor);
     scene.physics.addToMap(blocks);
 
     // Iluminacao
@@ -415,8 +439,13 @@ function level3(){
     return scene;
 }
 
-export function buildMap(scene, matrix, blockMaterial) {
+export function buildMap(scene, matrix, blockMaterial, floor) {
     let plane = createGroundPlane(matrix[0].length*blockSize, matrix.length*blockSize);
+    plane.material.map = floor;
+    plane.material.map.wrapS = THREE.RepeatWrapping;
+    plane.material.map.wrapT = THREE.RepeatWrapping;
+    plane.material.map.minFilter = THREE.LinearFilter;
+    plane.material.map.magFilter = THREE.LinearFilter;
     let blocks = new Set();
     plane.position.set((matrix[0].length*blockSize)/2-blockSize/2,0,(matrix.length*blockSize)/2-blockSize/2);
     plane.rotateX(Math.PI/2);
@@ -476,7 +505,7 @@ function getBlock(pos, blockMaterial, type) {
 function getSpotLightMesh(){
     var loader = new GLTFLoader( );
     let mesh = new THREE.Object3D();    
-    loader.load( './Models/lightPost.glb', function ( gltf ) {
+    loader.load( './Assets/Objects/lightPost.glb', function ( gltf ) {
         mesh.add(gltf.scene);
         mesh.castShadow = true;
     }); 
@@ -498,4 +527,14 @@ export function worldToMatrix(pos) {
         j: Math.floor(pos.z/blockSize)
     }
     return mPos;
+}
+
+function setMaterial(file, repeatU = 1, repeatV = 1, color = 'rgb(255,255,255)'){
+    let loader = new THREE.TextureLoader();
+    let mat = new THREE.MeshBasicMaterial({ map: loader.load(file), color:color});
+       mat.map.colorSpace = THREE.SRGBColorSpace;
+    mat.map.wrapS = mat.map.wrapT = THREE.RepeatWrapping;
+    mat.map.minFilter = mat.map.magFilter = THREE.LinearFilter;
+    mat.map.repeat.set(repeatU,repeatV); 
+    return mat;
 }

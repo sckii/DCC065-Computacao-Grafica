@@ -40,7 +40,7 @@ class Tank {
         const material2 = new THREE.MeshBasicMaterial({ color: 0x00ff00, opacity: 0.0, transparent: true }); // Material verde
         const newObject = new THREE.Mesh(geometry, material2);
 
-        loader.load( './Models/tank.glb', function ( gltf ) {
+        loader.load( './Assets/Objects/tank.glb', function ( gltf ) {
             let obj = gltf.scene;
             obj.traverse( (child) => {
                 if(!(child.name == "Tank_Wheel_1" || child.name == "Tank_Wheel_2" || child.name == "Tank_Wheel_3" || child.name == "Tank_Wheel_4" || child.name == "Tank_Wheel_5")){

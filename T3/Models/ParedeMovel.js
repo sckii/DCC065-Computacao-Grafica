@@ -23,19 +23,19 @@ class ParedeMovel {
 
     buildObject(x,y,z) {
         const geometry = new THREE.BoxGeometry(6,2,2);
-        const mesh = new THREE.Mesh(geometry, this.getMaterial());
+        let material = [
+            setMaterial('./Assets/Textures/Level3/MoveWall.jpg', 1, 1, 'rgb(255,255,255)'),  // x+
+            setMaterial('./Assets/Textures/Level3/MoveWall.jpg', 1, 1, 'rgb(255,255,255)'),  // x-
+            setMaterial('./Assets/Textures/Level3/MoveWall.jpg', 1, 1, 'rgb(255,255,255)'),  // y+
+            setMaterial('./Assets/Textures/Level3/MoveWall.jpg', 1, 1, 'rgb(255,255,255)'),  // y-
+            setMaterial('./Assets/Textures/Level3/MoveWall.jpg', 1, 1, 'rgb(255,255,255)'),  // z+
+            setMaterial('./Assets/Textures/Level3/MoveWall.jpg', 1, 1, 'rgb(255,255,255)'),  // z-
+        ]
+        const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(x, y, z);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         return mesh;
-    }
-
-    getMaterial(){
-        let material;
-        material = new THREE.MeshPhongMaterial({
-            color: "rgb(220,255,255)",
-        });
-        return material;
     }
 
     update() {
@@ -49,6 +49,15 @@ class ParedeMovel {
     onCollisionEntered(){}
 
     onCollisionExit(){}
+}
+function setMaterial(file, repeatU = 1, repeatV = 1, color = 'rgb(255,255,255)'){
+    let loader = new THREE.TextureLoader();
+    let mat = new THREE.MeshBasicMaterial({ map: loader.load(file), color:color});
+       mat.map.colorSpace = THREE.SRGBColorSpace;
+    mat.map.wrapS = mat.map.wrapT = THREE.RepeatWrapping;
+    mat.map.minFilter = mat.map.magFilter = THREE.LinearFilter;
+    mat.map.repeat.set(repeatU,repeatV); 
+    return mat;
 }
 
 export default ParedeMovel;
