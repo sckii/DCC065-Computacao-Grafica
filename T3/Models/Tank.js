@@ -136,7 +136,9 @@ class Tank {
      * @param {Collider} other 
      */
     onCollisionExit(other) {
-        
+        if(other instanceof PowerUp){     
+            return;
+        }
     }
 
     /**
@@ -144,14 +146,12 @@ class Tank {
      * @param {Collision} collision 
      */   
     onCollision(collision){
-        if(collision.other instanceof PowerUp){
-            if(other.type == 1){        //heal
-                this.lifePoints += 2;
-            }   
-        }
         if (!(collision.other instanceof Bullet)) {
             this.position.add(collision.getNormal().multiplyScalar(.15));
             this.normal = collision.getNormal();
+        }
+        if(collision.other instanceof PowerUp){     
+            return;
         }
     }
 
