@@ -1,16 +1,34 @@
-import SphereCollider from "../Physics/SphereCollider";
+import AABBCollider from "../Physics/AABBCollider";
 
 class PowerUp{ 
     constructor(currentLevel, scene){
+
+        this.position = this.getPosition(currentLevel);
+        this.type = this.getType();
+        this.geometry = this.buildMesh(this.position.x, this.position.z);
+        this.isActive = false;
+        // Colisão
+        this.colliderComponent = new AABBCollider(this, 1,1);
+
+        this.startSpawn(scene);
+        
+    }
+    startSpawn(scene){
+        // Função que será chamada a cada 10 segundos
+        if(!scene.activePowerUp.isActive){
+            this.spawInterval = setInterval(() => {
+                this.spawn(scene);
+            }, 10000);
+        }
+    }
+    spawn(scene){
         this.position = this.getPosition(currentLevel);
         this.type = this.getType();
         this.geometry = this.buildMesh(this.position.x, this.position.z);
         this.isActive = true;
-        // Colisão
-        this.colliderComponent = new SphereCollider(this, this.radius);
-
-        this.startSpawn(scene);
-        
+        scene.add(this.geometry);
+        scene.physics.add(this.colliderComponent); 
+        scene.updateList.push(this);
     }
 
     buildMesh(x, z){
@@ -83,43 +101,9 @@ class PowerUp{
      * @param {Collision} collision 
      */
     onCollisionEntered(collision) {
-        // Faz com que o tiro não bata em outros e no próprio tanque
-        if(collision.other === this.shooter || collision.other instanceof Bullet){     
-            return;
-        }
         
-        if(collision.other instanceof Cannon){     
-            removeFromScene(this);
-            return;
-        }
-
-        if (collision.other.wallType === 2) {
-            return;
-        }
-        
-        this.position.add(collision.getNormal().multiplyScalar(.1));
-        
-        this.numColision = this.numColision + 1;
-        if (collision.other instanceof Tank){
-            collision.other.reciveDamage(1);
-            removeFromScene(this);
-            return;
-        }
-        this.dir.reflect(collision.getNormal());
-        this.dir.normalize();
     }
 
-    startSpawn(scene){
-        // Função que será chamada a cada 10 segundos
-        if(scene.activePowerUp.isActive){
-            this.spawInterval = setInterval(() => {
-                this.spawn(scene);
-            }, 10000);
-        }
-    }
-    spawn(scene){
-
-    }
     /**
      * Esse método é chamado quando um objeto para de colidir com este
      * @param {Collider} other 
@@ -129,14 +113,7 @@ class PowerUp{
     }
 
     update() {
-        this.geometry.translateOnAxis(this.dir, this.speed);
-    
-        //console.log(this.numColision);
-        if (this.numColision >= 3 ){
-            removeFromScene(this);
-        }
-        
-        //this.colliderComponent.checkBoundCollision();
+        // rodar
     }
 
 }   export default PowerUp;

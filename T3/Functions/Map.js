@@ -106,10 +106,6 @@ function level1(){
 
     // PowerUp
     let powerUp = new PowerUp(1, scene);
-    scene.activePowerUp = powerUp;
-    scene.add(powerUp.geometry);
-    scene.physics.add(powerUp.colliderComponent); 
-    scene.updateList.push(powerUp);
     
     // Camera
     scene.mainCamera.setTracking(redTank)
