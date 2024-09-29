@@ -54,12 +54,12 @@ function level1(){
     var floor = textureLoader.load('./Assets/Textures/Level1/floor.jpg');
     floor.colorSpace = THREE.SRGBColorSpace;
     let blockMaterial = [
-        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // x+
-        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // x-
-        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // y+
-        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // y-
-        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // z+
-        setMaterial('./Assets/Textures/Level1/Wall.jpg', 0.75, 0.75, 'rgb(75,75,75)'),  // z-
+        setMaterial('./Assets/Textures/Level1/newWall.png', 1, 1, 'white'),  // x+
+        setMaterial('./Assets/Textures/Level1/newWall.png', 1, 1, 'white'),  // x-
+        setMaterial('./Assets/Textures/Level1/newWall.png', 1, 1, 'white'),  // y+
+        setMaterial('./Assets/Textures/Level1/newWall.png', 1, 1, 'white'),  // y-
+        setMaterial('./Assets/Textures/Level1/newWall.png', 1, 1, 'white'),  // z+
+        setMaterial('./Assets/Textures/Level1/newWall.png', 1, 1, 'white'),  // z-
     ]
     let blocks = buildMap(scene, matrixLvl1, blockMaterial, floor);
     scene.physics.addToMap(blocks);
@@ -145,12 +145,12 @@ function level2(){
     var floor = textureLoader.load('./Assets/Textures/Level2/Florr.jpg');
     floor.colorSpace = THREE.SRGBColorSpace;
     let blockMaterial = [
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x+
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x-
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y+
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y-
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z+
-        setMaterial('./Assets/Textures/Level2/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z-
+        setMaterial('./Assets/Textures/Level2/newWall.png', 1, 1, 'rgb(75,75,75)'),  // x+
+        setMaterial('./Assets/Textures/Level2/newWall.png', 1, 1, 'rgb(75,75,75)'),  // x-
+        setMaterial('./Assets/Textures/Level2/newWall.png', 1, 1, 'rgb(75,75,75)'),  // y+
+        setMaterial('./Assets/Textures/Level2/newWall.png', 1, 1, 'rgb(75,75,75)'),  // y-
+        setMaterial('./Assets/Textures/Level2/newWall.png', 1, 1, 'rgb(75,75,75)'),  // z+
+        setMaterial('./Assets/Textures/Level2/newWall.png', 1, 1, 'rgb(75,75,75)'),  // z-
     ]
     let blocks = buildMap(scene, matrixLvl2, blockMaterial, floor);
 
@@ -337,12 +337,12 @@ function level3(){
     var floor = textureLoader.load('./Assets/Textures/Level3/floor.jpg');
     floor.colorSpace = THREE.SRGBColorSpace;
     let blockMaterial = [
-        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x+
-        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // x-
-        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y+
-        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // y-
-        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z+
-        setMaterial('./Assets/Textures/Level3/Wall.jpg', 1, 1, 'rgb(75,75,75)'),  // z-
+        setMaterial('./Assets/Textures/Level3/newWall.png', 1, 1, 'white'),  // x+
+        setMaterial('./Assets/Textures/Level3/newWall.png', 1, 1, 'white'),  // x-
+        setMaterial('./Assets/Textures/Level3/newWall.png', 1, 1, 'white'),  // y+
+        setMaterial('./Assets/Textures/Level3/newWall.png', 1, 1, 'white'),  // y-
+        setMaterial('./Assets/Textures/Level3/newWall.png', 1, 1, 'white'),  // z+
+        setMaterial('./Assets/Textures/Level3/newWall.png', 1, 1, 'white'),  // z-
     ]
     let blocks = buildMap(scene, matrixLvl3, blockMaterial, floor);
     scene.physics.addToMap(blocks);
@@ -528,7 +528,7 @@ export function worldToMatrix(pos) {
 
 function setMaterial(file, repeatU = 1, repeatV = 1, color = 'rgb(255,255,255)'){
     let loader = new THREE.TextureLoader();
-    let mat = new THREE.MeshBasicMaterial({ map: loader.load(file), color:color});
+    let mat = new THREE.MeshLambertMaterial({ map: loader.load(file), color:color});
        mat.map.colorSpace = THREE.SRGBColorSpace;
     mat.map.wrapS = mat.map.wrapT = THREE.RepeatWrapping;
     mat.map.minFilter = mat.map.magFilter = THREE.LinearFilter;
