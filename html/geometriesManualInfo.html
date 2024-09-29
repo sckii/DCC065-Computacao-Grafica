@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title></title>
+		<meta charset="utf-8">
+		<script src="resources/list.js"></script>
+		<script src="resources/page.js"></script>
+		<link type="text/css" rel="stylesheet" href="resources/page.css" />
+	</head>
+	<body>
+		<h1>Geometries - Manual creation</h1>
+		<br>
+		<hr>
+
+		<p>To create objects manually in Threejs, one way is to use the <a href="https://threejs.org/docs/#api/en/core/BufferGeometry" target="_blank">THREE.BufferGeometry</a>.
+			This object can be used to represent a mesh, lines, points etc. In CG the main use is to create triangles.
+		</p>
+
+		<p>
+			An interesting way to represent objects is through <a href="https://en.wikipedia.org/wiki/Polygon_mesh#Face-vertex_meshes" target="_blank">Face-vertex meshes</a>, 
+			where an object is representated as a set of faces and a set of vertices. The example above was created using this representation.
+		</p>
+		
+		<iframe src="../examples/geometriesManual.html" onload="this.contentWindow.focus()" onmouseover="this.contentWindow.focus()"></iframe>
+		<a href="../examples/geometriesManual.html" target="_blank">Open in a new tab</a>
+		
+		<h2>Creating vertices and faces</h2>
+
+		<p>
+			The following code show how to use the THREE.BufferGeometry in a face-vertex mesh representation.
+		</p>
+
+		<code>
+		// Create all vertices of the object
+		// In this example, we have six vertices
+		let v = [-4.0, -2.0, -1.5,  // p0
+				 -1.0, -2.0,  1.5,  // p1  
+				 -2.0,  2.0,  0.0,  // p2 
+		 		  2.5, -2.0,  1.5,  // p3
+		 		  1.0,  2.0,  1.0,  // p4
+		 		  4.0, -2.0, -0.5]; // p5
+		
+		// Create the triangular faces
+		// In this example we have 4 triangular faces
+		let f =  [0, 1, 2,   
+				  2, 1, 4,
+			 	  1, 3, 4,
+			 	  4, 3, 5];
+		
+		// In this example normals = vertices because the center of the object is the origin. 
+		// You may have to compute your normals manually.
+		const n = v;
+		
+		// Set buffer attributes
+		var vertices = new Float32Array( v );
+		var normals = new Float32Array( n );  
+		var indices = new Uint32Array( f );
+		
+		// Set the Buffer Geometry
+		let geometry = new THREE.BufferGeometry();
+		geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) ); // 3 components per vertex
+		geometry.setAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );  // 3 components per normal
+		geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
+		geometry.computeVertexNormals(); 
+		
+		material = new THREE.MeshPhongMaterial({color:"rgb(255,150,0)"});
+			material.side = THREE.DoubleSide; // Show front and back polygons
+			material.flatShading = true;
+		const mesh = new THREE.Mesh( geometry, material );
+		
+		scene.add(mesh);
+		
+		// Create auxiliary spheres to visualize the points
+		createPointSpheres(v);
+		</code>
+	</body>
+</html>

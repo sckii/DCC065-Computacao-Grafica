@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title></title>
+		<meta charset="utf-8">
+		<script src="resources/list.js"></script>
+		<script src="resources/page.js"></script>
+		<link type="text/css" rel="stylesheet" href="resources/page.css" />
+	</head>
+	<body>
+		<h1>Geometric Transformation II</h1>
+		<br>
+		<hr>
+
+		<p>When we add an object to another object, the local and world position of this object might be different.
+         In the following example, a sphere was added to a cube. When we move the cube, the local position of the 
+         sphere is the same, but its world position changes.
+      </p>
+
+		<iframe src="../examples/geometricTransformation2.html" onload="this.contentWindow.focus()" onmouseover="this.contentWindow.focus()"></iframe>
+		<a href="../examples/geometricTransformation2.html" target="_blank">Open in a new tab</a>
+
+		<h2>World Position</h2>
+
+		<p>The following code fragment shows how to get the world position of a given object.</p>
+      
+      <code>
+      let wp = new THREE.Vector3();
+		sphere.getWorldPosition( wp );		
+      </code>
+
+	</body>
+</html>

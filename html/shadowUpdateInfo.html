@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title></title>
+		<meta charset="utf-8">
+		<script src="resources/list.js"></script>
+		<script src="resources/page.js"></script>
+		<link type="text/css" rel="stylesheet" href="resources/page.css" />
+	</head>
+	<body>
+		<h1>Dynamic vs Static shadows</h1>
+		<br>
+		<hr>
+
+		<p>
+			In this example, you can see the impact on the application's performance by turning off the 'AutoUpdate' 
+			parameter of a directional light. This option is especially interesting in applications where shadows 
+			don't need to be updated every frame. Check the FPS counter to spot the difference when turning ON this parameter.	
+		</p>
+
+		<p>
+			This example also presents a secondary directional light to be used with dynamic objects. 
+			This light can project shadows in a smaller area of influence to reduce computational consumption.
+			As we create two lights, the intensity of each light is cut by half (i.e., 0.5 for each light).
+		</p>		
+
+		<iframe src="../examples/shadowUpdate.html" onload="this.contentWindow.focus()" onmouseover="this.contentWindow.focus()"></iframe>
+		<a href="../examples/shadowUpdate.html" target="_blank">Open in a new tab</a>
+
+	</body>
+</html>

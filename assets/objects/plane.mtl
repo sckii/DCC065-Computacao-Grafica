@@ -1,0 +1,24 @@
+# Material Count: 2
+
+newmtl GLASS__TALTS_jpg
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 0.456300
+illum 2
+
+newmtl fuselaje__TALTS_jpg
+Ns 0.0
+Ka 0.1   0.1   0.1
+Kd 1.0   1.0   1.0
+Ks 1.0   1.0   1.0
+Ke 0.1   0.1   0.1
+Ns 300.0
+Ni 1.500000
+d 1.000000
+illum 4
+
+map_Kd plane.png
