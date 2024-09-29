@@ -289,7 +289,7 @@ function level2(){
     scene.bots = [blueTank, redTank];
 
 
-    let powerUp = new PowerUp(1, scene);
+    let powerUp = new PowerUp(2, scene);
     
     // Camera
     scene.mainCamera.setTracking(greenTank)
@@ -415,7 +415,7 @@ function level3(){
     // AI
     scene.bots = [blueTank, darkRedTank, lightBlueTank];
 
-    let powerUp = new PowerUp(1, scene);
+    let powerUp = new PowerUp(3, scene);
     
     // Camera
     scene.mainCamera.setTracking(redTank)

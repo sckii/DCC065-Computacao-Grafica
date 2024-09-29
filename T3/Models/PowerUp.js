@@ -88,8 +88,8 @@ class PowerUp{
         if(currentLevel == 3){
             let coordinates = [
                 { x: 22, z: 5 },
+                { x: 4, z: 17 },
                 { x: 4, z: 5 },
-                { x: 4, z: 13 },
                 { x: 22, z: 27 },
                 { x: 4, z: 37 }
             ];
