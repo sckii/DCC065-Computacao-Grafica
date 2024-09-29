@@ -12,7 +12,6 @@ import { CSG } from '../../libs/other/CSGMesh.js'
 import ParedeMovel from '../Models/ParedeMovel.js';
 import { CubeTextureLoaderSingleFile } from '../../libs/util/cubeTextureLoaderSingleFile.js';
 import Sound from './Sound.js';
-import PowerUp from '../Models/PowerUp.js';
 
 const blockSize = 2;
 
@@ -103,9 +102,6 @@ function level1(){
     
     // AI
     scene.bots = [blueTank];
-
-    // PowerUp
-    let powerUp = new PowerUp(1, scene);
     
     // Camera
     scene.mainCamera.setTracking(redTank)
@@ -288,8 +284,6 @@ function level2(){
 
     scene.bots = [blueTank, redTank];
 
-
-    let powerUp = new PowerUp(2, scene);
     
     // Camera
     scene.mainCamera.setTracking(greenTank)
@@ -414,8 +408,6 @@ function level3(){
     
     // AI
     scene.bots = [blueTank, darkRedTank, lightBlueTank];
-
-    let powerUp = new PowerUp(3, scene);
     
     // Camera
     scene.mainCamera.setTracking(redTank)

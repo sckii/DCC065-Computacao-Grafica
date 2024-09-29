@@ -6,7 +6,6 @@ import HealthBar from './HealthBar.js';
 import { GLTFLoader } from '../../build/jsm/loaders/GLTFLoader.js';
 import { Vector3 } from '../../build/three.module.js';
 import { getSounds, getCurrentScene, removeFromScene } from '../Functions/SceneGlobals.js';
-import PowerUp from './PowerUp.js';
 
 class Tank {
     constructor(x, z, color, rotate) {
@@ -136,9 +135,7 @@ class Tank {
      * @param {Collider} other 
      */
     onCollisionExit(other) {
-        if(other instanceof PowerUp){     
-            return;
-        }
+        
     }
 
     /**
@@ -149,9 +146,6 @@ class Tank {
         if (!(collision.other instanceof Bullet)) {
             this.position.add(collision.getNormal().multiplyScalar(.15));
             this.normal = collision.getNormal();
-        }
-        if(collision.other instanceof PowerUp){     
-            return;
         }
     }
 

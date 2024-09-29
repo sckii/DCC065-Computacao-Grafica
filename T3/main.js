@@ -99,7 +99,7 @@ function render() {
    }
 
    // Bots update 
-   //scene.bots.forEach(bot => {if(bot) bot.ai.update()});
+   scene.bots.forEach(bot => {if(bot) bot.ai.update()});
 }
 
 function keyboardUpdate() {
