@@ -15,7 +15,7 @@ setupLoadingScreen()
 
 let cssRenderer;
 
-let currentlvlNumber = 3;
+let currentlvlNumber = 1;
 setCurrentScene(buildLevel(currentlvlNumber));
 
 
@@ -99,7 +99,7 @@ function render() {
    }
 
    // Bots update 
-   scene.bots.forEach(bot => {if(bot) bot.ai.update()});
+   //scene.bots.forEach(bot => {if(bot) bot.ai.update()});
 }
 
 function keyboardUpdate() {

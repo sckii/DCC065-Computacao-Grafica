@@ -1,14 +1,17 @@
-import AABBCollider from "../Physics/AABBCollider";
+import * as THREE from  'three';
+import AABBCollider from "../Physics/AABBCollider.js";
 
 class PowerUp{ 
     constructor(currentLevel, scene){
-
+        this.level = currentLevel;
         this.position = this.getPosition(currentLevel);
         this.type = this.getType();
         this.geometry = this.buildMesh(this.position.x, this.position.z);
         this.isActive = false;
         // Colisão
         this.colliderComponent = new AABBCollider(this, 1,1);
+
+        scene.activePowerUp = this;
 
         this.startSpawn(scene);
         
@@ -22,7 +25,7 @@ class PowerUp{
         }
     }
     spawn(scene){
-        this.position = this.getPosition(currentLevel);
+        this.position = this.getPosition(this.level);
         this.type = this.getType();
         this.geometry = this.buildMesh(this.position.x, this.position.z);
         this.isActive = true;
