@@ -109,7 +109,7 @@ function level1(){
     
     // AI
     scene.bots = [blueTank];
-
+    
     // Camera
     scene.mainCamera.setTracking(redTank)
 

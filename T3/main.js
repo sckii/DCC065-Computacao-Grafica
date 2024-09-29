@@ -11,7 +11,9 @@ import Sound from './Functions/Sound.js';
 let keyboard = new KeyboardState();
 setRenderer(initRenderer());
 
-let cssRenderer = initCssRenderer();
+setupLoadingScreen()
+
+let cssRenderer;
 
 let currentlvlNumber = 1;
 setCurrentScene(buildLevel(currentlvlNumber));
@@ -42,8 +44,6 @@ let soundOn = true;
 
 // Sons 
 const musica = new Sound("./Assets/sounds/music.wav", 0.1);
-
-musica.music();
 
 render();
 function render() {
@@ -82,9 +82,9 @@ function render() {
       setCurrentScene(buildLevel(currentlvlNumber));
    }
    if(currentlvlNumber == 3 && getCurrentScene().bots.length == 0){
-      currentlvlNumber = 3;
+      currentlvlNumber = 0;
       clearCssRenderer();
-      setCurrentScene(buildLevel(currentlvlNumber));
+      showEndScreen();
    }
 
    // Verificando qual camera será utilizada
@@ -149,7 +149,6 @@ function keyboardUpdate() {
       setCurrentScene(buildLevel(2));
    }
    if (keyboard.down("3")) {
-      console.log("oi");
       currentlvlNumber = 3;
       clearCssRenderer();
       setCurrentScene(buildLevel(3));
@@ -182,4 +181,83 @@ function initCssRenderer() {
       cssRenderer.setSize( window.innerWidth, window.innerHeight );
    }, false );
    return cssRenderer;
+}
+// Configura a tela de carregamento
+function setupLoadingScreen() {
+   let progressBar = document.getElementById('progress');
+   let button = document.getElementById("startBtn");
+   // Inicialmente, o botão é desabilitado e exibe "Carregando..."
+   button.disabled = true;
+   button.style.backgroundColor = 'red';
+   button.innerHTML = 'Carregando...';
+   let progressWidth = 0;
+ 
+   // Simula o preenchimento da barra de progresso ao longo de 3 segundos
+   let progressInterval = setInterval(() => {
+     if (progressWidth >= 100) {
+      clearInterval(progressInterval);
+       // Adiciona um pequeno delay para garantir que a barra esteja visualmente completa
+      setTimeout(() => {
+            // Quando o "carregamento" termina, o botão se torna clicável
+            button.disabled = false;
+            button.style.backgroundColor = '#4caf50';  // Torna o botão verde
+            button.innerHTML = 'Começar o Jogo';  // Muda o texto
+   
+            button.addEventListener("click", onButtonPressed);
+         }, 2300);  // Delay após a barra encher
+      } else {
+         progressWidth += 10;  // Aumenta a barra de progresso gradualmente
+         progressBar.style.width = progressWidth + '%';
+      }
+   }, 1);  // A cada 1ms, a barra aumenta de largura
+ 
+   // Configura o botão de começar
+   button.addEventListener("click", onButtonPressed);
+}
+ // Função para ocultar a tela de carregamento e iniciar o jogo
+function onButtonPressed() {
+   const loadingScreen = document.getElementById('loading-screen');
+   loadingScreen.classList.add('fade-out');  // Inicia o fade-out da tela de carregamento
+ 
+   // Remove a tela de carregamento após a transição
+   loadingScreen.addEventListener('transitionend', (e) => {
+     const element = e.target;
+     element.remove();  // Remove a tela de carregamento da DOM
+   });
+
+   musica.music();
+   cssRenderer = initCssRenderer();
+ }
+
+// Função para mostrar a tela de fim de jogo
+function showEndScreen() {
+   const endScreen = document.getElementById('end-screen');
+   endScreen.classList.remove('hidden');  // Remove a classe que oculta a tela
+   endScreen.classList.add('visible');    // Adiciona a classe para o fade-in e tornar visível
+ 
+   const restartButton = document.getElementById('restartBtn');
+   restartButton.addEventListener('click', restartGame);  // Configura o botão para reiniciar o jogo
+}
+
+// Função para reiniciar o jogo (sem recarregar a página)
+function restartGame() {
+const endScreen = document.getElementById('end-screen');
+
+// Remove a classe "visible" e adiciona "fade-out"
+endScreen.classList.remove('visible');
+endScreen.classList.add('fade-out');
+
+// Remove a tela de fim de jogo após a transição de fade-out
+endScreen.addEventListener('transitionend', (e) => {
+   if (e.target === endScreen) {  // Verifica se a transição é na tela de fim
+      endScreen.classList.add('hidden');  // Oculta a tela novamente
+      endScreen.classList.remove('fade-out');  // Remove o fade-out para que possa ser reutilizado depois
+      resetGame();  // Chama a função para reiniciar o estado do jogo
+   }
+}, { once: true });  // Garante que o evento transitionend seja chamado apenas uma vez
+}
+
+function resetGame(){
+   currentlvlNumber = 1;
+   restart = true;
 }
